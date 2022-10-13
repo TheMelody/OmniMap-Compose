@@ -10,8 +10,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/map-compose" />
+            <option value="$PROJECT_DIR$/gd-map-compose" />
+            <option value="$PROJECT_DIR$/sample-baidu" />
+            <option value="$PROJECT_DIR$/sample-common" />
+            <option value="$PROJECT_DIR$/sample-gaode" />
+            <option value="$PROJECT_DIR$/sample-google" />
+            <option value="$PROJECT_DIR$/sample-tencent" />
+            <option value="$PROJECT_DIR$/sample-ui-components" />
           </set>
         </option>
       </GradleProjectSettings>

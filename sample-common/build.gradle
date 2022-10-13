@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.melody.sample.common'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        compose true
+
+        // Disable unused AGP features
+        buildConfig false
+        aidl false
+        renderScript false
+        shaders false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    api "androidx.compose.runtime:runtime:$compose_version"
+    api 'androidx.core:core-ktx:1.8.0'
+    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    api 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    api 'androidx.activity:activity-compose:1.5.1'
+    api "com.google.accompanist:accompanist-permissions:0.26.2-beta"
+    api "androidx.startup:startup-runtime:1.2.0-alpha01"
+}
