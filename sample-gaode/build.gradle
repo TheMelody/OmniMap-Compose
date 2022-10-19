@@ -75,7 +75,4 @@ dependencies {
     implementation project(path: ':sample-common')
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':gd-map-compose')
-
-    // 搜索功能
-    implementation "com.amap.api:search:9.4.0"
 }

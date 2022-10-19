@@ -7,6 +7,6 @@
         <item>@string/gd_map_main_feature_item_blue_location</item>
         <item>@string/gd_map_main_feature_item_smooth_move</item>
         <item>@string/gd_map_main_feature_item_drag_drop_select_point</item>
-        <!--<item>@string/gd_map_main_feature_item_route_plan</item>-->
+        <item>@string/gd_map_main_feature_item_route_plan</item>
     </string-array>
 </resources>

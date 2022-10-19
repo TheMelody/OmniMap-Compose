@@ -15,8 +15,9 @@ import kotlin.math.sin
 /**
  * 腾讯地图和高德地图的经度纬度不用换算，只有百度地图需要转换一下
  * MapUtils
- * @author TheMelody
- * email developer_melody@163.com
+ * @author 被风吹过的夏天
+ * @email developer_melody@163.com
+ * @github: https://github.com/TheMelody/OmniMap
  * created 2022/10/08 16:20
  */
 
