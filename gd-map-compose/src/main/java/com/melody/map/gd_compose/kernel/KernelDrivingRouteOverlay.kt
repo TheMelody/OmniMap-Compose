@@ -167,7 +167,7 @@ internal class KernelDrivingRouteOverlay(
                 endMarker = null
                 addStartAndEndMarker()
                 addThroughPointMarker()
-                setIsColorfulline(isColorfulline)
+                setPolylineSelected(isSelected)
             }
             if(result.isFailure) {
                 Log.e(TAG,"addToMap",result.exceptionOrNull())
@@ -180,12 +180,6 @@ internal class KernelDrivingRouteOverlay(
      */
     fun setIsColorfulline(iscolorfulline: Boolean) {
         isColorfulline = iscolorfulline
-        if (isColorfulline && tmcs?.isNotEmpty() == true) {
-            colorWayUpdate(tmcs, isSelected)
-            showColorPolyline()
-        } else {
-            showPolyline()
-        }
     }
 
     override fun setPolylineSelected(isSelected: Boolean) {

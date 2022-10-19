@@ -378,7 +378,6 @@ fun DrivingRouteOverlay(
 
             set(nodeIconVisible) { this.drivingRouteOverlay?.setNodeIconVisibility(it) }
             set(throughPointMarkerVisible) { this.drivingRouteOverlay?.setThroughPointIconVisibility(it) }
-            set(showColorFulLine) { this.drivingRouteOverlay?.setIsColorfulline(it) }
             set(isSelected) { this.drivingRouteOverlay?.setPolylineSelected(it) }
         }
     )
