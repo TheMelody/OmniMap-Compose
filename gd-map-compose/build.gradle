@@ -44,7 +44,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 
     // 高德地图3d
-    api 'com.amap.api:3dmap:9.4.0'
+    api 'com.amap.api:3dmap:9.5.0'
     // 高德地图：搜索相关API
-    api "com.amap.api:search:9.4.0"
+    api "com.amap.api:search:9.4.5"
 }

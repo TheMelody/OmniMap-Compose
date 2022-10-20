@@ -161,7 +161,7 @@ internal fun OverlayScreen() {
             }
 
             if(showTileOverlay) {
-                // 贴图
+                // 贴图，像热力图也是用TileOverlay渲染的
                 val tileProvider: TileProvider = object : UrlTileProvider(256, 256) {
                     override fun getTileUrl(x: Int, y: Int, zoom: Int): URL {
                         return URL("https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png")
