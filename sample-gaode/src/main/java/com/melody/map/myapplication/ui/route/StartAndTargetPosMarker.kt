@@ -86,6 +86,7 @@ private fun NoFocusMarker(
         state = state,
         zIndex = zIndex,
         anchor = anchor,
-        onClick = { true }
+        // 这里是防止重叠的Marker点击会出现bringToFront，读者根据需求自行修改设置
+        isClickable = false
     )
 }

@@ -159,6 +159,7 @@ fun Marker(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
+    isClickable: Boolean = true,
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     snippet: String? = null,
@@ -175,6 +176,7 @@ fun Marker(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
+        isClickable = isClickable,
         flat = flat,
         icon = icon,
         rotation = rotation,
@@ -218,6 +220,7 @@ fun MarkerInfoWindow(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
+    isClickable: Boolean = true,
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
@@ -234,6 +237,7 @@ fun MarkerInfoWindow(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
+        isClickable = isClickable,
         flat = flat,
         icon = icon,
         snippet = snippet,
@@ -277,6 +281,7 @@ fun MarkerInfoWindowContent(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
+    isClickable: Boolean = true,
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
@@ -293,6 +298,7 @@ fun MarkerInfoWindowContent(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
+        isClickable = isClickable,
         flat = flat,
         icon = icon,
         snippet = snippet,
@@ -337,6 +343,7 @@ private fun MarkerImpl(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
+    isClickable: Boolean = true,
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
@@ -370,6 +377,7 @@ private fun MarkerImpl(
                 }
             ) ?: error("Error adding marker")
             marker.`object` = tag
+            marker.isClickable = isClickable
             MarkerNode(
                 compositionContext = compositionContext,
                 marker = marker,
@@ -387,6 +395,7 @@ private fun MarkerImpl(
             update(infoWindow) { this.infoWindow = it }
 
             set(alpha) { this.marker.alpha = it }
+            set(isClickable) { this.marker.isClickable = it }
             set(anchor) { this.marker.setAnchor(it.x, it.y) }
             set(draggable) { this.marker.isDraggable = it }
             set(flat) { this.marker.isFlat = it }
