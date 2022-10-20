@@ -75,6 +75,24 @@ object RoutePlanRepository {
         )
     }
 
+    fun getStartGuideIcon(): BitmapDescriptor {
+        return BitmapDescriptorFactory.fromBitmap(
+            BitmapFactory.decodeResource(
+                SDKUtils.getApplicationContext().resources,
+                com.melody.ui.components.R.drawable.ic_map_start_guide_icon
+            )
+        )
+    }
+
+    fun getEndGuideIcon(): BitmapDescriptor {
+        return BitmapDescriptorFactory.fromBitmap(
+            BitmapFactory.decodeResource(
+                SDKUtils.getApplicationContext().resources,
+                com.melody.ui.components.R.drawable.ic_map_end_guide_icon
+            )
+        )
+    }
+
     fun getDrivingCustomTexture(isSelected: Boolean): BitmapDescriptor {
         return BitmapDescriptorFactory.fromBitmap(
             BitmapFactory.decodeResource(

@@ -41,8 +41,18 @@ class BusRouteDataState(
     targetPos: LatLng,
     startMarkerIcon: BitmapDescriptor?,
     endMarkerIcon: BitmapDescriptor?,
+    startGuideIcon: BitmapDescriptor?,
+    endGuideIcon: BitmapDescriptor?,
     val busLineSelectedTexture: BitmapDescriptor,
     val busLineUnSelectedTexture: BitmapDescriptor,
     val busPathV2List: List<BusPathV2>
-): BaseRouteDataState(routeWidth,startPos,targetPos, startMarkerIcon, endMarkerIcon)
+): BaseRouteDataState(
+    routeWidth = routeWidth,
+    startPos = startPos,
+    targetPos = targetPos,
+    startGuideIcon = startGuideIcon,
+    endGuideIcon = endGuideIcon,
+    startMarkerIcon = startMarkerIcon,
+    endMarkerIcon = endMarkerIcon
+)
 

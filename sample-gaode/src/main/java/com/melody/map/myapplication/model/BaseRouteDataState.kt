@@ -38,6 +38,8 @@ open class BaseRouteDataState(
     val routeWidth: Float,
     val startPos: LatLng,
     val targetPos: LatLng,
+    val startGuideIcon: BitmapDescriptor?,
+    val endGuideIcon: BitmapDescriptor?,
     val startMarkerIcon: BitmapDescriptor?,
     val endMarkerIcon: BitmapDescriptor?
 )

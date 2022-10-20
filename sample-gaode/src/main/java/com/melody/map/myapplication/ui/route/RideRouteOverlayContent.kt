@@ -42,14 +42,13 @@ import com.melody.map.myapplication.model.RideRouteDataState
 @GDMapComposable
 internal fun RideRouteOverlayContent(data: RideRouteDataState) {
     var polylineSelectedIndex by rememberSaveable { mutableStateOf(0) }
+    StartAndTargetPosMarker(data)
     data.ridePathList.forEachIndexed { index, ridePath ->
         RideRouteOverlay(
             isSelected = polylineSelectedIndex == index,
             startPoint = data.startPos,
             endPoint = data.targetPos,
             routeWidth = data.routeWidth,
-            startMarkerIcon = data.startMarkerIcon,
-            endMarkerIcon = data.endMarkerIcon,
             rideLineSelectedTexture = data.rideLineSelectedTexture,
             rideLineUnSelectedTexture = data.rideLineUnSelectedTexture,
             rideStationNodeIcon = data.rideNodeIcon,

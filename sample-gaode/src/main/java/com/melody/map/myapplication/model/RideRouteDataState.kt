@@ -41,10 +41,20 @@ class RideRouteDataState(
     targetPos: LatLng,
     startMarkerIcon: BitmapDescriptor?,
     endMarkerIcon: BitmapDescriptor?,
+    startGuideIcon: BitmapDescriptor?,
+    endGuideIcon: BitmapDescriptor?,
     val nodeVisible: Boolean,
     val rideLineSelectedTexture: BitmapDescriptor,
     val rideLineUnSelectedTexture: BitmapDescriptor,
     val rideNodeIcon: BitmapDescriptor?,
     val ridePathList: List<RidePath>
-): BaseRouteDataState(routeWidth,startPos,targetPos, startMarkerIcon, endMarkerIcon)
+): BaseRouteDataState(
+    routeWidth = routeWidth,
+    startPos = startPos,
+    targetPos = targetPos,
+    startGuideIcon = startGuideIcon,
+    endGuideIcon = endGuideIcon,
+    startMarkerIcon = startMarkerIcon,
+    endMarkerIcon = endMarkerIcon
+)
 

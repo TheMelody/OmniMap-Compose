@@ -43,8 +43,6 @@ internal class KernelWalkRouteOverlay(
     isSelected: Boolean,
     routeWidth: Float,
     polylineColor: Color,
-    startMarkerIcon: BitmapDescriptor?,
-    endMarkerIcon: BitmapDescriptor?,
     walkLineSelectedTexture: BitmapDescriptor?,
     walkLineUnSelectedTexture: BitmapDescriptor?,
     walkNodeIcon: BitmapDescriptor?,
@@ -62,8 +60,6 @@ internal class KernelWalkRouteOverlay(
     busLineUnSelectedTexture = null,
     driveLineSelectedTexture = null,
     driveLineUnSelectedTexture = null,
-    startMarkerIcon = startMarkerIcon,
-    endMarkerIcon = endMarkerIcon,
     busNodeIcon = null,
     walkNodeIcon = walkNodeIcon,
     driveNodeIcon = null,
@@ -91,7 +87,6 @@ internal class KernelWalkRouteOverlay(
                    addWalkPolyLines(walkStep)
                }
                mPolylineOptions?.add(endPoint)
-               addStartAndEndMarker()
                showPolyline()
            }
             if(result.isFailure) {

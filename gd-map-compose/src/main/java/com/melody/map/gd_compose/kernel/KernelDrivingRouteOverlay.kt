@@ -44,8 +44,6 @@ internal class KernelDrivingRouteOverlay(
     polylineColor: Color,
     driveLineSelectedTexture: BitmapDescriptor,
     driveLineUnSelectedTexture: BitmapDescriptor,
-    startMarkerIcon: BitmapDescriptor?,
-    endMarkerIcon: BitmapDescriptor?,
     driveNodeIcon: BitmapDescriptor?,
     private val throughMarkerIcon: BitmapDescriptor?,
     startPoint: LatLng,
@@ -63,8 +61,6 @@ internal class KernelDrivingRouteOverlay(
     busLineUnSelectedTexture = null,
     driveLineSelectedTexture = driveLineSelectedTexture,
     driveLineUnSelectedTexture = driveLineUnSelectedTexture,
-    startMarkerIcon = startMarkerIcon,
-    endMarkerIcon = endMarkerIcon,
     busNodeIcon = null,
     walkNodeIcon = null,
     driveNodeIcon = driveNodeIcon,
@@ -81,6 +77,7 @@ internal class KernelDrivingRouteOverlay(
     private var mPolylineOptionscolor: PolylineOptions? = null
     private var throughPointMarkerVisible = true
     private var isColorfulline = true
+    private var isAddToMapFinish: Boolean = false
 
     /**
      * 初始化线段属性
@@ -151,9 +148,9 @@ internal class KernelDrivingRouteOverlay(
      * 添加驾车路线添加到地图上显示。
      */
     fun addToMap() {
-        initPolylineOptions()
         if (routeWidth == 0f || drivePath == null) return
         coroutineScope.launch {
+            initPolylineOptions()
             val result = kotlin.runCatching {
                 tmcs = mutableListOf()
                 mPolylineOptions?.add(startPoint)
@@ -161,14 +158,10 @@ internal class KernelDrivingRouteOverlay(
                     mPolylineOptions?.add(it)
                 }
                 mPolylineOptions?.add(endPoint)
-                startMarker?.remove()
-                startMarker = null
-                endMarker?.remove()
-                endMarker = null
-                addStartAndEndMarker()
                 addThroughPointMarker()
                 setPolylineSelected(isSelected)
             }
+            isAddToMapFinish = true
             if(result.isFailure) {
                 Log.e(TAG,"addToMap",result.exceptionOrNull())
             }
@@ -183,17 +176,20 @@ internal class KernelDrivingRouteOverlay(
     }
 
     override fun setPolylineSelected(isSelected: Boolean) {
-        val drawColorTexture = isColorfulline && tmcs?.isNotEmpty() == true
-        if(drawColorTexture) {
-            colorWayUpdate(tmcs, isSelected)
-        } else {
-            setPolylineTexture(isSelected)
-        }
-        removeAllPolyLines()
-        if(drawColorTexture) {
-            showColorPolyline()
-        } else {
-            showPolyline()
+        if(!isAddToMapFinish) return
+        coroutineScope.launch {
+            val drawColorTexture = isColorfulline && tmcs?.isNotEmpty() == true
+            if(drawColorTexture) {
+                colorWayUpdate(tmcs, isSelected)
+            } else {
+                setPolylineTexture(isSelected)
+            }
+            removeAllPolyLines()
+            if(drawColorTexture) {
+                showColorPolyline()
+            } else {
+                showPolyline()
+            }
         }
     }
 
@@ -252,7 +248,7 @@ internal class KernelDrivingRouteOverlay(
      *
      * @param tmcSection
      */
-    private fun colorWayUpdate(tmcSection: List<TMC>?,isSelected: Boolean) {
+    private suspend fun colorWayUpdate(tmcSection: List<TMC>?, isSelected: Boolean) {
         if (tmcSection == null || tmcSection.isEmpty()) {
             return
         }
@@ -260,12 +256,10 @@ internal class KernelDrivingRouteOverlay(
         mPolylineOptionscolor = PolylineOptions()
         mPolylineOptionscolor?.isUseTexture = true
         mPolylineOptionscolor?.width(routeWidth)
-        coroutineScope.launch {
-            val customTextureMap = resolveColorLineTextureList(tmcSection,isSelected)
-            // 图片List和Index的List都要设置，否则无法正常加载出全部状态图片
-            mPolylineOptionscolor?.customTextureIndex = customTextureMap.keys.toList()
-            mPolylineOptionscolor?.customTextureList = customTextureMap.values.toList()
-        }
+        val customTextureMap = resolveColorLineTextureList(tmcSection,isSelected)
+        // 图片List和Index的List都要设置，否则无法正常加载出全部状态图片
+        mPolylineOptionscolor?.customTextureIndex = customTextureMap.keys.toList()
+        mPolylineOptionscolor?.customTextureList = customTextureMap.values.toList()
     }
 
     private fun getStatusColorDrawable(status: String,isSelected: Boolean): Int {
@@ -349,6 +343,7 @@ internal class KernelDrivingRouteOverlay(
                 throughPointMarkerList.clear()
             }
         }
+        isAddToMapFinish = false
         if(result.isFailure) {
             Log.e(TAG,"removeFromMap",result.exceptionOrNull())
         }

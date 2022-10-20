@@ -45,8 +45,6 @@ internal class KernelBusRouteOverlay(
     busLineUnSelectedTexture: BitmapDescriptor,
     walkLineSelectedTexture: BitmapDescriptor?,
     walkLineUnSelectedTexture: BitmapDescriptor?,
-    startMarkerIcon: BitmapDescriptor?,
-    endMarkerIcon: BitmapDescriptor?,
     busNodeIcon: BitmapDescriptor?,
     walkNodeIcon: BitmapDescriptor?,
     startPoint: LatLng,
@@ -63,8 +61,6 @@ internal class KernelBusRouteOverlay(
     busLineUnSelectedTexture = busLineUnSelectedTexture,
     driveLineSelectedTexture = null,
     driveLineUnSelectedTexture = null,
-    startMarkerIcon = startMarkerIcon,
-    endMarkerIcon = endMarkerIcon,
     busNodeIcon = busNodeIcon,
     walkNodeIcon = walkNodeIcon,
     driveNodeIcon = null,
@@ -172,7 +168,6 @@ internal class KernelBusRouteOverlay(
                     addTaxiMarkers(busStep.taxi)
                 }
             }
-            addStartAndEndMarker()
         }
         if(result.isFailure) {
             Log.e(TAG,"addToMap",result.exceptionOrNull())

@@ -45,8 +45,6 @@ internal open class KernelRouteOverlay(
     val busLineUnSelectedTexture: BitmapDescriptor?,
     val driveLineSelectedTexture: BitmapDescriptor?,
     val driveLineUnSelectedTexture: BitmapDescriptor?,
-    val startMarkerIcon: BitmapDescriptor?,
-    val endMarkerIcon: BitmapDescriptor?,
     val busNodeIcon: BitmapDescriptor?,
     val walkNodeIcon: BitmapDescriptor?,
     val driveNodeIcon: BitmapDescriptor?,
@@ -63,8 +61,6 @@ internal open class KernelRouteOverlay(
     val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     var stationMarkers: MutableList<Marker> = mutableListOf()
     var allPolyLines: MutableList<Polyline> = mutableListOf()
-    var startMarker: Marker? = null
-    var endMarker: Marker? = null
     var nodeIconVisible: Boolean = true
 
     fun convertToLatLng(latLonPoint: LatLonPoint?): LatLng? {
@@ -87,8 +83,6 @@ internal open class KernelRouteOverlay(
      * 去掉BusRouteOverlay上所有的Marker。
      */
     open fun removeFromMap() {
-        startMarker?.remove()
-        endMarker?.remove()
         removeAllMarkers()
         removeAllPolyLines()
     }
@@ -103,12 +97,6 @@ internal open class KernelRouteOverlay(
         for (line in allPolyLines) {
             line.remove()
         }
-    }
-
-
-    fun addStartAndEndMarker() {
-        startMarker = aMap.addMarker(MarkerOptions().position(startPoint).apply { startMarkerIcon?.let { icon(it) } })
-        endMarker = aMap.addMarker(MarkerOptions().position(endPoint).apply { endMarkerIcon?.let { icon(it) } })
     }
 
     open fun getLatLngBounds(): LatLngBounds {

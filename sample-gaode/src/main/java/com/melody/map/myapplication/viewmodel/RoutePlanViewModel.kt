@@ -73,11 +73,7 @@ class RoutePlanViewModel :
         }
     }
 
-    init {
-        queryRoutePlan(0)
-    }
-
-    fun queryRoutePlan(queryType: Int) {
+    fun queryRoutePlan(queryType: Int = 0) {
         setEvent(RoutePlanContract.Event.QueryRoutePlan(queryType))
     }
 
@@ -138,6 +134,8 @@ class RoutePlanViewModel :
                             targetPos = endPos ?: currentState.queryEndPoint,
                             startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
                             endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
+                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
+                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
                             drivePathV2List = drivePathV2,
                             driveLineSelectedTexture = RoutePlanRepository.getDrivingCustomTexture(true),
                             driveLineUnSelectedTexture = RoutePlanRepository.getDrivingCustomTexture(false),
@@ -167,6 +165,8 @@ class RoutePlanViewModel :
                             targetPos = endPos ?: currentState.queryEndPoint,
                             startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
                             endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
+                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
+                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
                             busLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
                             busLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
                             busPathV2List = busPathV2
@@ -194,6 +194,8 @@ class RoutePlanViewModel :
                             targetPos = endPos ?: currentState.queryEndPoint,
                             startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
                             endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
+                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
+                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
                             walkLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
                             walkLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
                             walkNodeIcon = null,
@@ -222,6 +224,8 @@ class RoutePlanViewModel :
                             targetPos = endPos ?: currentState.queryEndPoint,
                             startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
                             endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
+                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
+                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
                             rideLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
                             rideLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
                             rideNodeIcon = null,

@@ -40,4 +40,4 @@ import androidx.compose.runtime.ComposableTargetMarker
     AnnotationTarget.TYPE,
     AnnotationTarget.TYPE_PARAMETER,
 )
-public annotation class GDMapComposable
+annotation class GDMapComposable

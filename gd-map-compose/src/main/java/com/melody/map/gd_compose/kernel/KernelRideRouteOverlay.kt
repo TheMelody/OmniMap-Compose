@@ -38,8 +38,6 @@ internal class KernelRideRouteOverlay(
     isSelected: Boolean,
     routeWidth: Float,
     polylineColor: Color,
-    startMarkerIcon: BitmapDescriptor?,
-    endMarkerIcon: BitmapDescriptor?,
     private val rideLineSelectedTexture: BitmapDescriptor?,
     private val rideLineUnSelectedTexture: BitmapDescriptor?,
     private val rideStationDescriptor: BitmapDescriptor?,
@@ -57,8 +55,6 @@ internal class KernelRideRouteOverlay(
     walkLineUnSelectedTexture = null,
     driveLineSelectedTexture = null,
     driveLineUnSelectedTexture = null,
-    startMarkerIcon = startMarkerIcon,
-    endMarkerIcon = endMarkerIcon,
     busNodeIcon = null,
     walkNodeIcon = null,
     driveNodeIcon = null,
@@ -87,7 +83,6 @@ internal class KernelRideRouteOverlay(
                 addRidePolyLines(rideStep)
             }
             mPolylineOptions?.add(endPoint)
-            addStartAndEndMarker()
             showPolyline()
         }
     }

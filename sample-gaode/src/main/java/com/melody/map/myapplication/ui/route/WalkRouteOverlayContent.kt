@@ -42,14 +42,13 @@ import com.melody.map.myapplication.model.WalkRouteDataState
 @GDMapComposable
 internal fun WalkRouteOverlayContent(data: WalkRouteDataState) {
     var polylineSelectedIndex by rememberSaveable { mutableStateOf(0) }
+    StartAndTargetPosMarker(data)
     data.walkPathList.forEachIndexed { index, walkPath ->
         WalkRouteOverlay(
             isSelected = polylineSelectedIndex == index,
             startPoint = data.startPos,
             endPoint = data.targetPos,
             routeWidth = data.routeWidth,
-            startMarkerIcon = data.startMarkerIcon,
-            endMarkerIcon = data.endMarkerIcon,
             walkLineSelectedTexture = data.walkLineSelectedTexture,
             walkLineUnSelectedTexture = data.walkLineUnSelectedTexture,
             walkNodeIcon = data.walkNodeIcon,

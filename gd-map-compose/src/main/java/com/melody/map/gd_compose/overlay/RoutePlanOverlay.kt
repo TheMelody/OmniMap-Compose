@@ -68,8 +68,6 @@ internal class RoutePlanOverlayNode(
  * @param routeWidth 路径的宽度
  * @param walkLineSelectedTexture 选中状态下步行线路纹理图片
  * @param walkLineUnSelectedTexture 未选中状态下步行线路纹理图片
- * @param startMarkerIcon 起点位置的Marker图标
- * @param endMarkerIcon 终点位置的Marker图标
  * @param walkNodeIcon 节点位置的图标
  * @param nodeIconVisible 节点是否可见
  * @param isSelected 路径是否被选中
@@ -86,8 +84,6 @@ fun WalkRouteOverlay(
     polylineColor: Color = Color(0XFF5584EB),
     walkLineSelectedTexture: BitmapDescriptor,
     walkLineUnSelectedTexture: BitmapDescriptor,
-    startMarkerIcon: BitmapDescriptor? = null,
-    endMarkerIcon: BitmapDescriptor? = null,
     walkNodeIcon: BitmapDescriptor? = null,
     nodeIconVisible: Boolean = false,
     isSelected: Boolean = true,
@@ -104,8 +100,6 @@ fun WalkRouteOverlay(
                 isSelected = isSelected,
                 routeWidth = routeWidth,
                 polylineColor = polylineColor,
-                startMarkerIcon = startMarkerIcon,
-                endMarkerIcon = endMarkerIcon,
                 startPoint = startPoint,
                 endPoint = endPoint,
                 walkLineSelectedTexture = walkLineSelectedTexture,
@@ -143,8 +137,6 @@ fun WalkRouteOverlay(
  * @param routeWidth 路径的宽度
  * @param rideLineSelectedTexture 选中状态下骑行线路纹理图片
  * @param rideLineUnSelectedTexture 未选中状态下骑行线路纹理图片
- * @param startMarkerIcon 起点位置的Marker图标
- * @param endMarkerIcon 终点位置的Marker图标
  * @param rideStationNodeIcon 节点位置的图标
  * @param nodeIconVisible 节点是否可见
  * @param isSelected 是否选中路径
@@ -161,8 +153,6 @@ fun RideRouteOverlay(
     polylineColor: Color = Color(0XFF5584EB),
     rideLineSelectedTexture: BitmapDescriptor,
     rideLineUnSelectedTexture: BitmapDescriptor,
-    startMarkerIcon: BitmapDescriptor? = null,
-    endMarkerIcon: BitmapDescriptor? = null,
     rideStationNodeIcon: BitmapDescriptor? = null,
     nodeIconVisible: Boolean = false,
     isSelected: Boolean = true,
@@ -179,8 +169,6 @@ fun RideRouteOverlay(
                 isSelected = isSelected,
                 routeWidth = routeWidth,
                 polylineColor = polylineColor,
-                startMarkerIcon = startMarkerIcon,
-                endMarkerIcon = endMarkerIcon,
                 rideStationDescriptor = rideStationNodeIcon,
                 rideLineSelectedTexture = rideLineSelectedTexture,
                 rideLineUnSelectedTexture = rideLineUnSelectedTexture,
@@ -220,8 +208,6 @@ fun RideRouteOverlay(
  * @param busLineUnSelectedTexture 未选中状态下公交线路纹理图片
  * @param walkLineSelectedTexture 未选中状态下步行线路纹理图片
  * @param walkLineUnSelectedTexture 未选中状态下步行路纹理图片
- * @param startMarkerIcon 起点位置的Marker图标
- * @param endMarkerIcon 终点位置的Marker图标
  * @param busNodeIcon 节点位置的图标
  * @param nodeIconVisible 节点是否可见
  * @param isSelected 路径是否被选中
@@ -240,8 +226,6 @@ fun BusRouteOverlay(
     busLineUnSelectedTexture: BitmapDescriptor,
     walkLineSelectedTexture: BitmapDescriptor?,
     walkLineUnSelectedTexture: BitmapDescriptor?,
-    startMarkerIcon: BitmapDescriptor? = null,
-    endMarkerIcon: BitmapDescriptor? = null,
     busNodeIcon: BitmapDescriptor? = null,
     walkNodeIcon: BitmapDescriptor? = null,
     nodeIconVisible: Boolean = false,
@@ -263,8 +247,6 @@ fun BusRouteOverlay(
                 walkLineUnSelectedTexture = walkLineUnSelectedTexture,
                 busLineSelectedTexture = busLineSelectedTexture,
                 busLineUnSelectedTexture = busLineUnSelectedTexture,
-                startMarkerIcon = startMarkerIcon,
-                endMarkerIcon = endMarkerIcon,
                 busNodeIcon = busNodeIcon,
                 walkNodeIcon = walkNodeIcon,
                 startPoint = startPoint,
@@ -301,8 +283,6 @@ fun BusRouteOverlay(
  * @param routeWidth 路径的宽度
  * @param driveLineSelectedTexture 选中状态下驾车路径的纹理图片
  * @param driveLineUnSelectedTexture 未选中状态下驾车路径的纹理图片
- * @param startMarkerIcon 起点的Marker图标
- * @param endMarkerIcon 终点的Marker图标
  * @param driveNodeIcon 每站节点的图标Marker
  * @param showColorFulLine 是否显示交通拥堵情况
  * @param nodeIconVisible 是否显示节点的Marker
@@ -323,8 +303,6 @@ fun DrivingRouteOverlay(
     polylineColor: Color = Color(0XFF5584EB),
     driveLineSelectedTexture: BitmapDescriptor,
     driveLineUnSelectedTexture: BitmapDescriptor,
-    startMarkerIcon: BitmapDescriptor? = null,
-    endMarkerIcon: BitmapDescriptor? = null,
     driveNodeIcon: BitmapDescriptor? = null,
     showColorFulLine: Boolean = true,
     nodeIconVisible: Boolean = false,
@@ -347,8 +325,6 @@ fun DrivingRouteOverlay(
                 polylineColor = polylineColor,
                 driveLineSelectedTexture = driveLineSelectedTexture,
                 driveLineUnSelectedTexture = driveLineUnSelectedTexture,
-                startMarkerIcon = startMarkerIcon,
-                endMarkerIcon = endMarkerIcon,
                 driveNodeIcon = driveNodeIcon,
                 throughMarkerIcon = throughMarkerIcon,
                 startPoint = startPoint,

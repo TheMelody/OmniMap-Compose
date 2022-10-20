@@ -42,10 +42,20 @@ class DrivingRouteDataState(
     targetPos: LatLng,
     startMarkerIcon: BitmapDescriptor?,
     endMarkerIcon: BitmapDescriptor?,
+    startGuideIcon: BitmapDescriptor?,
+    endGuideIcon: BitmapDescriptor?,
     val driveLineSelectedTexture: BitmapDescriptor,
     val driveLineUnSelectedTexture: BitmapDescriptor,
     val throughIcon: BitmapDescriptor?,
     val throughPointList: List<LatLonPoint>,
     val drivePathV2List: List<DrivePathV2>
-): BaseRouteDataState(routeWidth,startPos,targetPos,startMarkerIcon, endMarkerIcon)
+): BaseRouteDataState(
+    routeWidth = routeWidth,
+    startPos = startPos,
+    targetPos = targetPos,
+    startGuideIcon = startGuideIcon,
+    endGuideIcon = endGuideIcon,
+    startMarkerIcon = startMarkerIcon,
+    endMarkerIcon = endMarkerIcon
+)
 

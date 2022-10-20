@@ -77,7 +77,8 @@ internal fun RoutePlanScreen() {
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
             properties = currentState.mapProperties,
-            uiSettings = currentState.uiSettings
+            uiSettings = currentState.uiSettings,
+            onMapLoaded = viewModel::queryRoutePlan
         ) {
             if(!currentState.isLoading) {
                 currentState.dataState?.apply {

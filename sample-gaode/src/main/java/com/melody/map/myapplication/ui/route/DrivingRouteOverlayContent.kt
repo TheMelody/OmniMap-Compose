@@ -42,14 +42,15 @@ import com.melody.map.myapplication.model.DrivingRouteDataState
 @GDMapComposable
 internal fun DrivingRouteOverlayContent(data: DrivingRouteDataState) {
     var polylineSelectedIndex by rememberSaveable { mutableStateOf(0) }
+    // 保证里面用的是MapNode，如果是普通的LayoutNode不行
+    StartAndTargetGuidePosMarker(data)
+    // 驾车的路径
     data.drivePathV2List.forEachIndexed { index, drivePathV2 ->
         DrivingRouteOverlay(
             isSelected = polylineSelectedIndex == index,
             startPoint = data.startPos,
             endPoint = data.targetPos,
             routeWidth = data.routeWidth,
-            startMarkerIcon = data.startMarkerIcon,
-            endMarkerIcon = data.endMarkerIcon,
             driveLineSelectedTexture = data.driveLineSelectedTexture,
             driveLineUnSelectedTexture = data.driveLineUnSelectedTexture,
             throughMarkerIcon = data.throughIcon,
