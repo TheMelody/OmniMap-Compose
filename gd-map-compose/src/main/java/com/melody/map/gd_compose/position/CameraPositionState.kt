@@ -77,6 +77,12 @@ class CameraPositionState(position: CameraPosition = CameraPosition(LatLng(39.91
     val projection: Projection?
         get() = map?.projection
 
+    val projectionMatrix: FloatArray?
+        get() = map?.projectionMatrix
+
+    val viewMatrix: FloatArray?
+        get() = map?.viewMatrix
+
     /**
      * Local source of truth for the current camera position.
      * While [map] is non-null this reflects the current position of [map] as it changes.
