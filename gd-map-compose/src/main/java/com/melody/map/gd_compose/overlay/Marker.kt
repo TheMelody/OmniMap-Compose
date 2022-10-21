@@ -38,6 +38,7 @@ import com.amap.api.maps.model.BitmapDescriptor
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MarkerOptions
+import com.amap.api.maps.model.animation.Animation
 import com.melody.map.gd_compose.MapApplier
 import com.melody.map.gd_compose.MapNode
 import com.melody.map.gd_compose.model.GDMapComposable
@@ -56,11 +57,15 @@ internal class MarkerNode(
     }
     override fun onRemoved() {
         markerState.marker = null
+        marker.setAnimation(null)
+        marker.setAnimationListener(null)
         marker.remove()
     }
 
     override fun onCleared() {
         markerState.marker = null
+        marker.setAnimation(null)
+        marker.setAnimationListener(null)
         marker.remove()
     }
 }
@@ -168,6 +173,10 @@ fun Marker(
     title: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
+    isSetTop: Boolean = false,
+    playAnimation: Boolean = false,
+    animation: Animation? = null,
+    animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
 ) {
@@ -185,7 +194,11 @@ fun Marker(
         title = title,
         visible = visible,
         zIndex = zIndex,
+        isSetTop = isSetTop,
+        playAnimation = playAnimation,
         onClick = onClick,
+        animation = animation,
+        animationListener = animationListener,
         onInfoWindowClick = onInfoWindowClick,
     )
 }
@@ -228,6 +241,10 @@ fun MarkerInfoWindow(
     title: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
+    isSetTop: Boolean = false,
+    playAnimation: Boolean = false,
+    animation: Animation? = null,
+    animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
@@ -246,6 +263,10 @@ fun MarkerInfoWindow(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
+        isSetTop = isSetTop,
+        playAnimation = playAnimation,
+        animation = animation,
+        animationListener = animationListener,
         onInfoWindowClick = onInfoWindowClick,
         infoWindow = content,
     )
@@ -289,6 +310,10 @@ fun MarkerInfoWindowContent(
     title: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
+    isSetTop: Boolean = false,
+    playAnimation: Boolean = false,
+    animation: Animation? = null,
+    animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
@@ -307,6 +332,10 @@ fun MarkerInfoWindowContent(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
+        isSetTop = isSetTop,
+        playAnimation = playAnimation,
+        animation = animation,
+        animationListener = animationListener,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = content,
     )
@@ -352,6 +381,10 @@ private fun MarkerImpl(
     title: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
+    isSetTop: Boolean = false,
+    playAnimation: Boolean = false,
+    animation: Animation? = null,
+    animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
     infoWindow: (@Composable (Marker) -> Unit)? = null,
@@ -378,6 +411,11 @@ private fun MarkerImpl(
             ) ?: error("Error adding marker")
             marker.`object` = tag
             marker.isClickable = isClickable
+            marker.setAnimationListener(animationListener)
+            marker.setAnimation(animation)
+            if(playAnimation) {
+                marker.startAnimation()
+            }
             MarkerNode(
                 compositionContext = compositionContext,
                 marker = marker,
@@ -393,6 +431,7 @@ private fun MarkerImpl(
             update(onInfoWindowClick) { this.onInfoWindowClick = it }
             update(infoContent) { this.infoContent = it }
             update(infoWindow) { this.infoWindow = it }
+            update(animationListener) { this.marker.setAnimationListener(animationListener) }
 
             set(alpha) { this.marker.alpha = it }
             set(isClickable) { this.marker.isClickable = it }
@@ -418,6 +457,16 @@ private fun MarkerImpl(
             }
             set(visible) { this.marker.isVisible = it }
             set(zIndex) { this.marker.zIndex = it }
+            set(playAnimation) {
+                if(playAnimation) {
+                    marker.startAnimation()
+                }
+            }
+            set(isSetTop) {
+                if (isSetTop) {
+                    this.marker.setToTop()
+                }
+            }
         }
     )
 }

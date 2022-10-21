@@ -173,7 +173,7 @@ object RoutePlanRepository {
         // 第二个参数：计算路径的模式。可选，默认为最快捷 RouteSearchV2.BusMode。
         // 第三个参数：城市区号/电话区号。此项不能为空。
         // 第四个参数：是否计算夜班车，默认为不计算。0：不计算，1：计算。可选。
-        val query = RouteSearchV2.BusRouteQuery(fromAndTo, RouteSearchV2.BusMode.BUS_LEASE_WALK, cityCode, 1)
+        val query = RouteSearchV2.BusRouteQuery(fromAndTo, RouteSearchV2.BusMode.BUS_DEFAULT, cityCode, 1)
         query.showFields = RouteSearchV2.ShowFields.ALL
         newRouteSearch.calculateBusRouteAsyn(query)
     }

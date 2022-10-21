@@ -58,6 +58,12 @@ object MainRepository {
             StringUtils.getString(R.string.gd_map_main_feature_item_route_plan) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
             }
+            StringUtils.getString(R.string.gd_map_main_feature_item_multipoint_click) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(),MultiPointOverlayActivity::class.java))
+            }
+            StringUtils.getString(R.string.gd_map_main_feature_item_marker_animation) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(),MarkerAnimationActivity::class.java))
+            }
         }
     }
 

@@ -90,7 +90,8 @@ internal class KernelBusRouteOverlay(
      *
      * 5.公交最后一站和终点间无步行，之间连起来
      */
-    fun addToMap() {
+    fun addToMap(fromCreateNode: Boolean) = asyncLaunch {
+        removeFromMap()
         val result = kotlin.runCatching {
             val busSteps = busPath.steps
             for (i in busSteps.indices) {
@@ -169,8 +170,11 @@ internal class KernelBusRouteOverlay(
                 }
             }
         }
-        if(result.isFailure) {
-            Log.e(TAG,"addToMap",result.exceptionOrNull())
+        if (fromCreateNode && isSelected) {
+            zoomToSpan(boundsPadding = 200)
+        }
+        if (result.isFailure) {
+            Log.e(TAG, "addToMap", result.exceptionOrNull())
         }
     }
 
@@ -410,9 +414,9 @@ internal class KernelBusRouteOverlay(
             PolylineOptions().add(latLngFrom, latLngTo)
                 .width(routeWidth)
                 .zIndex(if(isSelectedBusLine) ROUTE_SELECTED_ZINDEX else ROUTE_UNSELECTED_ZINDEX)
-                .setCustomTexture(if (isSelected) walkLineSelectedTexture else walkLineUnSelectedTexture)
+                .setCustomTexture(if (isSelectedBusLine) walkLineSelectedTexture else walkLineUnSelectedTexture)
                 .color(
-                    polylineColor.copy(if (isSelected) ROUTE_SELECTED_TRANSPARENCY else ROUTE_UNSELECTED_TRANSPARENCY)
+                    polylineColor.copy(if (isSelectedBusLine) ROUTE_SELECTED_TRANSPARENCY else ROUTE_UNSELECTED_TRANSPARENCY)
                         .toArgb()
                 ).setDottedLine(true).setDottedLineType(1)
         )
@@ -421,11 +425,11 @@ internal class KernelBusRouteOverlay(
     private fun addWalkPolyline(listWalkPolyline: List<LatLng>) {
         addPolyLine(
             PolylineOptions().addAll(listWalkPolyline)
-                .setCustomTexture(if (isSelected) walkLineSelectedTexture else walkLineUnSelectedTexture)
+                .setCustomTexture(if (isSelectedBusLine) walkLineSelectedTexture else walkLineUnSelectedTexture)
                 .width(routeWidth)
                 .zIndex(if(isSelectedBusLine) ROUTE_SELECTED_ZINDEX else ROUTE_UNSELECTED_ZINDEX)
                 .color(
-                    polylineColor.copy(if (isSelected) ROUTE_SELECTED_TRANSPARENCY else ROUTE_UNSELECTED_TRANSPARENCY)
+                    polylineColor.copy(if (isSelectedBusLine) ROUTE_SELECTED_TRANSPARENCY else ROUTE_UNSELECTED_TRANSPARENCY)
                         .toArgb()
                 ).setDottedLine(true).setDottedLineType(1)
         )
@@ -442,8 +446,7 @@ internal class KernelBusRouteOverlay(
     override fun setPolylineSelected(isSelected: Boolean) {
         isSelectedBusLine = isSelected
         synchronized(aMap) {
-            removeFromMap()
-            addToMap()
+            addToMap(false)
         }
     }
 

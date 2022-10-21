@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import com.amap.api.maps.AMap
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MultiPointItem
 import com.amap.api.maps.model.Polyline
 import com.melody.map.gd_compose.adapter.ComposeInfoWindowAdapter
 import com.melody.map.gd_compose.overlay.*
@@ -33,6 +34,7 @@ import com.melody.map.gd_compose.overlay.MarkerNode
 import com.melody.map.gd_compose.overlay.MovingPointOverlayNode
 import com.melody.map.gd_compose.overlay.PolylineNode
 import com.melody.map.gd_compose.overlay.RoutePlanOverlayNode
+import com.melody.map.gd_compose.utils.fastFirstOrNull
 
 internal interface MapNode {
     fun onAttached() {}
@@ -95,6 +97,15 @@ internal class MapApplier(
         map.setOnInfoWindowClickListener { marker ->
             decorations.nodeForMarker(marker)?.onInfoWindowClick?.invoke(marker)
         }
+        // MultiPointOverlay的点击事件
+        map.setOnMultiPointClickListener { multiPointItem ->
+            val node = decorations.nodeForMultiPoint(multiPointItem)
+            if(null != node) {
+                node.onPointItemClick.invoke(multiPointItem)
+                return@setOnMultiPointClickListener true
+            }
+            return@setOnMultiPointClickListener false
+        }
         // 长按触发
         map.setOnMarkerDragListener(object : AMap.OnMarkerDragListener {
             override fun onMarkerDrag(marker: Marker) {
@@ -133,19 +144,28 @@ internal class MapApplier(
  * Marker
  */
 private fun MutableList<MapNode>.nodeForMarker(marker: Marker): MarkerNode? =
-    firstOrNull { it is MarkerNode && it.marker.options.title == marker.options.title && it.marker.options.snippet == marker.options.snippet } as? MarkerNode
+    fastFirstOrNull { it is MarkerNode && it.marker.options.title == marker.options.title && it.marker.options.snippet == marker.options.snippet } as? MarkerNode
 
 /**
  * MovingPointOverlay轨迹移动
  */
 private fun MutableList<MapNode>.nodeForMovingPointOverlay(marker: Marker): MovingPointOverlayNode? =
-    firstOrNull { it is MovingPointOverlayNode && it.marker.`object` == marker.`object` } as? MovingPointOverlayNode
+    fastFirstOrNull { it is MovingPointOverlayNode && it.marker.`object` == marker.`object` } as? MovingPointOverlayNode
 
 /**
  * Polyline
  */
 private fun MutableList<MapNode>.nodeForPolyline(polyline: Polyline): PolylineNode? =
-    firstOrNull { it is PolylineNode && it.polyline == polyline } as? PolylineNode
+    fastFirstOrNull { it is PolylineNode && it.polyline == polyline } as? PolylineNode
 
+/**
+ * RoutePlanOverlay
+ */
 private fun MutableList<MapNode>.nodeForRoutePlanPolyline(polyline: Polyline): RoutePlanOverlayNode? =
-    firstOrNull { it is RoutePlanOverlayNode && null != it.polylineList.firstOrNull { child -> child == polyline } } as? RoutePlanOverlayNode
+    fastFirstOrNull { it is RoutePlanOverlayNode && null != it.routePlanOverlay?.allPolyLines?.fastFirstOrNull { child -> child == polyline } } as? RoutePlanOverlayNode
+
+/**
+ * MultiPointOverlay
+ */
+private fun MutableList<MapNode>.nodeForMultiPoint(multiPointItem: MultiPointItem): MultiPointOverlayNode? =
+    fastFirstOrNull { it is MultiPointOverlayNode && null != it.multiPointOverlay.items.fastFirstOrNull { child -> child == multiPointItem  } } as? MultiPointOverlayNode

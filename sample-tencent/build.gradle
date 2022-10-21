@@ -9,7 +9,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 def jksDir = keystorePropertiesFile.absolutePath.substring(0,keystorePropertiesFile.absolutePath.length() - "keystore.properties".length())
 
 android {
-    namespace 'com.melody.bdmap.myapplication'
+    namespace 'com.melody.tencentmap.myapplication'
     compileSdk 33
 
     defaultConfig {

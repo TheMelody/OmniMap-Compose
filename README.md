@@ -2,9 +2,10 @@ OmniMap Compose 🗺
 ===============
 
 Compose多平台地图神器:
-- ![高德](https://via.placeholder.com/15/f03c15/f03c15.png) **`高德`**
 - ![百度](https://via.placeholder.com/15/4e6ef2/4e6ef2.png) **`百度`**
+- ![高德](https://via.placeholder.com/15/f03c15/f03c15.png) **`高德`**
 - ![腾讯](https://via.placeholder.com/15/E69B19/E69B19.png) **`腾讯`**
+- ![华为](https://via.placeholder.com/15/1589F0/1589F0.png) **`华为`**
 - ![谷歌](https://via.placeholder.com/15/1589F0/1589F0.png) **`谷歌`**
 
 

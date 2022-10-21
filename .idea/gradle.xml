@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/sample-common" />
             <option value="$PROJECT_DIR$/sample-gaode" />
             <option value="$PROJECT_DIR$/sample-google" />
+            <option value="$PROJECT_DIR$/sample-huawei" />
             <option value="$PROJECT_DIR$/sample-tencent" />
             <option value="$PROJECT_DIR$/sample-ui-components" />
           </set>

@@ -37,6 +37,7 @@ import com.amap.api.services.route.RidePath
 import com.amap.api.services.route.WalkPath
 import com.melody.map.gd_compose.MapApplier
 import com.melody.map.gd_compose.MapNode
+import com.melody.map.gd_compose.kernel.*
 import com.melody.map.gd_compose.kernel.KernelBusRouteOverlay
 import com.melody.map.gd_compose.kernel.KernelDrivingRouteOverlay
 import com.melody.map.gd_compose.kernel.KernelRideRouteOverlay
@@ -45,18 +46,12 @@ import com.melody.map.gd_compose.model.GDMapComposable
 
 internal class RoutePlanOverlayNode(
     val polylineList: MutableList<Polyline>,
-    val drivingRouteOverlay: KernelDrivingRouteOverlay? = null,
-    val busRouteOverlay: KernelBusRouteOverlay? = null,
-    val rideRouteOverlay: KernelRideRouteOverlay? = null,
-    val walkRouteOverlay: KernelWalkRouteOverlay? = null,
+    val routePlanOverlay: KernelRouteOverlay? = null,
     var onPolylineClick: (Polyline) -> Unit,
     var onMarkerClick: (Marker) -> Boolean
 ) : MapNode {
     override fun onRemoved() {
-        drivingRouteOverlay?.removeFromMap()
-        busRouteOverlay?.removeFromMap()
-        rideRouteOverlay?.removeFromMap()
-        walkRouteOverlay?.removeFromMap()
+        routePlanOverlay?.removeFromMap()
         polylineList.clear()
     }
 }
@@ -108,14 +103,10 @@ fun WalkRouteOverlay(
                 walkPath = walkPath
             )
             walkRouteOverlay.setNodeIconVisibility(nodeIconVisible)
-            walkRouteOverlay.removeFromMap()
             walkRouteOverlay.addToMap()
-            if(isSelected) {
-                walkRouteOverlay.zoomToSpan()
-            }
             RoutePlanOverlayNode(
                 polylineList = walkRouteOverlay.allPolyLines,
-                walkRouteOverlay = walkRouteOverlay,
+                routePlanOverlay = walkRouteOverlay,
                 onMarkerClick = onMarkerClick,
                 onPolylineClick = onPolylineClick
             )
@@ -124,8 +115,8 @@ fun WalkRouteOverlay(
             update(onMarkerClick) { this.onMarkerClick = it }
             update(onPolylineClick) { this.onPolylineClick = it }
 
-            set(nodeIconVisible) { this.walkRouteOverlay?.setNodeIconVisibility(it) }
-            set(isSelected) { this.walkRouteOverlay?.setPolylineSelected(it) }
+            set(nodeIconVisible) { this.routePlanOverlay?.setNodeIconVisibility(it) }
+            set(isSelected) { this.routePlanOverlay?.setPolylineSelected(it) }
         }
     )
 }
@@ -177,14 +168,10 @@ fun RideRouteOverlay(
                 ridePath = ridePath
             )
             rideRouteOverlay.setNodeIconVisibility(nodeIconVisible)
-            rideRouteOverlay.removeFromMap()
             rideRouteOverlay.addToMap()
-            if(isSelected) {
-                rideRouteOverlay.zoomToSpan()
-            }
             RoutePlanOverlayNode(
                 polylineList = rideRouteOverlay.allPolyLines,
-                rideRouteOverlay = rideRouteOverlay,
+                routePlanOverlay = rideRouteOverlay,
                 onMarkerClick = onMarkerClick,
                 onPolylineClick = onPolylineClick
             )
@@ -193,8 +180,8 @@ fun RideRouteOverlay(
             update(onMarkerClick) { this.onMarkerClick = it }
             update(onPolylineClick) { this.onPolylineClick = it }
 
-            set(nodeIconVisible) { this.rideRouteOverlay?.setNodeIconVisibility(it) }
-            set(isSelected) { this.rideRouteOverlay?.setPolylineSelected(it) }
+            set(nodeIconVisible) { this.routePlanOverlay?.setNodeIconVisibility(it) }
+            set(isSelected) { this.routePlanOverlay?.setPolylineSelected(it) }
         }
     )
 }
@@ -254,14 +241,10 @@ fun BusRouteOverlay(
                 busPath = busPath
             )
             busRouteOverlay.setNodeIconVisibility(nodeIconVisible)
-            busRouteOverlay.removeFromMap()
-            busRouteOverlay.addToMap()
-            if(isSelected) {
-                busRouteOverlay.zoomToSpan()
-            }
+            busRouteOverlay.addToMap(true)
             RoutePlanOverlayNode(
                 polylineList = busRouteOverlay.allPolyLines,
-                busRouteOverlay = busRouteOverlay,
+                routePlanOverlay = busRouteOverlay,
                 onMarkerClick = onMarkerClick,
                 onPolylineClick = onPolylineClick
             )
@@ -270,8 +253,8 @@ fun BusRouteOverlay(
             update(onMarkerClick) { this.onMarkerClick = it }
             update(onPolylineClick) { this.onPolylineClick = it }
 
-            set(nodeIconVisible) { this.busRouteOverlay?.setNodeIconVisibility(it) }
-            set(isSelected) { this.busRouteOverlay?.setPolylineSelected(it) }
+            set(nodeIconVisible) { this.routePlanOverlay?.setNodeIconVisibility(it) }
+            set(isSelected) { this.routePlanOverlay?.setPolylineSelected(it) }
         }
     )
 }
@@ -336,14 +319,10 @@ fun DrivingRouteOverlay(
             drivingRouteOverlay.setIsColorfulline(showColorFulLine)
             drivingRouteOverlay.setThroughPointIconVisibility(throughPointMarkerVisible)
             drivingRouteOverlay.setNodeIconVisibility(nodeIconVisible)
-            drivingRouteOverlay.removeFromMap()
             drivingRouteOverlay.addToMap()
-            if(isSelected) {
-                drivingRouteOverlay.zoomToSpan()
-            }
             RoutePlanOverlayNode(
                 polylineList = drivingRouteOverlay.allPolyLines,
-                drivingRouteOverlay = drivingRouteOverlay,
+                routePlanOverlay = drivingRouteOverlay,
                 onMarkerClick = onMarkerClick,
                 onPolylineClick = onPolylineClick
             )
@@ -352,9 +331,9 @@ fun DrivingRouteOverlay(
             update(onMarkerClick) { this.onMarkerClick = it }
             update(onPolylineClick) { this.onPolylineClick = it }
 
-            set(nodeIconVisible) { this.drivingRouteOverlay?.setNodeIconVisibility(it) }
-            set(throughPointMarkerVisible) { this.drivingRouteOverlay?.setThroughPointIconVisibility(it) }
-            set(isSelected) { this.drivingRouteOverlay?.setPolylineSelected(it) }
+            set(nodeIconVisible) { this.routePlanOverlay?.setNodeIconVisibility(it) }
+            set(throughPointMarkerVisible) { (this.routePlanOverlay as? KernelDrivingRouteOverlay)?.setThroughPointIconVisibility(it) }
+            set(isSelected) { this.routePlanOverlay?.setPolylineSelected(it) }
         }
     )
 }

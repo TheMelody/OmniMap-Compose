@@ -149,7 +149,8 @@ internal class KernelDrivingRouteOverlay(
      */
     fun addToMap() {
         if (routeWidth == 0f || drivePath == null) return
-        coroutineScope.launch {
+        asyncLaunch {
+            removeFromMap()
             initPolylineOptions()
             val result = kotlin.runCatching {
                 tmcs = mutableListOf()
@@ -162,6 +163,9 @@ internal class KernelDrivingRouteOverlay(
                 setPolylineSelected(isSelected)
             }
             isAddToMapFinish = true
+            if (isSelected) {
+                zoomToSpan()
+            }
             if(result.isFailure) {
                 Log.e(TAG,"addToMap",result.exceptionOrNull())
             }
@@ -177,7 +181,7 @@ internal class KernelDrivingRouteOverlay(
 
     override fun setPolylineSelected(isSelected: Boolean) {
         if(!isAddToMapFinish) return
-        coroutineScope.launch {
+        asyncLaunch {
             val drawColorTexture = isColorfulline && tmcs?.isNotEmpty() == true
             if(drawColorTexture) {
                 colorWayUpdate(tmcs, isSelected)

@@ -75,23 +75,25 @@ internal class KernelWalkRouteOverlay(
     /**
      * 添加步行路线到地图中
      */
-    fun addToMap() {
+    fun addToMap() = asyncLaunch {
+        removeFromMap()
         initPolylineOptions()
-        coroutineScope.launch {
-           val result = kotlin.runCatching {
-               val walkPaths: List<WalkStep> = walkPath?.steps ?: emptyList()
-               mPolylineOptions?.add(startPoint)
-               for (i in walkPaths.indices) {
-                   val walkStep = walkPaths[i]
-                   convertToLatLng(walkStep.polyline[0])?.let { addWalkStationMarkers(walkStep, it) }
-                   addWalkPolyLines(walkStep)
-               }
-               mPolylineOptions?.add(endPoint)
-               showPolyline()
-           }
-            if(result.isFailure) {
-                Log.e(TAG,"addToMap",result.exceptionOrNull())
+        val result = kotlin.runCatching {
+            val walkPaths: List<WalkStep> = walkPath?.steps ?: emptyList()
+            mPolylineOptions?.add(startPoint)
+            for (i in walkPaths.indices) {
+                val walkStep = walkPaths[i]
+                convertToLatLng(walkStep.polyline[0])?.let { addWalkStationMarkers(walkStep, it) }
+                addWalkPolyLines(walkStep)
             }
+            mPolylineOptions?.add(endPoint)
+            showPolyline()
+        }
+        if (isSelected) {
+            zoomToSpan()
+        }
+        if (result.isFailure) {
+            Log.e(TAG, "addToMap", result.exceptionOrNull())
         }
     }
 

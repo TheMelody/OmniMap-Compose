@@ -27,9 +27,9 @@ import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
 import com.amap.api.services.core.LatLonPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * 核心取自【高德路径规划】示例代码里面的RouteOverlay
@@ -58,10 +58,20 @@ internal open class KernelRouteOverlay(
         const val ROUTE_UNSELECTED_ZINDEX = -1F
     }
 
-    val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    var stationMarkers: MutableList<Marker> = mutableListOf()
-    var allPolyLines: MutableList<Polyline> = mutableListOf()
+    private val asyncJobs: MutableList<Job> = mutableListOf()
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val stationMarkers: MutableList<Marker> = mutableListOf()
+    val allPolyLines: MutableList<Polyline> = mutableListOf()
     var nodeIconVisible: Boolean = true
+
+    fun asyncLaunch(
+        context: CoroutineContext = EmptyCoroutineContext,
+        block: suspend CoroutineScope.() -> Unit
+    ) = coroutineScope.launch(context = context) {
+        block.invoke(this)
+    }.apply {
+        asyncJobs.add(this)
+    }
 
     fun convertToLatLng(latLonPoint: LatLonPoint?): LatLng? {
         if(null == latLonPoint) return null
@@ -85,6 +95,10 @@ internal open class KernelRouteOverlay(
     open fun removeFromMap() {
         removeAllMarkers()
         removeAllPolyLines()
+        asyncJobs.forEach {
+            it.cancel()
+        }
+        asyncJobs.clear()
     }
 
     private fun removeAllMarkers() {
@@ -114,10 +128,10 @@ internal open class KernelRouteOverlay(
     /**
      * 移动镜头到当前的视角。
      */
-    fun zoomToSpan() {
+    fun zoomToSpan(boundsPadding: Int = 100) {
         kotlin.runCatching {
             val bounds: LatLngBounds = getLatLngBounds()
-            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, boundsPadding))
         }
     }
 

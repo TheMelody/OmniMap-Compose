@@ -67,11 +67,12 @@ internal class KernelRideRouteOverlay(
      * 添加骑行路线到地图中
      */
     fun addToMap() {
-        initPolylineOptions()
         if (routeWidth == 0f || ridePath == null) return
-        val ridePaths = ridePath.steps
-        mPolylineOptions?.add(startPoint)
-        coroutineScope.launch {
+        asyncLaunch {
+            removeFromMap()
+            initPolylineOptions()
+            val ridePaths = ridePath.steps
+            mPolylineOptions?.add(startPoint)
             for (i in ridePaths.indices) {
                 val rideStep = ridePaths[i]
                 convertToLatLng(rideStep?.polyline?.getOrNull(0))?.let {
@@ -84,6 +85,9 @@ internal class KernelRideRouteOverlay(
             }
             mPolylineOptions?.add(endPoint)
             showPolyline()
+            if(isSelected) {
+                zoomToSpan()
+            }
         }
     }
 
