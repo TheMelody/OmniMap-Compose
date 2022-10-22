@@ -146,6 +146,7 @@ fun rememberMarkerState(
  * @param alpha the alpha (opacity) of the marker
  * @param anchor the anchor for the marker image
  * @param draggable sets the draggability for the marker
+ * @param isClickable sets the isClickable for the marker
  * @param flat sets if the marker should be flat against the map
  * @param icon sets the icon for the marker
  * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
@@ -154,6 +155,9 @@ fun rememberMarkerState(
  * @param title the title for the marker
  * @param visible the visibility of the marker
  * @param zIndex the z-index of the marker
+ * @param isSetTop the isSetTop of the marker
+ * @param animation the animation of the marker
+ * @param animationListener the animationListener of the marker
  * @param onClick a lambda invoked when the marker is clicked
  * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
  */
@@ -174,7 +178,6 @@ fun Marker(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
-    playAnimation: Boolean = false,
     animation: Animation? = null,
     animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
@@ -195,7 +198,6 @@ fun Marker(
         visible = visible,
         zIndex = zIndex,
         isSetTop = isSetTop,
-        playAnimation = playAnimation,
         onClick = onClick,
         animation = animation,
         animationListener = animationListener,
@@ -213,6 +215,7 @@ fun Marker(
  * @param alpha the alpha (opacity) of the marker
  * @param anchor the anchor for the marker image
  * @param draggable sets the draggability for the marker
+ * @param isClickable sets the isClickable for the marker
  * @param flat sets if the marker should be flat against the map
  * @param icon sets the icon for the marker
  * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
@@ -221,6 +224,9 @@ fun Marker(
  * @param title the title for the marker
  * @param visible the visibility of the marker
  * @param zIndex the z-index of the marker
+ * @param isSetTop the isSetTop of the marker
+ * @param animation the animation of the marker
+ * @param animationListener the animationListener of the marker
  * @param onClick a lambda invoked when the marker is clicked
  * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
  * @param content optional composable lambda expression for customizing the
@@ -242,7 +248,6 @@ fun MarkerInfoWindow(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
-    playAnimation: Boolean = false,
     animation: Animation? = null,
     animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
@@ -264,7 +269,6 @@ fun MarkerInfoWindow(
         zIndex = zIndex,
         onClick = onClick,
         isSetTop = isSetTop,
-        playAnimation = playAnimation,
         animation = animation,
         animationListener = animationListener,
         onInfoWindowClick = onInfoWindowClick,
@@ -282,6 +286,7 @@ fun MarkerInfoWindow(
  * @param alpha the alpha (opacity) of the marker
  * @param anchor the anchor for the marker image
  * @param draggable sets the draggability for the marker
+ * @param isClickable sets the isClickable for the marker
  * @param flat sets if the marker should be flat against the map
  * @param icon sets the icon for the marker
  * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
@@ -290,6 +295,9 @@ fun MarkerInfoWindow(
  * @param title the title for the marker
  * @param visible the visibility of the marker
  * @param zIndex the z-index of the marker
+ * @param isSetTop the isSetTop of the marker
+ * @param animation the animation of the marker
+ * @param animationListener the animationListener of the marker
  * @param onClick a lambda invoked when the marker is clicked
  * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
  * @param content optional composable lambda expression for customizing the
@@ -311,7 +319,6 @@ fun MarkerInfoWindowContent(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
-    playAnimation: Boolean = false,
     animation: Animation? = null,
     animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
@@ -333,7 +340,6 @@ fun MarkerInfoWindowContent(
         zIndex = zIndex,
         onClick = onClick,
         isSetTop = isSetTop,
-        playAnimation = playAnimation,
         animation = animation,
         animationListener = animationListener,
         onInfoWindowClick = onInfoWindowClick,
@@ -349,6 +355,7 @@ fun MarkerInfoWindowContent(
  * @param alpha the alpha (opacity) of the marker
  * @param anchor the anchor for the marker image
  * @param draggable sets the draggability for the marker
+ * @param isClickable sets the isClickable for the marker
  * @param flat sets if the marker should be flat against the map
  * @param icon sets the icon for the marker
  * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
@@ -357,6 +364,9 @@ fun MarkerInfoWindowContent(
  * @param title the title for the marker
  * @param visible the visibility of the marker
  * @param zIndex the z-index of the marker
+ * @param isSetTop the isSetTop of the marker
+ * @param animation the animation of the marker
+ * @param animationListener the animationListener of the marker
  * @param onClick a lambda invoked when the marker is clicked
  * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
  * @param infoWindow optional composable lambda expression for customizing
@@ -382,7 +392,6 @@ private fun MarkerImpl(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
-    playAnimation: Boolean = false,
     animation: Animation? = null,
     animationListener: Animation.AnimationListener? = null,
     onClick: (Marker) -> Boolean = { false },
@@ -413,7 +422,7 @@ private fun MarkerImpl(
             marker.isClickable = isClickable
             marker.setAnimationListener(animationListener)
             marker.setAnimation(animation)
-            if(playAnimation) {
+            if(null != animation) {
                 marker.startAnimation()
             }
             MarkerNode(
@@ -431,7 +440,9 @@ private fun MarkerImpl(
             update(onInfoWindowClick) { this.onInfoWindowClick = it }
             update(infoContent) { this.infoContent = it }
             update(infoWindow) { this.infoWindow = it }
-            update(animationListener) { this.marker.setAnimationListener(animationListener) }
+            update(animationListener) {
+                this.marker.setAnimationListener(animationListener)
+            }
 
             set(alpha) { this.marker.alpha = it }
             set(isClickable) { this.marker.isClickable = it }
@@ -457,8 +468,9 @@ private fun MarkerImpl(
             }
             set(visible) { this.marker.isVisible = it }
             set(zIndex) { this.marker.zIndex = it }
-            set(playAnimation) {
-                if(playAnimation) {
+            set(animation) {
+                marker.setAnimation(animation)
+                if(null != animation) {
                     marker.startAnimation()
                 }
             }

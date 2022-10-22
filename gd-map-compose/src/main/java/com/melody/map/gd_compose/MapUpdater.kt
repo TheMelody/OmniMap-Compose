@@ -125,6 +125,10 @@ internal inline fun MapUpdater(
         set(mapUiSettings.myLocationButtonEnabled) { map.uiSettings.isMyLocationButtonEnabled = it }
         // 修改定位蓝点样式
         set(mapProperties.myLocationStyle) { map.myLocationStyle = it }
+        // 是否显示3D楼块,默认显示
+        set(mapProperties.isShowBuildings) { map.showBuildings(it) }
+        // 是否显示底图标注,默认显示
+        set(mapProperties.isShowMapLabels) { map.showMapText(it) }
         // 是否显示室内地图
         set(mapProperties.isIndoorEnabled) { map.showIndoorMap(it)  }
         // 是否显示路况图层

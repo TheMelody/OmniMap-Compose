@@ -86,6 +86,10 @@
 
         <activity android:name=".MarkerAnimationActivity" android:exported="false"/>
 
+        <activity android:name=".MovementTrackActivity" android:exported="false"/>
+
+        <activity android:name=".ClusterEffectActivity" android:exported="false"/>
+
     </application>
 
 </manifest>

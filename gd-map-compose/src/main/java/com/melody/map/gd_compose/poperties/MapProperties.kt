@@ -32,6 +32,8 @@ val DefaultMapProperties = MapProperties()
 
 /**
  * @param language 设置地图底图语言，目前支持中文底图和英文底图，【语言mapType仅支持：MAP_TYPE_NORMAL】
+ * @param isShowBuildings  是否显示3D楼块效果
+ * @param isShowMapLabels  是否显示底图标注
  * @param isIndoorEnabled  是否显示室内地图
  * @param isMyLocationEnabled 设置是否打开定位图层（myLocationOverlay）。
  * @param isTrafficEnabled 是否打开交通路况图层
@@ -43,6 +45,8 @@ val DefaultMapProperties = MapProperties()
  */
 class MapProperties(
     val language: String = AMap.CHINESE,
+    val isShowBuildings: Boolean = true,
+    val isShowMapLabels: Boolean = true,
     val isIndoorEnabled: Boolean = false,
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
@@ -55,6 +59,8 @@ class MapProperties(
 
     override fun equals(other: Any?): Boolean = other is MapProperties &&
         language == other.language &&
+        isShowBuildings == other.isShowBuildings &&
+        isShowMapLabels == other.isShowMapLabels &&
         isIndoorEnabled == other.isIndoorEnabled &&
         isMyLocationEnabled == other.isMyLocationEnabled &&
         isTrafficEnabled == other.isTrafficEnabled &&
@@ -66,6 +72,8 @@ class MapProperties(
 
     override fun hashCode(): Int = Objects.hash(
         language,
+        isShowBuildings,
+        isShowMapLabels,
         isIndoorEnabled,
         isMyLocationEnabled,
         isTrafficEnabled,
@@ -78,6 +86,8 @@ class MapProperties(
 
     fun copy(
         language: String = this.language,
+        isShowBuildings: Boolean = this.isShowBuildings,
+        isShowMapLabels: Boolean = this.isShowMapLabels,
         isIndoorEnabled: Boolean = this.isIndoorEnabled,
         isMyLocationEnabled: Boolean = this.isMyLocationEnabled,
         isTrafficEnabled: Boolean = this.isTrafficEnabled,
@@ -88,6 +98,8 @@ class MapProperties(
         mapType: MapType = this.mapType,
     ): MapProperties = MapProperties(
         language = language,
+        isShowBuildings = isShowBuildings,
+        isShowMapLabels = isShowMapLabels,
         isIndoorEnabled = isIndoorEnabled,
         isMyLocationEnabled = isMyLocationEnabled,
         isTrafficEnabled = isTrafficEnabled,
@@ -100,6 +112,8 @@ class MapProperties(
 
     override fun toString(): String {
         return "MapProperties(language=$language, " +
+                "isShowBuildings=$isShowBuildings, " +
+                "isShowMapLabels=$isShowMapLabels, " +
                 "isIndoorEnabled=$isIndoorEnabled, " +
                 "isMyLocationEnabled=$isMyLocationEnabled, " +
                 "isTrafficEnabled=$isTrafficEnabled, " +

@@ -59,7 +59,6 @@ internal fun MarkerAnimationScreen() {
             currentState.markerLatLngList.forEach {
                 Marker(
                     state = rememberMarkerState(position = it),
-                    playAnimation = true,
                     animation = ScaleAnimation(0F, 1F, 0F, 1F).apply {
                         setDuration(1500)
                         repeatCount = Int.MAX_VALUE

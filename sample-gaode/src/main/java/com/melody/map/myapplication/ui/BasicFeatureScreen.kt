@@ -66,6 +66,8 @@ internal fun BasicFeatureScreen() {
                 "卫星图",
                 "导航地图",
                 "夜景地图",
+                "3D楼块效果",
+                "地图文字标注",
                 "实时交通状况开关",
                 "地图语言切换",
                 "显示室内地图开关",
@@ -102,6 +104,8 @@ internal fun BasicFeatureScreen() {
                             "卫星图"-> mapProperties.mapType == MapType.SATELLITE
                             "导航地图"-> mapProperties.mapType == MapType.NAVI
                             "夜景地图"-> mapProperties.mapType == MapType.NIGHT
+                            "3D楼块效果"-> mapProperties.isShowBuildings
+                            "地图文字标注"-> mapProperties.isShowMapLabels
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
                             "地图语言切换" -> mapProperties.language
                             "显示室内地图开关" -> mapProperties.isIndoorEnabled
@@ -139,6 +143,12 @@ internal fun BasicFeatureScreen() {
                         }
                         "夜景地图"-> {
                             mapProperties = mapProperties.copy(mapType = MapType.NIGHT)
+                        }
+                        "3D楼块效果" -> {
+                            mapProperties = mapProperties.copy(isShowBuildings = !mapProperties.isShowBuildings)
+                        }
+                        "地图文字标注" -> {
+                            mapProperties = mapProperties.copy(isShowMapLabels = !mapProperties.isShowMapLabels)
                         }
                         "实时交通状况开关"-> {
                             mapProperties = mapProperties.copy(isTrafficEnabled = !mapProperties.isTrafficEnabled)

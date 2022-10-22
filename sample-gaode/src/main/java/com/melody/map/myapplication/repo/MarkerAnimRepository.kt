@@ -21,6 +21,10 @@ object MarkerAnimRepository {
         )
     }
 
+    /**
+     * 这里仅测试使用，如真的有很多点，可以考虑用：点聚合效果，处理Marker过多的问题
+     * 因为点太多，做动画，导致界面上Marker压盖、性能变差。
+     */
     fun randomLatLngList(centerLatLng: LatLng): List<LatLng> {
         val latlngs = arrayOfNulls<LatLng>(500)
         for (i in 0..499) {

@@ -46,7 +46,7 @@ import com.melody.map.myapplication.ui.route.WalkRouteOverlayContent
 import com.melody.map.myapplication.viewmodel.RoutePlanViewModel
 import com.melody.sample.common.utils.showToast
 import com.melody.ui.components.MapMenuButton
-import com.melody.ui.components.ReadCenterLoading
+import com.melody.ui.components.RedCenterLoading
 import com.melody.ui.components.RoadTrafficSwitch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -100,7 +100,7 @@ internal fun RoutePlanScreen() {
             }
         }
         if(currentState.isLoading) {
-            ReadCenterLoading()
+            RedCenterLoading()
         }
         MenuButtonList(viewModel::queryRoutePlan)
         RoadTrafficSwitch(

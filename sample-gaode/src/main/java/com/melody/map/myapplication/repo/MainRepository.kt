@@ -64,6 +64,12 @@ object MainRepository {
             StringUtils.getString(R.string.gd_map_main_feature_item_marker_animation) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),MarkerAnimationActivity::class.java))
             }
+            StringUtils.getString(R.string.gd_map_main_feature_item_movement_track) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(),MovementTrackActivity::class.java))
+            }
+            StringUtils.getString(R.string.gd_map_main_feature_item_cluster_effect) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(),ClusterEffectActivity::class.java))
+            }
         }
     }
 
