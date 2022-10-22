@@ -1,14 +1,13 @@
 OmniMap Compose 🗺
 ===============
 
-Compose多平台地图神器:
-- ![百度](https://via.placeholder.com/15/4e6ef2/4e6ef2.png) **`百度`**
-- ![高德](https://via.placeholder.com/15/f03c15/f03c15.png) **`高德`**
-- ![腾讯](https://via.placeholder.com/15/E69B19/E69B19.png) **`腾讯`**
-- ![华为](https://via.placeholder.com/15/1589F0/1589F0.png) **`华为`**
-- ![谷歌](https://via.placeholder.com/15/1589F0/1589F0.png) **`谷歌`**
+Compose一键集成5大地图平台神器:
+- ![百度](https://via.placeholder.com/15/4e6ef2/4e6ef2.png) **`百度地图`**
+- ![高德](https://via.placeholder.com/15/f03c15/f03c15.png) **`高德地图`**
+- ![腾讯](https://via.placeholder.com/15/E69B19/E69B19.png) **`腾讯地图`**
+- ![华为](https://via.placeholder.com/15/1589F0/1589F0.png) **`华为花瓣地图`**
+- ![谷歌](https://via.placeholder.com/15/1589F0/1589F0.png) **`谷歌地图`**
 
 
-## 1.目前仅添加了高德地图基础能力的代码，待测试和示例代码调完，会重新调整
-
-## 2.高德地图完成的话，会去增加百度地图、腾讯地图的能力代码。
+## 1.目前初步完成高德地图
+## 2.接下来依次优先适配 => 腾讯 、百度、华为、谷歌
