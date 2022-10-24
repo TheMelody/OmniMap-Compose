@@ -29,7 +29,7 @@ import com.melody.map.myapplication.utils.GDMapUtils
 import com.melody.sample.common.utils.SDKUtils
 
 /**
- * MainActivity
+ * AppDataInitStartup
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
