@@ -45,7 +45,7 @@ val DefaultMapProperties = MapProperties()
  */
 class MapProperties(
     val language: String = AMap.CHINESE,
-    val isShowBuildings: Boolean = true,
+    val isShowBuildings: Boolean = false,
     val isShowMapLabels: Boolean = true,
     val isIndoorEnabled: Boolean = false,
     val isMyLocationEnabled: Boolean = false,
