@@ -50,6 +50,9 @@ class Map3dActivity : ComponentActivity() {
                     uiSettings = MapUiSettings(
                         isZoomGesturesEnabled = true,
                         isScrollGesturesEnabled = true,
+                        isRotateGesturesEnabled = true,
+                        isZoomEnabled = true,
+                        isTiltGesturesEnabled = true,
                     )
                 )
             }
