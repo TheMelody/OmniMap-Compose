@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import com.amap.api.maps.AMap
+import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.LocationSource
 import com.amap.api.maps.model.CameraPosition
 import com.melody.map.gd_compose.model.MapClickListeners
@@ -126,7 +127,12 @@ internal inline fun MapUpdater(
         // 修改定位蓝点样式
         set(mapProperties.myLocationStyle) { map.myLocationStyle = it }
         // 是否显示3D楼块,默认显示
-        set(mapProperties.isShowBuildings) { map.showBuildings(it) }
+        set(mapProperties.isShowBuildings) {
+            map.showBuildings(it)
+            // 显示高德3D楼块需要增加：倾斜角度，如需要动态更新倾斜角度，可开启：倾斜手势
+            // 【倾斜手势开启之后】双指向上或者向下，可动态更新倾斜角度
+            map.moveCamera(CameraUpdateFactory.changeTilt(if(it) 60F else 0F))
+        }
         // 是否显示底图标注,默认显示
         set(mapProperties.isShowMapLabels) { map.showMapText(it) }
         // 是否显示室内地图
