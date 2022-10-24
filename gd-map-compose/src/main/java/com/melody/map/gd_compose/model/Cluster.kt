@@ -20,26 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.myapplication
+package com.melody.map.gd_compose.model
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.melody.map.myapplication.ui.ClusterEffectScreen
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
 
-/**
- * ClusterEffectActivity
- * @author 被风吹过的夏天
- * @email developer_melody@163.com
- * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/22 14:54
- */
-class ClusterEffectActivity : ComponentActivity() {
+internal class Cluster internal constructor(val centerLatLng: LatLng) {
+    private val mClusterItems: MutableList<ClusterItem> = mutableListOf()
+    var marker: Marker? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ClusterEffectScreen()
-        }
+    fun addClusterItem(clusterItem: ClusterItem) {
+        mClusterItems.add(clusterItem)
     }
+
+    val clusterCount: Int
+        get() = mClusterItems.size
+    val clusterItems: List<ClusterItem>
+        get() = mClusterItems
 }

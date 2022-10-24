@@ -20,26 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.myapplication
+package com.melody.map.myapplication.contract
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.melody.map.myapplication.ui.ClusterEffectScreen
+import com.amap.api.maps.model.BitmapDescriptor
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.LatLngBounds
+import com.melody.map.gd_compose.model.ClusterItem
+import com.melody.map.gd_compose.model.ClusterRender
+import com.melody.map.gd_compose.poperties.MapUiSettings
+import com.melody.sample.common.state.IUiEffect
+import com.melody.sample.common.state.IUiEvent
+import com.melody.sample.common.state.IUiState
 
 /**
- * ClusterEffectActivity
+ * ClusterEffectContract
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/22 14:54
+ * created 2022/10/24 11:33
  */
-class ClusterEffectActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ClusterEffectScreen()
-        }
+class ClusterEffectContract {
+    sealed class Event : IUiEvent {
+        data class ClusterItemClick(val list: List<ClusterItem>): Event()
     }
+
+    data class State(
+        val isLoading: Boolean,
+        val uiSettings: MapUiSettings,
+        val clusterItem: List<ClusterItem>,
+        val clusterBounds: LatLngBounds?,
+        val defaultClusterIcon: BitmapDescriptor
+    ) : IUiState
+
+    sealed class Effect : IUiEffect
 }

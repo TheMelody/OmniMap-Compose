@@ -20,26 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.myapplication
+package com.melody.map.myapplication.model
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.melody.map.myapplication.ui.ClusterEffectScreen
+import com.amap.api.maps.model.LatLng
+import com.melody.map.gd_compose.model.ClusterItem
 
-/**
- * ClusterEffectActivity
- * @author 被风吹过的夏天
- * @email developer_melody@163.com
- * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/22 14:54
- */
-class ClusterEffectActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ClusterEffectScreen()
-        }
-    }
+class RegionItem(private val latLng: LatLng, private val title: String) : ClusterItem {
+    override fun getPosition(): LatLng = latLng
 }
