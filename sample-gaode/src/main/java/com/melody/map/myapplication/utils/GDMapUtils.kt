@@ -34,7 +34,7 @@ import com.amap.api.maps.MapsInitializer
  */
 object GDMapUtils {
     /**
-     * 更新地图的隐私合规，【不调用地图无法正常显示】只要用到地图SDK的地方，都要先调用它
+     * 更新地图的隐私合规，【不调用地图无法正常显示】要先调用它
      */
     fun updateMapViewPrivacy(context: Context) {
         MapsInitializer.updatePrivacyShow(context.applicationContext, true, true)

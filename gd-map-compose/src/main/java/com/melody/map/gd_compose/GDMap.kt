@@ -160,7 +160,7 @@ private fun MapView.lifecycleObserver(previousState: MutableState<Lifecycle.Even
         when (event) {
             Lifecycle.Event.ON_CREATE ->  {
                 // Skip calling mapView.onCreate if the lifecycle did not go through onDestroy - in
-                // this case the GoogleMap composable also doesn't leave the composition. So,
+                // this case the GDMap composable also doesn't leave the composition. So,
                 // recreating the map does not restore state properly which must be avoided.
                 if (previousState.value != Lifecycle.Event.ON_STOP) {
                     this.onCreate(Bundle())
