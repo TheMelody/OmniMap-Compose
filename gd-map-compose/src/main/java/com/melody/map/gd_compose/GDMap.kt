@@ -36,7 +36,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.amap.api.maps.AMapOptions
 import com.amap.api.maps.LocationSource
 import com.amap.api.maps.MapView
-import com.amap.api.maps.MapsInitializer
 import com.amap.api.maps.model.IndoorBuildingInfo
 import com.amap.api.maps.model.Poi
 import com.melody.map.gd_compose.extensions.awaitMap
@@ -60,7 +59,6 @@ import kotlinx.coroutines.awaitCancellation
 @Composable
 fun GDMap(
     modifier: Modifier = Modifier,
-    isTerrainEnable: Boolean = false,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     aMapOptionsFactory: () -> AMapOptions = { AMapOptions() },
     properties: MapProperties = DefaultMapProperties,
@@ -76,8 +74,6 @@ fun GDMap(
     }
     val context = LocalContext.current
     val mapView = remember {
-        // 是否显示3D地形图，需要在地图创建之前调用
-        MapsInitializer.setTerrainEnable(isTerrainEnable)
         MapView(context, aMapOptionsFactory()).apply {
             id = R.id.map
         }

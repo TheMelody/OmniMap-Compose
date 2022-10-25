@@ -28,6 +28,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import com.amap.api.maps.MapsInitializer
 import com.melody.map.gd_compose.GDMap
 import com.melody.map.gd_compose.poperties.MapUiSettings
 
@@ -41,12 +42,13 @@ import com.melody.map.gd_compose.poperties.MapUiSettings
 class Map3dActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 开启3D地形开关
+        MapsInitializer.setTerrainEnable(true)
         super.onCreate(savedInstanceState)
         setContent {
             Box(modifier = Modifier.fillMaxSize()) {
                 GDMap(
                     modifier = Modifier.matchParentSize(),
-                    isTerrainEnable = true,
                     uiSettings = MapUiSettings(
                         isZoomGesturesEnabled = true,
                         isScrollGesturesEnabled = true,
