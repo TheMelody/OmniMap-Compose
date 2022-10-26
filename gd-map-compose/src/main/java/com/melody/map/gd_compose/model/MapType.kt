@@ -26,7 +26,7 @@ import androidx.compose.runtime.Immutable
 import com.amap.api.maps.AMap
 
 /**
- * Enumerates the different types of map tiles.
+ * 不同类型的地图模式
  */
 @Immutable
 enum class MapType(val value: Int) {

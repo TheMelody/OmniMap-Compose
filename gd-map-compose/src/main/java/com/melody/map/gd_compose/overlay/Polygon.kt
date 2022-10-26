@@ -45,15 +45,15 @@ internal class PolygonNode(
 }
 
 /**
- * A composable for a polygon on the map.
+ * 在地图上绘制多边形覆盖物。一个多边形可以凸面体，也可是凹面体。
  *
- * @param points the points comprising the vertices of the polygon
- * @param fillColor the fill color of the polygon
- * @param strokeColor the stroke color of the polygon
- * @param strokeWidth specifies the polygon's stroke width, in display pixels
- * @param visible the visibility of the polygon
- * @param zIndex the z-index of the polygon
- * @param onClick a lambda invoked when the polygon is clicked
+ * @param points 多边形的顶点坐标列表
+ * @param fillColor 多边形的填充颜色
+ * @param strokeColor 多边形的边框颜色
+ * @param strokeWidth 多边形的边框宽度，单位：像素
+ * @param visible 多边形的可见属性。当不可见时，多边形将不会被绘制，但是其他属性将会保存。
+ * @param zIndex 多边形的显示层级
+ * @param lineJoinType 边框连接处形状
  */
 @Composable
 @GDMapComposable

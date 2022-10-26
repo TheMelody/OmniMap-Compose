@@ -71,15 +71,15 @@ class GroundOverlayPosition private constructor(
 }
 
 /**
- * A composable for a ground overlay on the map.
+ * 在地图上绘制一个 Ground 覆盖物（一张图片以合适的大小贴在地图上的图片层），它会跟随地图的缩放而缩放。
  *
- * @param position the position of the ground overlay
- * @param image the image of the ground overlay
- * @param anchor the anchor of the ground overlay
- * @param bearing the bearing of the ground overlay in degrees clockwise from north
- * @param transparency the transparency of the ground overlay
- * @param visible the visibility of the ground overlay
- * @param zIndex the z-index of the ground overlay
+ * @param position ground 覆盖物的位置的锚点
+ * @param image 覆盖物的贴图。在添加图片层之前，如果没有设置图片，会报IllegalArgumentException 异常。
+ * @param anchor 设置图片的锚点，[0,0]是左上角，[1,1]是右下角
+ * @param bearing ground 覆盖物从正北顺时针的角度，相对锚点旋转
+ * @param transparency  ground 覆盖物的透明度
+ * @param visible ground 覆盖物是否可见
+ * @param zIndex 展示层级，ground覆盖物之间的压盖关系
  */
 @Composable
 @GDMapComposable
@@ -119,6 +119,7 @@ fun GroundOverlay(
 
 private fun GroundOverlay.position(position: GroundOverlayPosition) {
     if (position.latLngBounds != null) {
+        // 根据矩形区域设置ground 覆盖物的位置
         setPositionFromBounds(position.latLngBounds)
         return
     }
@@ -136,9 +137,11 @@ private fun GroundOverlay.position(position: GroundOverlayPosition) {
 
 private fun GroundOverlayOptions.position(position: GroundOverlayPosition): GroundOverlayOptions {
     if (position.latLngBounds != null) {
+        // 根据矩形区域设置ground 覆盖物的位置
         return positionFromBounds(position.latLngBounds)
     }
 
+    // 根据位置和宽高设置ground 覆盖物。在显示时，图片会被缩放来适应指定的尺寸
     if (position.location == null || position.width == null) {
         throw IllegalStateException("Invalid position $position")
     }

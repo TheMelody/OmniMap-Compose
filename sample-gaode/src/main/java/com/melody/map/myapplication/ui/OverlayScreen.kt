@@ -22,11 +22,13 @@
 
 package com.melody.map.myapplication.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -39,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.BitmapDescriptorFactory
@@ -101,8 +104,11 @@ internal fun OverlayScreen() {
             MarkerInfoWindow(icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = LatLng(39.93, 116.13)),
                 content = {
-                    Card(modifier = Modifier.size(66.dp)) {
-                        Text(text = "我是一个卖报的小画家")
+                    Card(modifier = Modifier.requiredSizeIn(maxWidth = 88.dp, minHeight = 66.dp)) {
+                        Text(
+                            modifier = Modifier.padding(4.dp),
+                            text = "自定义InfoWindow => 我是一个卖报的小画家"
+                        )
                     }
                 }
             )
@@ -112,8 +118,14 @@ internal fun OverlayScreen() {
                 state = singaporeState,
                 title = "炎将军在此"
             ) {
-                Card(modifier = Modifier.size(120.dp)) {
-                    Text(it.title ?: "Title", color = Color.Red)
+                FlowRow(modifier = Modifier.size(120.dp)) {
+                    Text("自定义InfoContent:\t", color = Color.Red)
+                    Text(it.title ?: "", color = Color.Red)
+                    Image(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = R.drawable.ic_defaultcluster),
+                        contentDescription = null
+                    )
                 }
             }
 
@@ -171,7 +183,10 @@ internal fun OverlayScreen() {
             }
         }
 
-        FlowRow(modifier = Modifier.fillMaxWidth().background(Color.Black.copy(alpha = 0.3F)).padding(10.dp)) {
+        FlowRow(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black.copy(alpha = 0.3F))
+            .padding(10.dp)) {
             MapMenuButton(
                 onClick = { showWFJGroupOverlay = !showWFJGroupOverlay },
                 text = "在王府井显示：GroundOverlay"

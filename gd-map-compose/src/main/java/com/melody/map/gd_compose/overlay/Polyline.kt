@@ -47,21 +47,20 @@ internal class PolylineNode(
 }
 
 /**
- * A composable for a polyline on the map.
+ * 地图线段覆盖物。一个线段是多个连贯点的集合线段。
  *
- * @param points the points comprising the polyline
- * @param color the color of the polyline
- * @param geodesic specifies whether to draw the polyline as a geodesic
- * @param visible the visibility of the polyline
- * @param isDottedLine the isDottedLine of the polyline
- * @param isAboveMaskLayer the isAboveMaskLayer of the polyline
- * @param useGradient the useGradient of the polyline
- * @param lineCustomTexture the lineCustomTexture of the polyline
- * @param lineJoinType the lineJoinType of the polyline
- * @param lineCapType the lineCapType of the polyline
- * @param width the width of the polyline in screen pixels
- * @param zIndex the z-index of the polyline
- * @param onClick a lambda invoked when the polyline is clicked
+ * @param points 线段的坐标点列表
+ * @param color 线段的颜色
+ * @param geodesic 线段是否画大地曲线，默认false，不画大地曲线
+ * @param visible 线段的可见属性
+ * @param isDottedLine 线段是否虚线，默认为false，画实线
+ * @param useGradient 线段是否使用渐变色
+ * @param lineCustomTexture 线段的纹理图
+ * @param lineJoinType Polyline连接处形状
+ * @param lineCapType Polyline尾部形状
+ * @param width 线段的宽度
+ * @param zIndex 显示层级
+ * @param onClick polyline点击事件回调
  */
 @Composable
 @GDMapComposable
@@ -71,7 +70,6 @@ fun Polyline(
     geodesic: Boolean = false,
     visible: Boolean = true,
     isDottedLine: Boolean = false,
-    isAboveMaskLayer: Boolean = false,
     useGradient: Boolean = false,
     lineCustomTexture: BitmapDescriptor? = null,
     lineJoinType: LineJoinType = LineJoinType.LineJoinBevel,
@@ -91,7 +89,6 @@ fun Polyline(
                     setDottedLine(isDottedLine)
                     lineJoinType(lineJoinType)
                     lineCapType(lineCapType)
-                    aboveMaskLayer(isAboveMaskLayer)
                     customTexture = lineCustomTexture
                     useGradient(useGradient)
                     visible(visible)
@@ -109,7 +106,6 @@ fun Polyline(
             set(color) { this.polyline.color = it.toArgb() }
             set(geodesic) { this.polyline.isGeodesic = it }
             set(isDottedLine) { this.polyline.isDottedLine = it }
-            set(isAboveMaskLayer) { this.polyline.setAboveMaskLayer(it) }
             set(lineCustomTexture) { this.polyline.setCustomTexture(it) }
             set(visible) { this.polyline.isVisible = it }
             set(width) { this.polyline.width = it }

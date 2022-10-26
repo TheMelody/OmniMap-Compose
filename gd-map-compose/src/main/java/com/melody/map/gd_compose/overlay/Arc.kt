@@ -43,11 +43,14 @@ internal class ArcNode(
 }
 
 /**
- * A composable for a Arc on the map.
- * @param strokeColor the stroke color of the Arc
- * @param strokeWidth the width of the Arc's outline in screen pixels
- * @param visible the visibility of the Arc
- * @param zIndex the z-index of the Arc
+ * 弧线覆盖物
+ * @param startPoint 起点位置坐标
+ * @param endPoint 终点位置坐标
+ * @param passedPoint 途经点位置坐标
+ * @param strokeColor 弧形的边框颜色
+ * @param strokeWidth 弧形的边框宽度，单位：像素
+ * @param visible 弧形是否可见
+ * @param zIndex 弧形Z轴数值
  */
 @Composable
 @GDMapComposable

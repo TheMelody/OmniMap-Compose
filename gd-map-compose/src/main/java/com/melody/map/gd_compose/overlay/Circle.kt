@@ -43,16 +43,16 @@ internal class CircleNode(
 }
 
 /**
- * A composable for a circle on the map.
+ * 在地图上绘制圆的覆盖物.
  *
- * @param center the [LatLng] to use for the center of this circle
- * @param fillColor the fill color of the circle
- * @param radius the radius of the circle in meters.
- * @param strokeColor the stroke color of the circle
- * @param strokeDottedLineType the stroke dash type of the circle
- * @param strokeWidth the width of the circle's outline in screen pixels
- * @param visible the visibility of the circle
- * @param zIndex the z-index of the circle
+ * @param center 圆心经纬度坐标
+ * @param fillColor 圆的填充颜色
+ * @param radius 圆的半径，单位米.
+ * @param strokeColor 圆的边框颜色
+ * @param strokeDottedLineType 圆的边框虚线形状
+ * @param strokeWidth 圆的边框宽度
+ * @param visible 圆是否可见
+ * @param zIndex 设置显示的层级，越大越靠上显示
  */
 @Composable
 @GDMapComposable

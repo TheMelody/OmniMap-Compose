@@ -58,7 +58,7 @@ internal class ComposeInfoWindowAdapter(
         if (infoContent == null) { // 这里返回null，是处理getInfoWindow这2个方法谁返回视图的并显示冲突的问题
             return null
         }
-        return infoWindowView.applyAndRemove(markerNode.compositionContext) {
+        return infoWindowView.applyAndRemove(false,markerNode.compositionContext) {
             infoContent(marker)
         }
     }
@@ -71,12 +71,13 @@ internal class ComposeInfoWindowAdapter(
         if (infoWindow == null) { // 这里返回null，是处理getInfoContents这2个方法谁返回视图的并显示冲突的问题
             return null
         }
-        return infoWindowView.applyAndRemove(markerNode.compositionContext) {
+        return infoWindowView.applyAndRemove(true,markerNode.compositionContext) {
             infoWindow(marker)
         }
     }
 
     private fun ComposeView.applyAndRemove(
+        fromInfoWindow: Boolean,
         parentContext: CompositionContext,
         content: @Composable () -> Unit
     ): ComposeView {
@@ -84,8 +85,10 @@ internal class ComposeInfoWindowAdapter(
         val result = this.apply {
             setParentCompositionContext(parentContext)
             setContent {
-                // 去除高德地图默认气泡背景
-                setBackgroundColor(Color.TRANSPARENT)
+                if(fromInfoWindow) {
+                    // 去除地图默认气泡背景, 如果是InfoContent，则只定制内容，不修改窗口背景和样式
+                    setBackgroundColor(Color.TRANSPARENT)
+                }
                 content.invoke()
             }
         }

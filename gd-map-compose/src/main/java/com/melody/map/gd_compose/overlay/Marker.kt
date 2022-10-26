@@ -76,20 +76,20 @@ enum class DragState {
 }
 
 /**
- * A state object that can be hoisted to control and observe the marker state.
+ * 控制和观察[Marker]状态的状态对象。
  *
- * @param position the initial marker position
+ * @param position Marker覆盖物的位置坐标
  */
 class MarkerState(
     position: LatLng = LatLng(0.0, 0.0)
 ) {
     /**
-     * Current position of the marker.
+     * 当前Marker覆盖物的位置
      */
     var position: LatLng by mutableStateOf(position)
 
     /**
-     * Current [DragState] of the marker.
+     * 当前Marker拖拽的状态
      */
     var dragState: DragState by mutableStateOf(DragState.END)
         internal set
@@ -105,14 +105,14 @@ class MarkerState(
         }
 
     /**
-     * Shows the info window for the underlying marker
+     * 显示 Marker 覆盖物的信息窗口
      */
     fun showInfoWindow() {
         marker?.showInfoWindow()
     }
 
     /**
-     * Hides the info window for the underlying marker
+     * 隐藏Marker覆盖物的信息窗口。如果Marker本身是不可以见的，此方法将不起任何作用
      */
     fun hideInfoWindow() {
         marker?.hideInfoWindow()
@@ -139,27 +139,26 @@ fun rememberMarkerState(
 }
 
 /**
- * A composable for a marker on the map.
+ * 默认覆盖物Marker， [Marker]是在地图上的一个点绘制图标。这个图标和屏幕朝向一致，和地图朝向无关，也不会受地图的旋转、倾斜、缩放影响
  *
- * @param state the [MarkerState] to be used to control or observe the marker
- * state such as its position and info window
- * @param alpha the alpha (opacity) of the marker
- * @param anchor the anchor for the marker image
- * @param draggable sets the draggability for the marker
- * @param isClickable sets the isClickable for the marker
- * @param flat sets if the marker should be flat against the map
- * @param icon sets the icon for the marker
- * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
- * @param snippet the snippet for the marker
- * @param tag optional tag to associate with the marker
- * @param title the title for the marker
- * @param visible the visibility of the marker
- * @param zIndex the z-index of the marker
- * @param isSetTop the isSetTop of the marker
- * @param animation the animation of the marker
- * @param animationListener the animationListener of the marker
- * @param onClick a lambda invoked when the marker is clicked
- * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
+ * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
+ * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
+ * @param anchor Marker覆盖物的锚点比例
+ * @param draggable Marker覆盖物是否允许拖拽
+ * @param isClickable Marker覆盖物是否可以点击
+ * @param flat Marker覆盖物是否平贴在地图上
+ * @param icon Marker覆盖物的图标
+ * @param rotation Marker覆盖物基于锚点旋转的角度
+ * @param snippet Marker 覆盖物的文字片段
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题
+ * @param visible Marker 覆盖物的可见属性
+ * @param zIndex Marker覆盖物的z轴值
+ * @param isSetTop 设置为true: 则当前marker在最上面
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param animationListener 动画监听，包含动画开始和结束时的回调
+ * @param onClick 标注点击事件回调
+ * @param onInfoWindowClick InfoWindow的点击事件回调
  */
 @Composable
 @GDMapComposable
@@ -206,31 +205,27 @@ fun Marker(
 }
 
 /**
- * A composable for a marker on the map wherein its entire info window can be
- * customized. If this customization is not required, use
- * [com.amap.api.maps.model.Marker].
+ * 覆盖物[Marker]，此组合项可定制整个InfoWindow信息窗口，如果不需要此自定义，请使用 [com.melody.map.gd_compose.overlay.Marker].
  *
- * @param state the [MarkerState] to be used to control or observe the marker
- * state such as its position and info window
- * @param alpha the alpha (opacity) of the marker
- * @param anchor the anchor for the marker image
- * @param draggable sets the draggability for the marker
- * @param isClickable sets the isClickable for the marker
- * @param flat sets if the marker should be flat against the map
- * @param icon sets the icon for the marker
- * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
- * @param snippet the snippet for the marker
- * @param tag optional tag to associate with the marker
- * @param title the title for the marker
- * @param visible the visibility of the marker
- * @param zIndex the z-index of the marker
- * @param isSetTop the isSetTop of the marker
- * @param animation the animation of the marker
- * @param animationListener the animationListener of the marker
- * @param onClick a lambda invoked when the marker is clicked
- * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
- * @param content optional composable lambda expression for customizing the
- * info window's content
+ * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
+ * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
+ * @param anchor Marker覆盖物的锚点比例
+ * @param draggable Marker覆盖物是否允许拖拽
+ * @param isClickable Marker覆盖物是否可以点击
+ * @param flat Marker覆盖物是否平贴在地图上
+ * @param icon Marker覆盖物的图标
+ * @param rotation Marker覆盖物基于锚点旋转的角度
+ * @param snippet Marker 覆盖物的文字片段
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题
+ * @param visible Marker 覆盖物的可见属性
+ * @param zIndex Marker覆盖物的z轴值
+ * @param isSetTop true: 设置当前marker在最上面
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param animationListener 动画监听，包含动画开始和结束时的回调
+ * @param onClick 标注点击事件回调
+ * @param onInfoWindowClick InfoWindow的点击事件回调
+ * @param content 【可选】，用于自定义整个信息窗口。
  */
 @Composable
 @GDMapComposable
@@ -277,31 +272,27 @@ fun MarkerInfoWindow(
 }
 
 /**
- * A composable for a marker on the map wherein its info window contents can be
- * customized. If this customization is not required, use
- * [com.amap.api.maps.model.Marker].
+ * 覆盖物[Marker]，此组合项可定制InfoWindow信息窗口内容，如果不需要此自定义，请使用 [com.melody.map.gd_compose.overlay.Marker].
  *
- * @param state the [MarkerState] to be used to control or observe the marker
- * state such as its position and info window
- * @param alpha the alpha (opacity) of the marker
- * @param anchor the anchor for the marker image
- * @param draggable sets the draggability for the marker
- * @param isClickable sets the isClickable for the marker
- * @param flat sets if the marker should be flat against the map
- * @param icon sets the icon for the marker
- * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
- * @param snippet the snippet for the marker
- * @param tag optional tag to associate with the marker
- * @param title the title for the marker
- * @param visible the visibility of the marker
- * @param zIndex the z-index of the marker
- * @param isSetTop the isSetTop of the marker
- * @param animation the animation of the marker
- * @param animationListener the animationListener of the marker
- * @param onClick a lambda invoked when the marker is clicked
- * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
- * @param content optional composable lambda expression for customizing the
- * info window's content
+ * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
+ * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
+ * @param anchor Marker覆盖物的锚点比例
+ * @param draggable Marker覆盖物是否允许拖拽
+ * @param isClickable Marker覆盖物是否可以点击
+ * @param flat Marker覆盖物是否平贴在地图上
+ * @param icon Marker覆盖物的图标
+ * @param rotation Marker覆盖物基于锚点旋转的角度
+ * @param snippet Marker 覆盖物的文字片段
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题
+ * @param visible Marker 覆盖物的可见属性
+ * @param zIndex Marker覆盖物的z轴值
+ * @param isSetTop true: 设置当前marker在最上面
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param animationListener 动画监听，包含动画开始和结束时的回调
+ * @param onClick 标注点击事件回调
+ * @param onInfoWindowClick InfoWindow的点击事件回调
+ * @param content 【可选】，用于自定义信息窗口的内容。
  */
 @Composable
 @GDMapComposable
@@ -348,32 +339,28 @@ fun MarkerInfoWindowContent(
 }
 
 /**
- * Internal implementation for a marker on a GD map.
+ * Marker覆盖物的内部实现
  *
- * @param state the [MarkerState] to be used to control or observe the marker
- * state such as its position and info window
- * @param alpha the alpha (opacity) of the marker
- * @param anchor the anchor for the marker image
- * @param draggable sets the draggability for the marker
- * @param isClickable sets the isClickable for the marker
- * @param flat sets if the marker should be flat against the map
- * @param icon sets the icon for the marker
- * @param rotation the rotation of the marker in degrees clockwise about the marker's anchor point
- * @param snippet the snippet for the marker
- * @param tag optional tag to associate with the marker
- * @param title the title for the marker
- * @param visible the visibility of the marker
- * @param zIndex the z-index of the marker
- * @param isSetTop the isSetTop of the marker
- * @param animation the animation of the marker
- * @param animationListener the animationListener of the marker
- * @param onClick a lambda invoked when the marker is clicked
- * @param onInfoWindowClick a lambda invoked when the marker's info window is clicked
- * @param infoWindow optional composable lambda expression for customizing
- * the entire info window. If this value is non-null, the value in infoContent]
- * will be ignored.
- * @param infoContent optional composable lambda expression for customizing
- * the info window's content. If this value is non-null, [infoWindow] must be null.
+ * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
+ * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
+ * @param anchor Marker覆盖物的锚点比例
+ * @param draggable Marker覆盖物是否允许拖拽
+ * @param isClickable Marker覆盖物是否可以点击
+ * @param flat Marker覆盖物是否平贴在地图上
+ * @param icon Marker覆盖物的图标
+ * @param rotation Marker覆盖物基于锚点旋转的角度
+ * @param snippet Marker 覆盖物的文字片段
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题
+ * @param visible Marker 覆盖物的可见属性
+ * @param zIndex Marker覆盖物的z轴值
+ * @param isSetTop true: 设置当前marker在最上面
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param animationListener 动画监听，包含动画开始和结束时的回调
+ * @param onClick 标注点击事件回调
+ * @param onInfoWindowClick InfoWindow的点击事件回调
+ * @param infoWindow 【可选】，用于自定义整个信息窗口。如果此值为非空，则[infoContent]中的值将被忽略。
+ * @param infoContent 【可选】，用于自定义信息窗口的内容。如果此值为非 null，则 [infoWindow] 必须为 null。
  */
 @Composable
 @GDMapComposable
