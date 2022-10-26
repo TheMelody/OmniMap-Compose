@@ -60,4 +60,10 @@ class Map3dActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        // 恢复，防止其他页面的示例有问题
+        MapsInitializer.setTerrainEnable(false)
+        super.onDestroy()
+    }
 }
