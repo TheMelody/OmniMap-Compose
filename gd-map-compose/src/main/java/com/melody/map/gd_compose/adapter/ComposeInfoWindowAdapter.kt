@@ -81,7 +81,6 @@ internal class ComposeInfoWindowAdapter(
         parentContext: CompositionContext,
         content: @Composable () -> Unit
     ): ComposeView {
-        (this.parent as? MapView)?.removeView(this)
         val result = this.apply {
             setParentCompositionContext(parentContext)
             setContent {
@@ -92,6 +91,7 @@ internal class ComposeInfoWindowAdapter(
                 content.invoke()
             }
         }
+        (this.parent as? MapView)?.removeView(this)
         return result
     }
 }
