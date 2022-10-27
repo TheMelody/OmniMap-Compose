@@ -148,18 +148,16 @@ class LocationTrackingViewModel :
 
     override fun activate(listener: OnLocationChangedListener?) {
         mListener = listener
-        if(currentState.isOpenGps == true && currentState.grantLocationPermission) {
+        if(DragDropSelectPointRepository.checkGPSIsOpen() && currentState.grantLocationPermission) {
             startMapLocation()
         }
     }
 
     override fun deactivate() {
-        mListener = null
-        if (mLocationClient != null) {
-            mLocationClient?.stopLocation()
-            mLocationClient?.onDestroy()
-        }
+        mLocationClient?.stopLocation()
+        mLocationClient?.onDestroy()
         mLocationClient = null
+        mListener = null
     }
 
     override fun onCleared() {
