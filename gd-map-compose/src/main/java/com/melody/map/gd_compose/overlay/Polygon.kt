@@ -49,7 +49,7 @@ internal class PolygonNode(
  * 在地图上绘制多边形覆盖物。一个多边形可以凸面体，也可是凹面体。
  *
  * @param points 多边形的顶点坐标列表
- * @param holeOptions (可选)，多边形添加空心洞效果，关键坐标点数据可通过DistrictSearch.searchDistrictAsync查询获取
+ * @param holeOptions (可选)，多边形添加空心洞效果(目前来说效果不咋滴)，关键坐标点数据可通过DistrictSearch.searchDistrictAsync查询获取
  * @param fillColor 多边形的填充颜色
  * @param strokeColor 多边形的边框颜色
  * @param strokeWidth 多边形的边框宽度，单位：像素
