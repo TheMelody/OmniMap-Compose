@@ -34,6 +34,7 @@ import com.amap.api.maps.model.PolygonOptions
 import com.melody.map.gd_compose.MapApplier
 import com.melody.map.gd_compose.MapNode
 import com.amap.api.maps.model.AMapPara.LineJoinType
+import com.amap.api.maps.model.BaseHoleOptions
 import com.melody.map.gd_compose.model.GDMapComposable
 
 internal class PolygonNode(
@@ -48,6 +49,7 @@ internal class PolygonNode(
  * 在地图上绘制多边形覆盖物。一个多边形可以凸面体，也可是凹面体。
  *
  * @param points 多边形的顶点坐标列表
+ * @param holeOptions (可选)，多边形添加空心洞效果，关键坐标点数据可通过DistrictSearch.searchDistrictAsync查询获取
  * @param fillColor 多边形的填充颜色
  * @param strokeColor 多边形的边框颜色
  * @param strokeWidth 多边形的边框宽度，单位：像素
@@ -59,6 +61,7 @@ internal class PolygonNode(
 @GDMapComposable
 fun Polygon(
     points: List<LatLng>,
+    holeOptions: List<BaseHoleOptions>? = null,
     fillColor: Color = Color.Black,
     strokeColor: Color = Color.Black,
     strokeWidth: Float = 10f,
@@ -75,6 +78,7 @@ fun Polygon(
                 strokeColor(strokeColor.toArgb())
                 strokeWidth(strokeWidth)
                 lineJoinType(lineJoinType)
+                setHoleOptions(holeOptions)
                 visible(visible)
                 zIndex(zIndex)
             }) ?: error("Error adding polygon")
@@ -82,6 +86,7 @@ fun Polygon(
         },
         update = {
             set(points) { this.polygon.points = it }
+            set(holeOptions) { this.polygon.holeOptions = it }
             set(fillColor) { this.polygon.fillColor = it.toArgb() }
             set(strokeColor) { this.polygon.strokeColor = it.toArgb() }
             set(strokeWidth) { this.polygon.strokeWidth = it }
