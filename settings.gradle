@@ -15,8 +15,9 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "OmniMap"
-include ':sample-gaode'
 include ':gd-map-compose'
+include ':tencent-map-compose'
+include ':sample-gaode'
 include ':sample-baidu'
 include ':sample-tencent'
 include ':sample-huawei'

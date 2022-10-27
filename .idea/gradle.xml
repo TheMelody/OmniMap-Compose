@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/sample-huawei" />
             <option value="$PROJECT_DIR$/sample-tencent" />
             <option value="$PROJECT_DIR$/sample-ui-components" />
+            <option value="$PROJECT_DIR$/tencent-map-compose" />
           </set>
         </option>
       </GradleProjectSettings>

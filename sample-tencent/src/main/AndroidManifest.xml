@@ -2,6 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.melody.tencentmap.myapplication">
+    <!--腾讯地图 SDK 要求的权限(开始)-->
+    <!--访问网络获取地图服务-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--检查网络可用性-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 访问WiFi状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--需要外部存储写权限用于保存地图缓存-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <!--获取 device id 辨别设备，(可选) -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--腾讯地图 SDK 要求的权限(结束)-->
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
@@ -10,7 +24,40 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <!--腾讯地图Api key-->
+        <meta-data
+            android:name="TencentMapSDK"
+            android:value="2QIBZ-GE264-D6DUI-XYV6Q-ETIAS-SJF3L"/>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.melody.tencentmap.myapplication.initializer.AppDataInitStartup"
+                android:value="androidx.startup" />
+        </provider>
+
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".BasicFeatureActivity" android:exported="false"/>
+
+        <activity android:name=".OverlayActivity" android:exported="false"/>
+
+        <activity android:name=".LocationTrackingActivity" android:exported="false"/>
 
     </application>
 </manifest>
