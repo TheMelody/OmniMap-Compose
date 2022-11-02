@@ -3,7 +3,6 @@
 
     <string name="tx_map_main_feature_item_basic">基础功能</string>
     <string name="tx_map_main_feature_item_overlay">简单的Overlay功能</string>
-    <string name="tx_map_main_feature_item_3dmap">3D地形图</string>
     <string name="tx_map_main_feature_item_blue_location">地图定位蓝点功能</string>
     <string name="tx_map_main_feature_item_smooth_move">轨迹平滑(移动/回放)</string>
     <string name="tx_map_main_feature_item_drag_drop_select_point">Dragdrop拖拽选点</string>

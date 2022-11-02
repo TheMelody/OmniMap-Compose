@@ -56,7 +56,6 @@ import com.melody.map.tencent_compose.overlay.PolygonBorder
 import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.TileOverlay
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
-import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.utils.showToast
 import com.melody.tencentmap.myapplication.R
@@ -93,11 +92,7 @@ internal fun OverlayScreen() {
         TXMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
-            uiSettings = MapUiSettings(
-                isZoomGesturesEnabled = true,
-                isScrollGesturesEnabled = true,
-                isZoomEnabled = true
-            )
+            uiSettings = currentState.uiSettings
         ) {
             MarkerInfoWindow(icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = currentState.infoWindowLatLng),
@@ -169,6 +164,18 @@ internal fun OverlayScreen() {
                 width = 10F,
                 onClick = {
                     showToast("点击了Polyline,一共有：${it.points.size}个point")
+                }
+            )
+
+            // 线段的出现动画
+            Polyline(
+                points = currentState.polylineAnimPointList,
+                width = 15F,
+                isLineCap = true,
+                rainbow = currentState.polylineRainbow,
+                animation = currentState.polylineAnimation,
+                onClick = {
+                    showToast("线段动画Polyline,一共有：${it.points.size}个point")
                 }
             )
 

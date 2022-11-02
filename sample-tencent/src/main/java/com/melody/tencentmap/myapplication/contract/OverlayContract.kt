@@ -22,9 +22,12 @@
 
 package com.melody.tencentmap.myapplication.contract
 
+import com.melody.map.tencent_compose.overlay.PolylineRainbow
+import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.sample.common.state.IUiEffect
 import com.melody.sample.common.state.IUiEvent
 import com.melody.sample.common.state.IUiState
+import com.tencent.tencentmap.mapsdk.maps.model.Animation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
 
@@ -44,6 +47,7 @@ class OverlayContract {
     }
 
     data class State(
+        val uiSettings: MapUiSettings,
         val isShowTXDSGroupOverlay: Boolean,
         val isShowTileOverlay: Boolean,
         val circleCenter: LatLng,
@@ -57,6 +61,9 @@ class OverlayContract {
         val polylineList: List<LatLng>,
         val polygonTriangleList: List<LatLng>,
         val polygonPointList: List<LatLng>,
+        val polylineAnimPointList: List<LatLng>,
+        val polylineRainbow: PolylineRainbow,
+        val polylineAnimation: Animation,
         val patterns: List<Int>,
     ) : IUiState
 

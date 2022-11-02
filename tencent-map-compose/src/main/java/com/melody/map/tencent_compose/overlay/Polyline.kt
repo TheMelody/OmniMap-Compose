@@ -30,8 +30,10 @@ import androidx.compose.ui.graphics.toArgb
 import com.melody.map.tencent_compose.MapApplier
 import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
-import com.tencent.tencentmap.mapsdk.maps.model.BaseAnimation
+import com.tencent.tencentmap.mapsdk.maps.model.AlphaAnimation
+import com.tencent.tencentmap.mapsdk.maps.model.Animation
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
+import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.Polyline
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
@@ -128,7 +130,7 @@ class PolylineDynamicRoadName private constructor(
  * @param isRoad 线段是否为路线
  * @param isLineCap 路线是否显示半圆端点
  * @param isClickable 是否可点击
- * @param animation 动画
+ * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
  * @param tag 线段的附件对象
  * @param width 线段宽度
  * @param zIndex 显示层级
@@ -138,7 +140,7 @@ class PolylineDynamicRoadName private constructor(
 @TXMapComposable
 fun Polyline(
     points: List<LatLng>,
-    appendPoints: List<LatLng>,
+    appendPoints: List<LatLng> = emptyList(),
     rainbow: PolylineRainbow? = null,
     customTexture: PolylineCustomTexture? = null,
     dynamicRoadName: PolylineDynamicRoadName? = null,
@@ -148,13 +150,16 @@ fun Polyline(
     isRoad: Boolean = false,
     isLineCap: Boolean = false,
     isClickable: Boolean = true,
-    animation: BaseAnimation? = null,
+    animation: Animation? = null,
     lineType : Int = PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE,
     tag: Any? = null,
     width: Float = 10f,
     zIndex: Float = 0f,
     onClick: (Polyline) -> Unit = {}
 ) {
+    if(null != animation && !(animation is AlphaAnimation || animation is EmergeAnimation)) {
+        error("animation must be either AlphaAnimation or EmergeAnimation")
+    }
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolylineNode, MapApplier>(
         factory = {
@@ -167,7 +172,6 @@ fun Polyline(
                     gradient(useGradient)
                     road(isRoad)
                     lineCap(isLineCap)
-                    animation(animation)
                     clickable(isClickable)
                     visible(visible)
                     width(width)

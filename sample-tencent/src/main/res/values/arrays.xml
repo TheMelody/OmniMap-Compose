@@ -3,7 +3,6 @@
     <string-array name="main_feature_items">
         <item>@string/tx_map_main_feature_item_basic</item>
         <item>@string/tx_map_main_feature_item_overlay</item>
-        <item>@string/tx_map_main_feature_item_3dmap</item>
         <item>@string/tx_map_main_feature_item_blue_location</item>
         <item>@string/tx_map_main_feature_item_smooth_move</item>
         <item>@string/tx_map_main_feature_item_movement_track</item>

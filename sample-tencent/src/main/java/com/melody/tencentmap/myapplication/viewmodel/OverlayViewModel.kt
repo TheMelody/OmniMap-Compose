@@ -39,6 +39,7 @@ class OverlayViewModel : BaseViewModel<OverlayContract.Event,OverlayContract.Sta
 
     override fun createInitialState(): OverlayContract.State {
         return OverlayContract.State(
+            uiSettings = OverlayRepository.initMapUiSetting(),
             isShowTXDSGroupOverlay = false,
             isShowTileOverlay = false,
             circleCenter = LatLng(39.903787, 116.426095),
@@ -52,6 +53,9 @@ class OverlayViewModel : BaseViewModel<OverlayContract.Event,OverlayContract.Sta
             polygonTriangleList = listOf(LatLng(39.88, 116.41), LatLng(39.87, 116.49), LatLng(39.82, 116.38)),
             polygonCornerLatLng = LatLng(39.982347, 116.305966),
             polygonPointList = OverlayRepository.initPolygonPointList(),
+            polylineAnimPointList = OverlayRepository.initAnimPolylinePointList(),
+            polylineRainbow = OverlayRepository.initPolylineRainbow(),
+            polylineAnimation = OverlayRepository.initPolylineAnimation(),
             patterns = listOf(10, 10)
         )
     }

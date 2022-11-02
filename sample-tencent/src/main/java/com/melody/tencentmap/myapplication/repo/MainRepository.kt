@@ -55,9 +55,6 @@ object MainRepository {
             StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))
             }
-            StringUtils.getString(R.string.tx_map_main_feature_item_3dmap) -> {
-                startActivity(Intent(SDKUtils.getApplicationContext(),Map3dActivity::class.java))
-            }
             StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
             }
