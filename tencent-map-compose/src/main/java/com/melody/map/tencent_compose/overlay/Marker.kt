@@ -144,7 +144,8 @@ fun rememberMarkerState(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat Marker覆盖物是否平贴在地图上
+ * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
+ * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
  * @param snippet 标注的InfoWindow(气泡)的内容
@@ -164,7 +165,8 @@ fun Marker(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat: Boolean = false,
+    flat_stable: Boolean = false,
+    clockwise_stable: Boolean = true,
     icon: BitmapDescriptor? = null,
     snippet: String? = null,
     rotation: Float = 0.0f,
@@ -182,7 +184,8 @@ fun Marker(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat = flat,
+        flat_stable = flat_stable,
+        clockwise_stable = clockwise_stable,
         icon = icon,
         rotation = rotation,
         snippet = snippet,
@@ -204,7 +207,8 @@ fun Marker(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat Marker覆盖物是否平贴在地图上
+ * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
+ * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
  * @param snippet 标注的InfoWindow(气泡)的内容
@@ -225,9 +229,11 @@ fun MarkerInfoWindow(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat: Boolean = false,
+    flat_stable: Boolean = false,
+    clockwise_stable: Boolean = true,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
+    tag: Any? = null,
     snippet: String? = null,
     title: String? = null,
     visible: Boolean = true,
@@ -243,10 +249,12 @@ fun MarkerInfoWindow(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat = flat,
+        flat_stable = flat_stable,
+        clockwise_stable = clockwise_stable,
         icon = icon,
         snippet = snippet,
         rotation = rotation,
+        tag = tag,
         title = title,
         visible = visible,
         zIndex = zIndex,
@@ -265,7 +273,8 @@ fun MarkerInfoWindow(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat Marker覆盖物是否平贴在地图上
+ * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
+ * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
  * @param snippet 标注的InfoWindow(气泡)的内容
@@ -286,9 +295,11 @@ fun MarkerInfoWindowContent(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat: Boolean = false,
+    flat_stable: Boolean = false,
+    clockwise_stable: Boolean = true,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
+    tag: Any? = null,
     snippet: String? = null,
     title: String? = null,
     visible: Boolean = true,
@@ -304,10 +315,12 @@ fun MarkerInfoWindowContent(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat = flat,
+        flat_stable = flat_stable,
+        clockwise_stable = clockwise_stable,
         icon = icon,
         snippet = snippet,
         rotation = rotation,
+        tag = tag,
         title = title,
         visible = visible,
         zIndex = zIndex,
@@ -326,7 +339,8 @@ fun MarkerInfoWindowContent(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat Marker覆盖物是否平贴在地图上
+ * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
+ * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
  * @param snippet Marker 覆盖物的文字片段
@@ -348,7 +362,8 @@ private fun MarkerImpl(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat: Boolean = false,
+    flat_stable: Boolean = false,
+    clockwise_stable: Boolean = true,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
@@ -372,7 +387,8 @@ private fun MarkerImpl(
                     anchor(anchor.x, anchor.y)
                     draggable(draggable)
                     icon(icon)
-                    flat(flat)
+                    flat(flat_stable)
+                    clockwise(clockwise_stable)
                     rotation(rotation)
                     position(state.position)
                     snippet(snippet)
@@ -406,7 +422,9 @@ private fun MarkerImpl(
             set(isClickable) { this.marker.isClickable = it }
             set(anchor) { this.marker.setAnchor(it.x, it.y) }
             set(draggable) { this.marker.isDraggable = it }
-            set(flat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
+            // Marker#setMarkerOptions 方法已废弃
+            //set(flat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
+            //set(clockwise) { this.marker.setMarkerOptions(this.marker.options.clockwise(it)) }
             set(icon) { this.marker.setIcon(it) }
             set(rotation) { this.marker.rotation = rotation }
             set(state.position) {

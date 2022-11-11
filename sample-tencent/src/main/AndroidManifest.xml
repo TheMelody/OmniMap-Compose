@@ -59,5 +59,7 @@
 
         <activity android:name=".LocationTrackingActivity" android:exported="false"/>
 
+        <activity android:name=".SmoothMoveActivity" android:exported="false"/>
+
     </application>
 </manifest>

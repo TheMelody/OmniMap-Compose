@@ -29,6 +29,7 @@ import com.melody.tencentmap.myapplication.BasicFeatureActivity
 import com.melody.tencentmap.myapplication.LocationTrackingActivity
 import com.melody.tencentmap.myapplication.OverlayActivity
 import com.melody.tencentmap.myapplication.R
+import com.melody.tencentmap.myapplication.SmoothMoveActivity
 
 /**
  * MainRepository
@@ -49,10 +50,10 @@ object MainRepository {
             StringUtils.getString(R.string.tx_map_main_feature_item_blue_location) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), LocationTrackingActivity::class.java))
             }
-            /*StringUtils.getString(R.string.tx_map_main_feature_item_smooth_move) -> {
-                startActivity(Intent(SDKUtils.getApplicationContext(),SmoothMoveActivity::class.java))
+            StringUtils.getString(R.string.tx_map_main_feature_item_smooth_move) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), SmoothMoveActivity::class.java))
             }
-            StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
+            /*StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))
             }
             StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
