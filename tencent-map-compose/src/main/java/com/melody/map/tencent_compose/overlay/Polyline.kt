@@ -22,6 +22,7 @@
 
 package com.melody.map.tencent_compose.overlay
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
@@ -79,7 +80,9 @@ class PolylineCustomTexture private constructor(
 ) {
     companion object {
         /**
-         * 调用这个方法，arrow必须打开这个开关，允许在线上绘制纹理
+         * 调用这个方法，arrow必须打开这个开关，允许在线上绘制纹理；
+         *
+         * 注意：内部使用的时候，已经给你默认调用了arrow(true)了，请放心使用。
          * @param arrowSpacing 线上的纹理的间距
          * @param arrowTexture 线上的纹理图
          */
@@ -123,7 +126,7 @@ class PolylineDynamicRoadName private constructor(
  * @param rainbow (可选)，线的分段颜色（彩虹线）
  * @param customTexture_stable (可选，稳定参数，初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
- * @param color 线段的颜色
+ * @param polylineColor 线段的颜色
  * @param visible 线段的可见属性
  * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE
  * @param useGradient 线段是否使用渐变色
@@ -144,10 +147,10 @@ fun Polyline(
     rainbow: PolylineRainbow? = null,
     customTexture_stable: PolylineCustomTexture? = null,
     dynamicRoadName: PolylineDynamicRoadName? = null,
-    color: Color = Color.Black,
+    polylineColor: Color = Color.Black,
     visible: Boolean = true,
     useGradient: Boolean = false,
-    isRoad: Boolean = false,
+    isRoad: Boolean = true,
     isLineCap: Boolean = false,
     isClickable: Boolean = true,
     animation: Animation? = null,
@@ -166,15 +169,15 @@ fun Polyline(
             val polyline = mapApplier?.map?.addPolyline (
                 PolylineOptions().apply {
                     addAll(points)
-                    color(color.toArgb())
+                    lineCap(isLineCap)
+                    color(polylineColor.toArgb())
                     lineType?.let { lineType(it) }
                     gradient(useGradient)
-                    customTexture(customTexture_stable)
                     road(isRoad)
-                    lineCap(isLineCap)
                     clickable(isClickable)
                     visible(visible)
                     width(width)
+                    customTexture(customTexture_stable)
                 }) ?: error("Error adding Polyline")
             polyline.tag = tag
             polyline.rainbowColorLine(rainbow)
@@ -189,7 +192,7 @@ fun Polyline(
 
             set(points) { this.polyline.points = it }
             set(appendPoints) { this.polyline.appendPoints(it) }
-            set(color) { this.polyline.color = it.toArgb() }
+            set(polylineColor) { this.polyline.color = it.toArgb() }
             set(tag) { this.polyline.tag = it }
             set(rainbow) { this.polyline.rainbowColorLine(it) }
             set(useGradient) { this.polyline.isGradientEnable = it }

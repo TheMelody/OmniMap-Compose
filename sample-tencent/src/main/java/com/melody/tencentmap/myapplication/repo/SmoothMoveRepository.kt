@@ -26,6 +26,7 @@ import android.graphics.BitmapFactory
 import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.map.tencent_compose.utils.PathSmoothTool
 import com.melody.sample.common.utils.SDKUtils
+import com.melody.tencentmap.myapplication.R
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -226,7 +227,7 @@ object SmoothMoveRepository {
         return BitmapDescriptorFactory.fromBitmap(
             BitmapFactory.decodeResource(
                 SDKUtils.getApplicationContext().resources,
-                com.melody.ui.components.R.drawable.custtexture
+                R.drawable.color_arrow_texture
             )
         )
     }

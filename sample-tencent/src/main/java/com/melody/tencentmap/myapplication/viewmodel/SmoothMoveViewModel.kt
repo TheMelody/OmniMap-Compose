@@ -44,7 +44,7 @@ class SmoothMoveViewModel : BaseViewModel<SmoothMoveContract.Event,SmoothMoveCon
             trackPoints = emptyList(),
             bitmapTexture = null,
             movingTrackMarker = null,
-            totalDuration = 60 * 1000,
+            totalDuration = 10 * 1000,
             uiSettings = SmoothMoveRepository.initMapUiSettings()
         )
     }

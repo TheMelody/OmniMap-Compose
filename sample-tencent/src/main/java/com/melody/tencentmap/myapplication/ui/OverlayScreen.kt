@@ -172,6 +172,7 @@ internal fun OverlayScreen() {
                 points = currentState.polylineAnimPointList,
                 width = 15F,
                 isLineCap = true,
+                // 彩虹线段...
                 rainbow = currentState.polylineRainbow,
                 animation = currentState.polylineAnimation,
                 onClick = {

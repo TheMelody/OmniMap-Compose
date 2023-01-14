@@ -107,18 +107,11 @@ fun MovingPointOverlay(
             //set(flat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
             //set(clockwise) { this.marker.setMarkerOptions(this.marker.options.clockwise(it)) }
             set(isStartSmoothMove) {
-                //TODO:目前暂停恢复有问题，官方还没有给出答复
+                //不支持暂停，只支持停止，其实也能调用暂停，就是点击恢复的时候，小车方向和角度不正确了！！！！
                 if(it) {
-                    /*if(this.animator.animatorSet.isPaused) {
-                        this.animator.animatorSet.resume()
-                    } else {
-                        this.animator.startAnimation()
-                    }*/
                     this.animator.startAnimation()
                 } else {
-                    /*if(this.animator.animatorSet.isRunning) {
-                        this.animator.animatorSet.pause()
-                    }*/
+                    this.animator.endAnimation()
                 }
             }
         }
