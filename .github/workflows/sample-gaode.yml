@@ -23,4 +23,4 @@ jobs:
       uses: TheMelody/OmniMap-Compose@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: OmniMap高德地图示例
+       APP_FOLDER: OmniMap-高德地图示例
