@@ -16,8 +16,6 @@ runs:
   image: "Dockerfile"
 name: Build & Publish Release APK
 
-name: Build & Publish Release APK
-
 on:
  push:
   branches:
