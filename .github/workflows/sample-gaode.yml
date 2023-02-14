@@ -18,11 +18,11 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
     - name: Releasing using Hub
       uses: TheMelody/OmniMap-Compose@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: sample-gaode
-       RELEASE_TITLE: New Build
+       RELEASE_TITLE: OmniMap高德地图示例
