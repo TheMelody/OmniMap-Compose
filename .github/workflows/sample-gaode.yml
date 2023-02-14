@@ -1,8 +1,8 @@
-name: "Release APK Publisher"
+name: "Debug APK Publisher"
 branding:
   icon: "package"
   color: "red"
-description: "Build & Publish Release APK on Github"
+description: "Build & Publish Debug APK on Github"
 author: "TheMelody"
 inputs:
   GITHUB_TOKEN:
@@ -14,7 +14,7 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
-name: Build & Publish Release APK
+name: Build & Publish Debug APK
 
 on:
  push:
@@ -34,8 +34,8 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Build Release APK
-      run: ./gradlew assembleRelease
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
     - name: Releasing using Hub
       uses: TheMelody/OmniMap-Compose@master
       env:
