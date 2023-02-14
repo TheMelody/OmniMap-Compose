@@ -1,16 +1,12 @@
-name: "Debug APK Publisher"
+name: "Build Android release APK when create new tag"
 branding:
   icon: "package"
   color: "red"
-description: "Build & Publish Debug APK on Github"
+description: "Build Android release APK and upload as a github release match the created new tag"
 author: "TheMelody"
 inputs:
   GITHUB_TOKEN:
-    required: true
     description: "Github secret token to allow automated publishing of APK to release."
-  REPO_BRANCH:
-    required: false
-    description: "Github repository branch name."
 runs:
   using: "docker"
   image: "Dockerfile"
