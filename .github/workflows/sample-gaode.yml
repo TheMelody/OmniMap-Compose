@@ -25,7 +25,7 @@ jobs:
         run: ./gradlew clean
 
       - name: Build with Gradle
-        run: ./gradlew app:assembleRelease
+        run: ./gradlew sample-gaode:assembleRelease
 
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
