@@ -25,4 +25,4 @@ jobs:
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: sample-gaode
-       RELEASE_TITLE: OmniMap高德地图示例
+       RELEASE_TITLE: OmniMap-高德地图示例
