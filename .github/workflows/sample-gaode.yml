@@ -1,4 +1,22 @@
-name: Build & Publish Debug APK
+name: "Release APK Publisher"
+branding:
+  icon: "package"
+  color: "red"
+description: "Build & Publish Release APK on Github"
+author: "TheMelody"
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: "Github secret token to allow automated publishing of APK to release."
+  REPO_BRANCH:
+    required: false
+    description: "Github repository branch name."
+runs:
+  using: "docker"
+  image: "Dockerfile"
+name: Build & Publish Release APK
+
+name: Build & Publish Release APK
 
 on:
  push:
@@ -25,4 +43,4 @@ jobs:
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: sample-gaode
-       RELEASE_TITLE: OmniMap-高德地图示例
+       RELEASE_TITLE: OmniMap高德地图示例
