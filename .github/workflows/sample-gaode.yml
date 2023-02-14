@@ -1,26 +1,38 @@
-name: Build & Publish Release APK
+name: Android CI
 
 on:
- push:
-  branches:
-   - master
+  push:
+    branches: [ master ]
 
 jobs:
-  Gradle:
-    name: Generate APK
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
-    - name: setup jdk
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Make Gradle executable
-      run: chmod +x ./gradlew
-    - name: Build Release APK
-      run: ./gradlew assembleRelease
-    - name: Releasing using Hub
-      uses: TheMelody/OmniMap-Compose@master
-      env:
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: sample-gaode
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Clean with Gradle
+        run: ./gradlew clean
+
+      - name: Build with Gradle
+        run: ./gradlew app:assembleRelease
+
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "sample-gaode/build/outputs/apk/release/*.apk"
+          artifactErrorsFailBuild: true
+          body: "create by workflows"
+          token: ${{ secrets.ACTION_TOKEN }}
+          commit: master
+          tag: v1.0.${{ github.run_number }}
