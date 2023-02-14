@@ -1,4 +1,4 @@
-name: Android CI
+name: Simple-gaode CI
 
 on:
   push:
