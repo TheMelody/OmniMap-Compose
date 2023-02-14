@@ -21,7 +21,7 @@ jobs:
     - name: Build Debug APK
       run: ./gradlew assembleDebug
     - name: Releasing using Hub
-      uses: OmniMap-Compose/sample-gaode@master
+      uses: TheMelody/sample-gaode@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: sample-gaode
