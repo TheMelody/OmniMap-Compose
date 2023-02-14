@@ -1,28 +1,26 @@
-name: Build & Publish Debug APK
+name: Build & Publish Release APK
 
 on:
  push:
   branches:
    - master
-   
+
 jobs:
-  build:
+  Gradle:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: set up JDK 1.8
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: setup jdk
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 11
     - name: Make Gradle executable
       run: chmod +x ./gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
     - name: Releasing using Hub
       uses: TheMelody/OmniMap-Compose@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: app
-       RELEASE_TITLE: OmniMap-高德地图示例
+       APP_FOLDER: sample-gaode
