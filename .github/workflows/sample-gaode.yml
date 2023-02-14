@@ -1,26 +1,44 @@
-name: Build & Publish Release APK
+name: "Debug APK Publisher"
+branding:
+  icon: "package"
+  color: "red"
+description: "Build & Publish Debug APK on Github"
+author: "TheMelody"
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: "Github secret token to allow automated publishing of APK to release."
+  REPO_BRANCH:
+    required: false
+    description: "Github repository branch name."
+runs:
+  using: "docker"
+  image: "Dockerfile"
+name: Build & Publish Debug APK
 
 on:
-  push:
-    tags:
-      - '*'
-
+ push:
+  branches:
+   - master
+   
 jobs:
-  Gradle:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout code
-      uses: actions/checkout@v2
-    - name: setup jdk
+    - uses: actions/checkout@v1
+    - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
-        java-version: 11
+        java-version: 1.8
     - name: Make Gradle executable
       run: chmod +x ./gradlew
-    - name: Build Release APK
-      run: ./gradlew assembleRelease
+    - name: Build with Gradle
+      run: ./gradlew build
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
     - name: Releasing using Hub
       uses: TheMelody/OmniMap-Compose@master
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: OmniMap-高德地图示例
+       APP_FOLDER: app
+       RELEASE_TITLE: New Build
