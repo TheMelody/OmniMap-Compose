@@ -72,7 +72,7 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "${getName()}_${defaultConfig.versionName}_${formattedDate}-${variant.buildType.name}.apk"
+            outputFileName = "sample-gaode_${defaultConfig.versionName}_${formattedDate}-${variant.buildType.name}.apk"
         }
     }
 }
