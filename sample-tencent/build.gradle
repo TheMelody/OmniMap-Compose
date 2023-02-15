@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def formattedDate = new Date().format('yyyyMMddHHmm')
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -15,8 +16,12 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 100
+        versionName "1.0.0"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
 
     }
 
@@ -63,6 +68,12 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${getName()}_${defaultConfig.versionName}_${formattedDate}-${variant.buildType.name}.apk"
         }
     }
 }
