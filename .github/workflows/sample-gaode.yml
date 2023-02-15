@@ -33,6 +33,6 @@ jobs:
           artifacts: "sample-gaode/build/outputs/apk/release/*.apk"
           artifactErrorsFailBuild: true
           body: "create by workflows"
-          token: ${{ secrets.ACTION_TOKEN }}
+          token: ${{ secrets.github_token }}
           commit: master
           tag: v1.0.${{ github.run_number }}
