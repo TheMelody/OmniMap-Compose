@@ -191,7 +191,11 @@ fun Polyline(
             update(onClick) { this.onPolylineClick = it }
 
             set(points) { this.polyline.points = it }
-            set(appendPoints) { this.polyline.appendPoints(it) }
+            set(appendPoints) {
+                if(it.isNotEmpty()) {
+                    this.polyline.appendPoints(it)
+                }
+            }
             set(polylineColor) { this.polyline.color = it.toArgb() }
             set(tag) { this.polyline.tag = it }
             set(rainbow) { this.polyline.rainbowColorLine(it) }

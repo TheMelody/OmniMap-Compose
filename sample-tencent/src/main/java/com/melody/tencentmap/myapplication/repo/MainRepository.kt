@@ -27,6 +27,7 @@ import com.melody.sample.common.utils.SDKUtils
 import com.melody.sample.common.utils.StringUtils
 import com.melody.tencentmap.myapplication.BasicFeatureActivity
 import com.melody.tencentmap.myapplication.LocationTrackingActivity
+import com.melody.tencentmap.myapplication.MovementTrackActivity
 import com.melody.tencentmap.myapplication.OverlayActivity
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.SmoothMoveActivity
@@ -55,20 +56,20 @@ object MainRepository {
             }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))
-            }
-            StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
+            }*/
+            /*StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
-            }
-            StringUtils.getString(R.string.tx_map_main_feature_item_multipoint_click) -> {
+            }*/
+            /*StringUtils.getString(R.string.tx_map_main_feature_item_multipoint_click) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),MultiPointOverlayActivity::class.java))
-            }
-            StringUtils.getString(R.string.tx_map_main_feature_item_marker_animation) -> {
+            }*/
+            /*StringUtils.getString(R.string.tx_map_main_feature_item_marker_animation) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),MarkerAnimationActivity::class.java))
-            }
+            }*/
             StringUtils.getString(R.string.tx_map_main_feature_item_movement_track) -> {
-                startActivity(Intent(SDKUtils.getApplicationContext(),MovementTrackActivity::class.java))
+                startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity::class.java))
             }
-            StringUtils.getString(R.string.tx_map_main_feature_item_cluster_effect) -> {
+            /*StringUtils.getString(R.string.tx_map_main_feature_item_cluster_effect) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),ClusterEffectActivity::class.java))
             }*/
         }
