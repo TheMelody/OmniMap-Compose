@@ -19,8 +19,8 @@ class SensorEventHelper : SensorEventListener {
     private val magneticField: Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     private var lastTime: Long = 0
     private var mAngle = 0f
-    private var accelermoterValues : FloatArray ?= null
-    private var magneticFieldValues : FloatArray ?= null
+    private var accelermoterValues : FloatArray ?= null  //  FloatArray(3) 不在这里初始化
+    private var magneticFieldValues : FloatArray ?= null // FloatArray(3)  不在这里初始化
     private var iSensorDegreeListener:ISensorDegreeListener? = null
 
     companion object {
