@@ -1,8 +1,8 @@
-name: Simple-gaode CI
+name: Android CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ v1.0.0 ]
 
 jobs:
   build:
@@ -42,4 +42,5 @@ jobs:
           body: "五大地图集成示例APK包以及全量源码"
           token: ${{ secrets.github_token }}
           commit: master
-          tag: v1.0.${{ github.run_number }}
+          # tag名称和分支名称保持一致
+          tag: ${{ github.github.ref_name }}
