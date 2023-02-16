@@ -6,6 +6,8 @@ on:
       - 'v1.0.0'
       # master分支不触发工作流
       - '!master'
+      # dev_开头的分支不触发工作流
+      - '!dev_**'
 
 jobs:
   build:
@@ -48,5 +50,5 @@ jobs:
           body: "五大地图集成示例APK包以及全量源码"
           token: ${{ secrets.github_token }}
           commit: master
-          # tag名称和分支名称保持一致
+          # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
           tag: ${{ github.ref_name }}
