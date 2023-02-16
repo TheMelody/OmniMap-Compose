@@ -43,4 +43,4 @@ jobs:
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称和分支名称保持一致
-          tag: ${{ github.github.ref_name }}
+          tag: ${{ github.ref_name }}
