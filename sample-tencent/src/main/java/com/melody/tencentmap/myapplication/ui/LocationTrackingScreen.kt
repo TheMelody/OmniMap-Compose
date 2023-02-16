@@ -23,22 +23,29 @@
 package com.melody.tencentmap.myapplication.ui
 
 import android.Manifest
+import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.melody.map.tencent_compose.TXMap
-import com.melody.map.tencent_compose.model.TXCameraPosition
+import com.melody.map.tencent_compose.overlay.Circle
+import com.melody.map.tencent_compose.overlay.Marker
+import com.melody.map.tencent_compose.overlay.rememberMarkerState
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.launcher.handlerGPSLauncher
 import com.melody.sample.common.utils.requestMultiplePermission
 import com.melody.sample.common.utils.showToast
+import com.melody.ui.components.R
 import com.melody.tencentmap.myapplication.contract.LocationTrackingContract
 import com.melody.tencentmap.myapplication.dialog.ShowOpenGPSDialog
 import com.melody.tencentmap.myapplication.viewmodel.LocationTrackingViewModel
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
+import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -55,10 +62,11 @@ import kotlinx.coroutines.flow.onEach
 internal fun LocationTrackingScreen() {
     val viewModel: LocationTrackingViewModel = viewModel()
     val currentState by viewModel.uiState.collectAsState()
-    val cameraPosition = rememberCameraPositionState {
-        // 不预加载显示默认北京的位置，注意：如果这里想用onMapLoaded回调，则需要【指定TXCameraPosition的位置坐标】
-        position = TXCameraPosition(LatLng(0.0, 0.0), 11f, 0f, 0f)
-    }
+    var isRenderLocation by rememberSaveable{ mutableStateOf(false) }
+    val cameraPosition = rememberCameraPositionState()
+
+    val locationIconState = rememberMarkerState(position = currentState.locationLatLng?: LatLng(0.0,0.0))
+
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.onEach {
             if(it is LocationTrackingContract.Effect.Toast) {
@@ -84,9 +92,17 @@ internal fun LocationTrackingScreen() {
         }
     }
 
-    LaunchedEffect(currentState.locationLatLng) {
-        if(null == currentState.locationLatLng) return@LaunchedEffect
-        cameraPosition.move(CameraUpdateFactory.newLatLng(currentState.locationLatLng))
+    LaunchedEffect(Unit) {
+        snapshotFlow { currentState.locationLatLng }.collect { latLng ->
+            latLng?.let {
+                locationIconState.position = it
+                if(!isRenderLocation) {
+                    isRenderLocation = true
+                    // 确保首次需要动画位移到当前用户的位置
+                    cameraPosition.move(CameraUpdateFactory.newLatLng(it))
+                }
+            }
+        }
     }
 
     LaunchedEffect(currentState.isOpenGps, reqGPSPermission.allPermissionsGranted) {
@@ -115,6 +131,23 @@ internal fun LocationTrackingScreen() {
             properties = currentState.mapProperties,
             uiSettings = currentState.mapUiSettings,
             locationSource = viewModel
-        )
+        ){
+            // 这里不用腾讯自己的定位蓝点样式
+            if(locationIconState.position.latitude > 0){
+                Circle(
+                    center = locationIconState.position,
+                    fillColor = Color(0x801A9CE2),
+                    strokeColor = Color(0xFF1A9CE2),
+                    strokeWidth = 1F,
+                    radius = currentState.locationCircleRadius.toDouble()
+                )
+                Marker(
+                    anchor = Offset(0.5F,0.5F),
+                    rotation = currentState.currentRotation,
+                    state = locationIconState,
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_location_self)
+                )
+            }
+        }
     }
 }

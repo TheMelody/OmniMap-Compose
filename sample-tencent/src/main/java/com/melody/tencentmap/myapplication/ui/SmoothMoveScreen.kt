@@ -105,6 +105,7 @@ internal fun SmoothMoveScreen() {
                 .background(Color.Black.copy(alpha = 0.3F))){
                 MapMenuButton(
                     modifier = Modifier.align(Alignment.Center),
+                    // 腾讯地图的Smooth，不能真正的暂停和恢复，因为小车方向角度会失效，所以这里提供的示例也只有停止和开始
                     text = if (currentState.isStart) "停止" else "开始",
                     onClick = viewModel::toggle
                 )
