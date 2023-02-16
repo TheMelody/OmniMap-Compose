@@ -26,6 +26,7 @@ import com.melody.sample.common.base.BaseViewModel
 import com.melody.tencentmap.myapplication.contract.MovementTrackContract
 import com.melody.tencentmap.myapplication.repo.MovementTrackRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 /**
  * MovementTrackViewModel
@@ -53,6 +54,8 @@ class MovementTrackViewModel :
         setState { copy(isLoading = true) }
         val list = MovementTrackRepository.parseLocationsData("MovementTrackTrace.csv")
         val trackLatLng = MovementTrackRepository.getTrackLatLngBounds(list)
-        setState { copy(isLoading = false, latLngList = list, trackLatLng = trackLatLng) }
+        setState { copy(latLngList = list, trackLatLng = trackLatLng) }
+        delay(300) // 绘制本身就很耗时，延迟300毫秒，取消Loading，如果是网络数据，可直接取消Loading，这里是因为本地数据读取太快
+        setState { copy(isLoading = false) }
     }
 }
