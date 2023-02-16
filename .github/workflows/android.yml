@@ -2,7 +2,10 @@ name: Android CI
 
 on:
   push:
-    branches: [ v1.0.0 ]
+    branches:
+      - 'v1.0.0'
+      # master分支不触发工作流
+      - '!master'
 
 jobs:
   build:
@@ -27,6 +30,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew sample-gaode:assembleRelease
 
+      # 对安装包进行签名
       - name: Build Signed APK
         uses: victorbnl/build-signed-apk@v1.0.0
         with:
@@ -34,6 +38,8 @@ jobs:
           keystore_password: 123456
           key_alias: key0
           key_password: 123456
+
+      # 创建并提交签名后的APK包和源码提交至对应ref_name的tag
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
