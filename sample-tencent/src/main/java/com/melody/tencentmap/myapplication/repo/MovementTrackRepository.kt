@@ -1,8 +1,13 @@
 package com.melody.tencentmap.myapplication.repo
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.map.tencent_compose.utils.PathSmoothTool
 import com.melody.sample.common.utils.SDKUtils
+import com.tencent.tencentmap.mapsdk.maps.model.Animation
+import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
 import java.io.BufferedReader
@@ -85,5 +90,29 @@ object MovementTrackRepository {
         return b.build()
     }
 
+    /**
+     * 彩虹线段配置
+     */
+    fun initPolylineRainbow(totalSize:Int): PolylineRainbow {
+        return PolylineRainbow.create(
+            colors = listOf(
+                Color(0xFF9FD555).toArgb(),
+                Color(0xFFD247EB).toArgb(),
+                Color(0xFF41DD5B).toArgb(),
+                Color(0xFFF38D0F).toArgb()
+            ),
+            // 腾讯地图内部会根据取完颜色值，填充到对应的index位置处
+            indexes = listOf(0,totalSize/3,totalSize/8,totalSize)
+        )
+    }
+
+    /**
+     * 线段动画
+     */
+    fun initPolylineAnimation(startLatLng: LatLng,totalDuration:Int): Animation {
+        return EmergeAnimation(startLatLng).apply {
+            duration = totalDuration.toLong()
+        }
+    }
 
 }

@@ -6,6 +6,7 @@
         <item>@string/tx_map_main_feature_item_blue_location</item>
         <item>@string/tx_map_main_feature_item_smooth_move</item>
         <item>@string/tx_map_main_feature_item_movement_track</item>
+        <item>@string/tx_map_main_feature_item_movement_track2</item>
         <item>@string/tx_map_main_feature_item_drag_drop_select_point</item>
         <item>@string/tx_map_main_feature_item_route_plan</item>
         <item>@string/tx_map_main_feature_item_multipoint_click</item>

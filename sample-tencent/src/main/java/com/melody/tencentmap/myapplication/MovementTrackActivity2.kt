@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.tencentmap.myapplication.contract
+package com.melody.tencentmap.myapplication
 
-import com.melody.map.tencent_compose.overlay.PolylineRainbow
-import com.melody.map.tencent_compose.poperties.MapUiSettings
-import com.melody.sample.common.state.IUiEffect
-import com.melody.sample.common.state.IUiEvent
-import com.melody.sample.common.state.IUiState
-import com.tencent.tencentmap.mapsdk.maps.model.Animation
-import com.tencent.tencentmap.mapsdk.maps.model.LatLng
-import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.melody.tencentmap.myapplication.ui.MovementTrackScreen2
 
 /**
- * MovementTrackContract
+ * MovementTrackActivity2
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/02/16 16:37
+ * created 2023/02/16 16:31
  */
-class MovementTrackContract {
-    sealed class Event : IUiEvent
-
-    data class State (
-        val isLoading: Boolean,
-        val uiSettings: MapUiSettings,
-        val latLngList: List<LatLng>,
-        val trackLatLng: LatLngBounds?,
-        val polylineAnimDuration: Int,
-        val polylineRainbow: PolylineRainbow?,
-        val polylineAnimation: Animation?,
-    ) : IUiState
-
-    sealed class Effect : IUiEffect
+class MovementTrackActivity2 : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MovementTrackScreen2()
+        }
+    }
 }

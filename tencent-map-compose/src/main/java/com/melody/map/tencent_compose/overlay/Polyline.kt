@@ -171,9 +171,15 @@ fun Polyline(
                     addAll(points)
                     lineCap(isLineCap)
                     color(polylineColor.toArgb())
-                    lineType?.let { lineType(it) }
                     gradient(useGradient)
-                    road(isRoad)
+                    if(useGradient) {
+                        // 这里规避下，如果外部设置为true，则必须设置下面这个类型，且road也必须为true
+                        lineType(PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE)
+                        road(true)
+                    } else {
+                        lineType?.let { lineType(it) }
+                        road(isRoad)
+                    }
                     clickable(isClickable)
                     visible(visible)
                     width(width)

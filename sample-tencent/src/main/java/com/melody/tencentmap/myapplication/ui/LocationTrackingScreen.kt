@@ -132,6 +132,7 @@ internal fun LocationTrackingScreen() {
             uiSettings = currentState.mapUiSettings,
             locationSource = viewModel
         ){
+            // 【建议】：不使用有角度方向的图标，使用圆形图标加阴影效果比这个好多了
             // 这里不用腾讯自己的定位蓝点样式
             if(locationIconState.position.latitude > 0){
                 Circle(

@@ -62,5 +62,7 @@
 
         <activity android:name=".MovementTrackActivity" android:exported="false"/>
 
+        <activity android:name=".MovementTrackActivity2" android:exported="false"/>
+
     </application>
 </manifest>

@@ -28,6 +28,7 @@ import com.melody.sample.common.utils.StringUtils
 import com.melody.tencentmap.myapplication.BasicFeatureActivity
 import com.melody.tencentmap.myapplication.LocationTrackingActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity
+import com.melody.tencentmap.myapplication.MovementTrackActivity2
 import com.melody.tencentmap.myapplication.OverlayActivity
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.SmoothMoveActivity
@@ -68,6 +69,11 @@ object MainRepository {
             }*/
             StringUtils.getString(R.string.tx_map_main_feature_item_movement_track) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity::class.java))
+            }
+            StringUtils.getString(R.string.tx_map_main_feature_item_movement_track2) -> {
+                //其实 OverlayActivity 这里面已经有移动的示例了，有些同学看了后面忘了前面，只有摆在眼前才清楚，再拉一个页面写，写在一起，有些同学又搞晕了
+                // 这里本质是使用了腾讯地图的：线段动画的能力
+                startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity2::class.java))
             }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_cluster_effect) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),ClusterEffectActivity::class.java))

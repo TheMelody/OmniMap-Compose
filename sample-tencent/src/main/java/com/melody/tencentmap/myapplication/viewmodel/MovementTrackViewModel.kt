@@ -43,7 +43,10 @@ class MovementTrackViewModel :
             isLoading = false,
             latLngList = emptyList(),
             trackLatLng = null,
-            uiSettings = MovementTrackRepository.initMapUiSettings()
+            uiSettings = MovementTrackRepository.initMapUiSettings(),
+            polylineAnimDuration = 15 * 1000,
+            polylineRainbow = null,
+            polylineAnimation = null,
         )
     }
 
@@ -54,7 +57,9 @@ class MovementTrackViewModel :
         setState { copy(isLoading = true) }
         val list = MovementTrackRepository.parseLocationsData("MovementTrackTrace.csv")
         val trackLatLng = MovementTrackRepository.getTrackLatLngBounds(list)
-        setState { copy(latLngList = list, trackLatLng = trackLatLng) }
+        val polyLineAnimation = MovementTrackRepository.initPolylineAnimation(list[0],currentState.polylineAnimDuration)
+        val polylineRainbow = MovementTrackRepository.initPolylineRainbow(list.size)
+        setState { copy(latLngList = list, trackLatLng = trackLatLng, polylineAnimation = polyLineAnimation,polylineRainbow = polylineRainbow) }
         delay(300) // 绘制本身就很耗时，延迟300毫秒，取消Loading，如果是网络数据，可直接取消Loading，这里是因为本地数据读取太快
         setState { copy(isLoading = false) }
     }
