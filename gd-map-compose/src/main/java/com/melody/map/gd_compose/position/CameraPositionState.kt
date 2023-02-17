@@ -194,7 +194,6 @@ class CameraPositionState(position: CameraPosition = CameraPosition(LatLng(39.91
                             override fun onMapChangedLocked(newMap: AMap?) {
                                 if (newMap == null) {
                                     // Cancel the animate caller and crash the map setter
-                                    @Suppress("ThrowableNotThrown")
                                     continuation.resumeWithException(CancellationException(
                                         "internal error; no AMap available"))
                                     error(

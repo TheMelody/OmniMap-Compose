@@ -196,7 +196,6 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
                             override fun onMapChangedLocked(newMap: TencentMap?) {
                                 if (newMap == null) {
                                     // Cancel the animate caller and crash the map setter
-                                    @Suppress("ThrowableNotThrown")
                                     continuation.resumeWithException(CancellationException(
                                         "internal error; no TencentMap available"))
                                     error(

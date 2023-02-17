@@ -26,6 +26,7 @@ import android.content.Intent
 import com.melody.sample.common.utils.SDKUtils
 import com.melody.sample.common.utils.StringUtils
 import com.melody.tencentmap.myapplication.BasicFeatureActivity
+import com.melody.tencentmap.myapplication.DragDropSelectPointActivity
 import com.melody.tencentmap.myapplication.LocationTrackingActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity2
@@ -55,9 +56,9 @@ object MainRepository {
             StringUtils.getString(R.string.tx_map_main_feature_item_smooth_move) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), SmoothMoveActivity::class.java))
             }
-            /*StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
-                startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))
-            }*/
+            StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), DragDropSelectPointActivity::class.java))
+            }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
             }*/
