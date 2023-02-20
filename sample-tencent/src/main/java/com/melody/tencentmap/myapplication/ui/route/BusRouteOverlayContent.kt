@@ -20,25 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.tencentmap.myapplication
+package com.melody.tencentmap.myapplication.ui.route
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.melody.tencentmap.myapplication.ui.RoutePlanScreen
+import androidx.compose.runtime.Composable
+import com.melody.map.tencent_compose.model.TXMapComposable
 
 /**
- * RoutePlanActivity
+ * BusRouteOverlayContent
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/02/17 16:28
+ * created 2023/02/20 15:44
  */
-class RoutePlanActivity: ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RoutePlanScreen()
-        }
-    }
+@TXMapComposable
+@Composable
+internal fun BusRouteOverlayContent() {
+
 }

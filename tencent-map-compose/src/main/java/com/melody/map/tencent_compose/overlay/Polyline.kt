@@ -26,6 +26,8 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.melody.map.tencent_compose.MapApplier
@@ -33,6 +35,7 @@ import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.tencent.tencentmap.mapsdk.maps.model.AlphaAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
+import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -127,6 +130,7 @@ class PolylineDynamicRoadName private constructor(
  * @param customTexture_stable (可选，稳定参数，初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
  * @param polylineColor 线段的颜色
+ * @param polylineBorderColor 线段边框的颜色，需要修改borderWidth才能生效
  * @param visible 线段的可见属性
  * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE
  * @param useGradient 线段是否使用渐变色
@@ -136,7 +140,10 @@ class PolylineDynamicRoadName private constructor(
  * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
  * @param tag 线段的附件对象
  * @param width 线段宽度
+ * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
+ * @param onAnimationStart 线段动画开始的回调
+ * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
@@ -148,6 +155,7 @@ fun Polyline(
     customTexture_stable: PolylineCustomTexture? = null,
     dynamicRoadName: PolylineDynamicRoadName? = null,
     polylineColor: Color = Color.Black,
+    polylineBorderColor: Color = Color.Black,
     visible: Boolean = true,
     useGradient: Boolean = false,
     isRoad: Boolean = true,
@@ -156,13 +164,18 @@ fun Polyline(
     animation: Animation? = null,
     lineType : Int? = null,
     tag: Any? = null,
-    width: Float = 10f,
-    zIndex: Float = 0f,
+    width: Float = 10F,
+    borderWidth: Float = 0F,
+    zIndex: Float = 0F,
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
     onClick: (Polyline) -> Unit = {}
 ) {
     if(null != animation && !(animation is AlphaAnimation || animation is EmergeAnimation)) {
         error("animation must be either AlphaAnimation or EmergeAnimation")
     }
+    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
+    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolylineNode, MapApplier>(
         factory = {
@@ -171,6 +184,9 @@ fun Polyline(
                     addAll(points)
                     lineCap(isLineCap)
                     color(polylineColor.toArgb())
+                    if(borderWidth > 0) {
+                        borderColors(intArrayOf(polylineBorderColor.toArgb()))
+                    }
                     gradient(useGradient)
                     if(useGradient) {
                         // 这里规避下，如果外部设置为true，则必须设置下面这个类型，且road也必须为true
@@ -183,12 +199,21 @@ fun Polyline(
                     clickable(isClickable)
                     visible(visible)
                     width(width)
+                    borderWidth(borderWidth)
                     customTexture(customTexture_stable)
                 }) ?: error("Error adding Polyline")
             polyline.tag = tag
             polyline.rainbowColorLine(rainbow)
             polyline.dynamicRoadName(dynamicRoadName)
             if(null != animation) {
+                animation.animationListener = object : AnimationListener{
+                    override fun onAnimationStart() {
+                        currentOnAnimationStart.invoke()
+                    }
+                    override fun onAnimationEnd() {
+                        currentOnAnimationEnd.invoke()
+                    }
+                }
                 polyline.startAnimation(animation)
             }
             PolylineNode(polyline, onClick)
@@ -203,6 +228,11 @@ fun Polyline(
                 }
             }
             set(polylineColor) { this.polyline.color = it.toArgb() }
+            set(polylineBorderColor) {
+                if(borderWidth > 0){
+                    this.polyline.setBorderColors(intArrayOf(polylineBorderColor.toArgb()))
+                }
+            }
             set(tag) { this.polyline.tag = it }
             set(rainbow) { this.polyline.rainbowColorLine(it) }
             set(useGradient) { this.polyline.isGradientEnable = it }
@@ -211,6 +241,14 @@ fun Polyline(
             set(isClickable) { this.polyline.isClickable = it }
             set(animation) {
                 if(null != it) {
+                    it.animationListener = object : AnimationListener{
+                        override fun onAnimationStart() {
+                            currentOnAnimationStart.invoke()
+                        }
+                        override fun onAnimationEnd() {
+                            currentOnAnimationEnd.invoke()
+                        }
+                    }
                     this.polyline.startAnimation(it)
                 } else {
                     this.polyline.setAnimation(null)

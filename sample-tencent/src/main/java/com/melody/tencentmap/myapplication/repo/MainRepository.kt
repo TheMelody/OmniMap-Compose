@@ -32,6 +32,7 @@ import com.melody.tencentmap.myapplication.MovementTrackActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity2
 import com.melody.tencentmap.myapplication.OverlayActivity
 import com.melody.tencentmap.myapplication.R
+import com.melody.tencentmap.myapplication.RoutePlanActivity
 import com.melody.tencentmap.myapplication.SmoothMoveActivity
 
 /**
@@ -59,9 +60,9 @@ object MainRepository {
             StringUtils.getString(R.string.tx_map_main_feature_item_drag_drop_select_point) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), DragDropSelectPointActivity::class.java))
             }
-            /*StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
-                startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
-            }*/
+            StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), RoutePlanActivity::class.java))
+            }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_multipoint_click) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),MultiPointOverlayActivity::class.java))
             }*/
@@ -72,8 +73,8 @@ object MainRepository {
                 startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity::class.java))
             }
             StringUtils.getString(R.string.tx_map_main_feature_item_movement_track2) -> {
-                //其实 OverlayActivity 这里面已经有移动的示例了，有些同学看了后面忘了前面，只有摆在眼前才清楚，再拉一个页面写，写在一起，有些同学又搞晕了
-                // 这里本质是使用了腾讯地图的：线段动画的能力
+                // 其实 OverlayActivity 这里面已经有移动的示例了，再拉一个页面写，防止有些同学又搞晕了
+                // 这里用了腾讯地图的线段动画的能力，包括后面的【路径规划示例】，也不会很死板，我们也给加上线段动画。
                 startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity2::class.java))
             }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_cluster_effect) -> {
