@@ -18,6 +18,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
+        android:allowNativeHeapPointerTagging="false"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -65,6 +66,8 @@
         <activity android:name=".MovementTrackActivity2" android:exported="false"/>
 
         <activity android:name=".DragDropSelectPointActivity" android:exported="false"/>
+
+        <activity android:name=".RoutePlanActivity" android:exported="false"/>
 
     </application>
 </manifest>

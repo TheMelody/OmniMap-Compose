@@ -4,6 +4,7 @@
     package="com.melody.bdmap.myapplication">
     <application
         android:icon="@mipmap/ic_launcher"
+        android:allowNativeHeapPointerTagging="false"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
