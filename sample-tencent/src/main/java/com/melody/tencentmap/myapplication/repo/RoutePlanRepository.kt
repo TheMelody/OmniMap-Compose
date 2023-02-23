@@ -22,20 +22,26 @@
 
 package com.melody.tencentmap.myapplication.repo
 
-import android.graphics.BitmapFactory
 import com.melody.map.tencent_compose.model.MapType
 import com.melody.map.tencent_compose.poperties.MapProperties
 import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.sample.common.utils.SDKUtils
+import com.melody.tencentmap.myapplication.model.BaseRouteDataState
+import com.melody.tencentmap.myapplication.model.BusRouteDataState
+import com.melody.tencentmap.myapplication.model.DrivingRouteDataState
+import com.melody.tencentmap.myapplication.model.RideRouteDataState
+import com.melody.tencentmap.myapplication.model.WalkRouteDataState
 import com.tencent.lbssearch.TencentSearch
 import com.tencent.lbssearch.httpresponse.HttpResponseListener
+import com.tencent.lbssearch.`object`.param.BicyclingParam
 import com.tencent.lbssearch.`object`.param.DrivingParam
 import com.tencent.lbssearch.`object`.param.TransitParam
+import com.tencent.lbssearch.`object`.param.WalkingParam
+import com.tencent.lbssearch.`object`.result.BicyclingResultObject
 import com.tencent.lbssearch.`object`.result.DrivingResultObject
 import com.tencent.lbssearch.`object`.result.TransitResultObject
+import com.tencent.lbssearch.`object`.result.WalkingResultObject
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
@@ -69,78 +75,16 @@ object RoutePlanRepository {
         return MapProperties(mapType = MapType.NORMAL, isTrafficEnabled = false)
     }
 
-    /*fun getStartMarkerIcon(): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                com.melody.ui.components.R.drawable.bus_start_icon
-            )
-        )
-    }
-
-    fun getEndMarkerIcon(): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                com.melody.ui.components.R.drawable.bus_end_icon
-            )
-        )
-    }
-
-    fun getStartGuideIcon(): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                com.melody.ui.components.R.drawable.ic_map_start_guide_icon
-            )
-        )
-    }
-
-    fun getEndGuideIcon(): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                com.melody.ui.components.R.drawable.ic_map_end_guide_icon
-            )
-        )
-    }*/
-
-    fun getDrivingCustomTexture(isSelected: Boolean): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                if(isSelected) {
-                    com.melody.ui.components.R.drawable.ic_map_route_status_default_selected
-                } else{
-                    com.melody.ui.components.R.drawable.ic_map_route_status_default
-                }
-            )
-        )
-    }
-
-    fun getBusCustomTexture(isSelected: Boolean): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                if(isSelected) {
-                    com.melody.ui.components.R.drawable.ic_map_route_status_green_selected
-                } else{
-                    com.melody.ui.components.R.drawable.ic_map_route_status_green
-                }
-            )
-        )
-    }
-
     /**
      * 路径规划的线段动画
      */
-    fun initPolylineAnimation(startLatLng: LatLng, totalDuration: Int): Animation {
+    private fun initPolylineAnimation(startLatLng: LatLng, totalDuration: Int): Animation {
         return EmergeAnimation(startLatLng).apply {
             duration = totalDuration.toLong()
         }
     }
 
-    fun convertLatLngBounds(allPolyLines: List<LatLng>): LatLngBounds {
+    private fun convertLatLngBounds(allPolyLines: List<LatLng>): LatLngBounds {
         val b: LatLngBounds.Builder = LatLngBounds.builder()
         for (point in allPolyLines) {
             b.include(point)
@@ -148,10 +92,22 @@ object RoutePlanRepository {
         return b.build()
     }
 
+    /**
+     * 查询路径规划
+     */
+    suspend fun queryRoutePlan(queryType: Int, fromPoint:LatLng, toPoint:LatLng): BaseRouteDataState {
+        return when(queryType) {
+            0 -> drivingRoutePlanSearch(fromPoint, toPoint)
+            1 -> busRoutePlanSearch(fromPoint, toPoint)
+            2 -> walkRoutePlanSearch(fromPoint, toPoint)
+            else -> rideRoutePlanSearch(fromPoint, toPoint)
+        }
+    }
+
      /**
      * 驾车路径规划搜索
      */
-    suspend fun drivingRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng): List<List<LatLng>> {
+    private suspend fun drivingRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng): DrivingRouteDataState {
         return suspendCancellableCoroutine { continuation ->
             val drivingParam = DrivingParam(fromPoint, toPoint) //创建导航参数
             drivingParam.roadType(DrivingParam.RoadType.ON_MAIN_ROAD_BELOW_BRIDGE)
@@ -164,7 +120,20 @@ object RoutePlanRepository {
                         continuation.resumeWith(Result.failure(NullPointerException()))
                         return
                     }
-                    continuation.resumeWith(Result.success((p1.result.routes?.map { it.polyline }?: emptyList())))
+                    // 返回多路径
+                    val points= (p1.result.routes?.map { it.polyline }?: emptyList())
+
+                    continuation.resumeWith(Result.success(
+                        DrivingRouteDataState(
+                            polylineWidth = 24F,
+                            polylineBorderWidth = 6F,
+                            startPoint = fromPoint,
+                            endPoint = toPoint,
+                            latLngBounds = convertLatLngBounds(points[0]),
+                            polylineAnim = initPolylineAnimation(fromPoint,1000),
+                            points = points
+                        )
+                    ))
                 }
 
                 override fun onFailure(p0: Int, p1: String?, p2: Throwable?) {
@@ -177,30 +146,116 @@ object RoutePlanRepository {
     /**
      * 公交车路径规划搜索
      */
-    fun busRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng) {
-        val transitParam = TransitParam(fromPoint, toPoint)
-        val tencentSearch = TencentSearch(SDKUtils.getApplicationContext(),WEB_SERVICE_API_SECRET_KEY)
-        transitParam.policy(TransitParam.Policy.LEAST_WALKING, TransitParam.Preference.NO_SUBWAY)
-        tencentSearch.getRoutePlan(transitParam,object : HttpResponseListener<TransitResultObject?> {
+    private suspend fun busRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng): BusRouteDataState {
+        return suspendCancellableCoroutine { continuation ->
+            val transitParam = TransitParam(fromPoint, toPoint)
+            val tencentSearch = TencentSearch(SDKUtils.getApplicationContext(),WEB_SERVICE_API_SECRET_KEY)
+            transitParam.policy(TransitParam.Policy.LEAST_WALKING, TransitParam.Preference.NO_SUBWAY)
+            tencentSearch.getRoutePlan(transitParam,object : HttpResponseListener<TransitResultObject?> {
                 override fun onSuccess(p0: Int, p1: TransitResultObject?) {
-
+                    if(p1?.result == null) {
+                        continuation.resumeWith(Result.failure(NullPointerException()))
+                        return
+                    }
+                    if (p1.result != null && p1.result.routes != null && p1.result.routes.size > 0) {
+                        continuation.resumeWith(Result.success(BusRouteDataState(
+                            polylineWidth = 24F,
+                            polylineBorderWidth = 6F,
+                            startPoint = fromPoint,
+                            endPoint = toPoint,
+                            latLngBounds = LatLngBounds(p1.result.routes[0].bounds.northeast,p1.result.routes[0].bounds.southwest),
+                            routeList = p1.result.routes
+                        )))
+                    } else {
+                        continuation.resumeWith(Result.failure(NullPointerException("路线结果为空")))
+                    }
                 }
                 override fun onFailure(p0: Int, p1: String?, p2: Throwable?) {
+                    continuation.resumeWith(Result.failure(Throwable(p1)))
                 }
-        })
+            })
+        }
     }
 
     /**
      * 步行路径规划搜索
      */
-    fun walkRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng) {
+    private suspend fun walkRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng): WalkRouteDataState{
+        return suspendCancellableCoroutine { continuation ->
+            val walkingParam = WalkingParam()
+            walkingParam.from(fromPoint)
+            walkingParam.to(toPoint)
+            val tencentSearch = TencentSearch(SDKUtils.getApplicationContext(),WEB_SERVICE_API_SECRET_KEY)
+            tencentSearch.getRoutePlan(walkingParam, object : HttpResponseListener<WalkingResultObject?> {
+                override fun onSuccess(p0: Int, p1: WalkingResultObject?) {
+                    if (p1 == null) {
+                        continuation.resumeWith(Result.failure(NullPointerException()))
+                        return
+                    }
+                    if (p1.result != null && p1.result.routes != null && p1.result.routes.size > 0) {
+                        val walkPointList = p1.result.routes.map { it.polyline }
+                        continuation.resumeWith(Result.success(
+                            WalkRouteDataState(
+                                startPoint = fromPoint,
+                                endPoint = toPoint,
+                                polylineWidth = 10F,
+                                latLngBounds = convertLatLngBounds(walkPointList[0]),
+                                wakingPoints = walkPointList
+                            )
+                        ))
+                    } else {
+                        continuation.resumeWith(Result.failure(NullPointerException("路线结果为空")))
+                    }
+                }
 
+                override fun onFailure(
+                    statusCode: Int,
+                    responseString: String?,
+                    throwable: Throwable?
+                ) {
+                    continuation.resumeWith(Result.failure(Throwable(responseString?:throwable?.message)))
+                }
+            })
+        }
     }
 
     /**
      * 骑行路径规划搜索
      */
-    fun rideRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng) {
+    private suspend fun rideRoutePlanSearch(fromPoint:LatLng, toPoint:LatLng): RideRouteDataState {
+        return suspendCancellableCoroutine { continuation ->
+            val bicyclingParam = BicyclingParam()
+            bicyclingParam.from(fromPoint)
+            bicyclingParam.to(toPoint)
+            val tencentSearch = TencentSearch(SDKUtils.getApplicationContext(),WEB_SERVICE_API_SECRET_KEY)
+            tencentSearch.getRoutePlan(bicyclingParam, object : HttpResponseListener<BicyclingResultObject>{
+                override fun onSuccess(p0: Int, p1: BicyclingResultObject?) {
+                    if (p1 == null) {
+                        continuation.resumeWith(Result.failure(NullPointerException()))
+                        return
+                    }
+                    if (p1.result != null && p1.result.routes != null && p1.result.routes.size > 0) {
+                        val ridePointList = p1.result.routes.map { it.polyline }
+                        continuation.resumeWith(Result.success(
+                            RideRouteDataState(
+                                startPoint = fromPoint,
+                                endPoint = toPoint,
+                                polylineWidth = 24F,
+                                polylineBorderWidth = 6F,
+                                polylineAnim = initPolylineAnimation(fromPoint, 500),
+                                latLngBounds = convertLatLngBounds(ridePointList[0]),
+                                ridePoints = ridePointList
+                            )
+                        ))
+                    } else {
+                        continuation.resumeWith(Result.failure(NullPointerException("路线结果为空")))
+                    }
+                }
 
+                override fun onFailure(p0: Int, responseString: String?, p2: Throwable?) {
+                    continuation.resumeWith(Result.failure(Throwable(responseString)))
+                }
+            })
+        }
     }
 }

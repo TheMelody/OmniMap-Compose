@@ -33,9 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.melody.map.tencent_compose.TXMap
 import com.melody.map.tencent_compose.overlay.MovingPointOverlay
-import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
-import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.utils.showToast
 import com.melody.tencentmap.myapplication.contract.SmoothMoveContract
@@ -43,7 +41,6 @@ import com.melody.tencentmap.myapplication.viewmodel.SmoothMoveViewModel
 import com.melody.ui.components.MapMenuButton
 import com.melody.ui.components.RedCenterLoading
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
-import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -81,7 +78,7 @@ internal fun SmoothMoveScreen() {
             onMapLoaded = viewModel::handleMapLoaded
         ) {
             if(currentState.trackPoints.isNotEmpty()) {
-                Polyline(
+                PolylineCustomTexture(
                     points = currentState.trackPoints,
                     polylineColor = Color(0xFF0492FF),
                     customTexture_stable = PolylineCustomTexture.create(arrowSpacing = 30, arrowTexture = currentState.bitmapTexture),

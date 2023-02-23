@@ -36,8 +36,14 @@ import com.melody.map.tencent_compose.TXMap
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.utils.showToast
 import com.melody.tencentmap.myapplication.contract.RoutePlanContract
+import com.melody.tencentmap.myapplication.model.BusRouteDataState
 import com.melody.tencentmap.myapplication.model.DrivingRouteDataState
+import com.melody.tencentmap.myapplication.model.RideRouteDataState
+import com.melody.tencentmap.myapplication.model.WalkRouteDataState
+import com.melody.tencentmap.myapplication.ui.route.BusRouteOverlayContent
 import com.melody.tencentmap.myapplication.ui.route.DrivingRouteOverlayContent
+import com.melody.tencentmap.myapplication.ui.route.RideRouteOverlayContent
+import com.melody.tencentmap.myapplication.ui.route.WalkingRouteOverlayContent
 import com.melody.tencentmap.myapplication.viewmodel.RoutePlanViewModel
 import com.melody.ui.components.MapMenuButton
 import com.melody.ui.components.RedCenterLoading
@@ -78,6 +84,18 @@ internal fun RoutePlanScreen() {
                 is DrivingRouteDataState -> {
                     val dataState = currentState.routePlanDataState as DrivingRouteDataState
                     DrivingRouteOverlayContent(dataState, cameraPositionState)
+                }
+                is BusRouteDataState -> {
+                    val dataState = currentState.routePlanDataState as BusRouteDataState
+                    BusRouteOverlayContent(dataState, cameraPositionState)
+                }
+                is WalkRouteDataState -> {
+                    val dataState = currentState.routePlanDataState as WalkRouteDataState
+                    WalkingRouteOverlayContent(dataState, cameraPositionState)
+                }
+                is RideRouteDataState -> {
+                    val dataState = currentState.routePlanDataState as RideRouteDataState
+                    RideRouteOverlayContent(dataState, cameraPositionState)
                 }
             }
         }

@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.melody.map.tencent_compose.TXMap
 import com.melody.map.tencent_compose.overlay.MovingPointOverlay
-import com.melody.map.tencent_compose.overlay.Polyline
+import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.viewmodel.MovementTrackViewModel
@@ -66,11 +66,10 @@ internal fun MovementTrackScreen2() {
             uiSettings = currentState.uiSettings,
             onMapLoaded = viewModel::loadMovementTrackData
         ){
-            Polyline(
+            PolylineRainbow(
                 points = currentState.latLngList,
                 width = 15F,
                 isLineCap = true,
-                useGradient = true,
                 rainbow = currentState.polylineRainbow,
                 animation = currentState.polylineAnimation
             )

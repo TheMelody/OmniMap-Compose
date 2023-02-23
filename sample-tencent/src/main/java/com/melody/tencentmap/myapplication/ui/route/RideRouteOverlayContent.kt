@@ -28,65 +28,46 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.melody.map.tencent_compose.overlay.Marker
-import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
 import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.tencentmap.myapplication.R
-import com.melody.tencentmap.myapplication.model.BusRouteDataState
-import com.tencent.lbssearch.`object`.result.TransitResultObject
+import com.melody.tencentmap.myapplication.model.RideRouteDataState
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
-import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
 
 /**
- * BusRouteOverlayContent
+ * RideRouteOverlayContent
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/02/20 15:44
+ * created 2023/02/22 11:27
  */
 @TXMapComposable
 @Composable
-internal fun BusRouteOverlayContent(
-    dataState: BusRouteDataState,
+internal fun RideRouteOverlayContent(
+    dataState: RideRouteDataState,
     cameraPositionState: CameraPositionState
 ) {
-
     LaunchedEffect(Unit) {
         cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(dataState.latLngBounds, 100))
     }
 
-    dataState.routeList.forEach { route ->
+    dataState.ridePoints.forEach { pointList ->
         // 规划出的多条路径，样式看个人喜欢，腾讯地图自定义的东西很多
-        route.steps.forEach { segment ->
-            if (segment is TransitResultObject.Transit) {
-                PolylineCustomTexture(
-                    points = segment.lines[0].polyline,
-                    width = dataState.polylineWidth,
-                    borderWidth = dataState.polylineBorderWidth,
-                    animation = null,
-                    isLineCap = true,
-                    polylineColor = Color(0xFF58C180),
-                    polylineBorderColor = Color(0xFF387C54),
-                    customTexture_stable = PolylineCustomTexture.create(
-                        arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
-                            R.drawable.color_arrow_texture
-                        )
-                    )
+        PolylineCustomTexture(
+            points = pointList,
+            width = dataState.polylineWidth,
+            borderWidth = dataState.polylineBorderWidth,
+            isLineCap = true,
+            polylineColor = Color(0xFF58C180),
+            polylineBorderColor = Color(0xFF387C54),
+            customTexture_stable = PolylineCustomTexture.create(
+                arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
+                    R.drawable.color_arrow_texture
                 )
-            } else if (segment is TransitResultObject.Walking) {
-                Polyline(
-                    isLineCap = true,
-                    polylineColor = Color(0xFFFF0404),
-                    polylineBorderColor = Color(0xFFFF0404),
-                    borderWidth = 1F,
-                    points = segment.polyline,
-                    lineType = PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE,
-                    pattern = listOf(35, 20)
-                )
-            }
-        }
+            )
+        )
     }
     Marker(
         anchor = Offset(0.5f, 0.5f),

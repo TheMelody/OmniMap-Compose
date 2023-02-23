@@ -115,6 +115,8 @@ internal inline fun MapUpdater(
         set(mapUiSettings.logoScale) { map.uiSettings.setLogoScale(it) }
         // 设置定位监听
         set(locationSource) { map.setLocationSource(it) }
+        // 设置地图是否允许多InfoWindow模式，默认是false(只允许显示一个InfoWindow)
+        set(mapProperties.enableMultipleInfoWindow) { map.enableMultipleInfowindow(it) }
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false
         set(mapProperties.isMyLocationEnabled) { map.isMyLocationEnabled = it }
         // 设置默认定位按钮是否显示，非必需设置。

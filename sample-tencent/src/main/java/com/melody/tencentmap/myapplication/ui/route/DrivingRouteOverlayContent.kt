@@ -32,14 +32,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.melody.map.tencent_compose.overlay.Marker
-import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
 import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.model.DrivingRouteDataState
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 
 /**
@@ -64,7 +62,8 @@ internal fun DrivingRouteOverlayContent(
 
     dataState.points.forEach { pointList ->
         // 规划出的多条路径，样式看个人喜欢，腾讯地图自定义的东西很多
-        Polyline(
+        PolylineCustomTexture(
+            isLineCap = true,
             points = pointList,
             width = dataState.polylineWidth,
             borderWidth = dataState.polylineBorderWidth,

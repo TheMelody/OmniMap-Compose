@@ -56,7 +56,7 @@ import kotlinx.coroutines.awaitCancellation
 fun TXMap(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    aMapOptionsFactory: () -> TencentMapOptions = { TencentMapOptions() },
+    tMapOptionsFactory: () -> TencentMapOptions = { TencentMapOptions() },
     properties: MapProperties = DefaultMapProperties,
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: LocationSource? = null,
@@ -70,7 +70,7 @@ fun TXMap(
     }
     val context = LocalContext.current
     val mapView = remember {
-        MapView(context, aMapOptionsFactory()).apply {
+        MapView(context, tMapOptionsFactory()).apply {
             id = R.id.map
         }
     }
