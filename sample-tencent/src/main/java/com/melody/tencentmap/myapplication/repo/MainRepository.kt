@@ -28,6 +28,7 @@ import com.melody.sample.common.utils.StringUtils
 import com.melody.tencentmap.myapplication.BasicFeatureActivity
 import com.melody.tencentmap.myapplication.DragDropSelectPointActivity
 import com.melody.tencentmap.myapplication.LocationTrackingActivity
+import com.melody.tencentmap.myapplication.LogisticsActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity
 import com.melody.tencentmap.myapplication.MovementTrackActivity2
 import com.melody.tencentmap.myapplication.OverlayActivity
@@ -62,6 +63,9 @@ object MainRepository {
             }
             StringUtils.getString(R.string.tx_map_main_feature_item_route_plan) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), RoutePlanActivity::class.java))
+            }
+            StringUtils.getString(R.string.tx_map_main_feature_item_logistics) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), LogisticsActivity::class.java))
             }
             /*StringUtils.getString(R.string.tx_map_main_feature_item_multipoint_click) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(),MultiPointOverlayActivity::class.java))

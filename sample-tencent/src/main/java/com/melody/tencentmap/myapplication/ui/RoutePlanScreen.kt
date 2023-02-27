@@ -48,6 +48,7 @@ import com.melody.tencentmap.myapplication.viewmodel.RoutePlanViewModel
 import com.melody.ui.components.MapMenuButton
 import com.melody.ui.components.RedCenterLoading
 import com.melody.ui.components.RoadTrafficSwitch
+import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -60,8 +61,8 @@ import kotlinx.coroutines.flow.onEach
  */
 @Composable
 internal fun RoutePlanScreen() {
-    val cameraPositionState = rememberCameraPositionState()
     val viewModel: RoutePlanViewModel = viewModel()
+    val cameraPositionState = rememberCameraPositionState()
     val currentState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(viewModel.effect) {
@@ -70,6 +71,12 @@ internal fun RoutePlanScreen() {
                 showToast(it.msg)
             }
         }.collect()
+    }
+
+    LaunchedEffect(currentState.routePlanDataState?.latLngBounds) {
+        currentState.routePlanDataState?.latLngBounds?.let {
+            cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(it, 100))
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -83,19 +90,19 @@ internal fun RoutePlanScreen() {
             when(currentState.routePlanDataState) {
                 is DrivingRouteDataState -> {
                     val dataState = currentState.routePlanDataState as DrivingRouteDataState
-                    DrivingRouteOverlayContent(dataState, cameraPositionState)
+                    DrivingRouteOverlayContent(dataState)
                 }
                 is BusRouteDataState -> {
                     val dataState = currentState.routePlanDataState as BusRouteDataState
-                    BusRouteOverlayContent(dataState, cameraPositionState)
+                    BusRouteOverlayContent(dataState)
                 }
                 is WalkRouteDataState -> {
                     val dataState = currentState.routePlanDataState as WalkRouteDataState
-                    WalkingRouteOverlayContent(dataState, cameraPositionState)
+                    WalkingRouteOverlayContent(dataState)
                 }
                 is RideRouteDataState -> {
                     val dataState = currentState.routePlanDataState as RideRouteDataState
-                    RideRouteOverlayContent(dataState, cameraPositionState)
+                    RideRouteOverlayContent(dataState)
                 }
             }
         }

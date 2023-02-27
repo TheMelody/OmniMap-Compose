@@ -34,6 +34,8 @@ val DefaultMapProperties = MapProperties()
  * @param isIndoorEnabled  是否显示室内地图，目前室内图这玩意，权限申请【没有开通在线申请】，如需要请联系室内图商务协助办理：
  *                         https://lbs.qq.com/mobile/androidMapSDK/developerGuide/indoor
  * @param enableMultipleInfoWindow 多窗口模式默认是关闭的，是否启用可以在地图上显示多个Marker覆盖物上方的信息窗口
+ * @param restrictWidthBounds 基于宽度限制地图显示范围: tencentMap.setRestrictBounds(latLngBounds, RestrictBoundsFitMode.FIT_WIDTH)
+ * @param restrictHeightBounds 基于高度显示地图范围: tencentMap.setRestrictBounds(latLngBounds, RestrictBoundsFitMode.FIT_HEIGHT)
  * @param isMyLocationEnabled 设置是否打开定位图层（myLocationOverlay）
  * @param isTrafficEnabled 是否打开交通路况图层
  * @param myLocationStyle 设置定位图层（myLocationOverlay）的样式
@@ -46,6 +48,8 @@ class MapProperties(
     val isShowBuildings: Boolean = false,
     val isIndoorEnabled: Boolean = false,
     val enableMultipleInfoWindow: Boolean = false,
+    val restrictWidthBounds: LatLngBounds? = null,
+    val restrictHeightBounds: LatLngBounds? = null,
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
     val myLocationStyle: MyLocationStyle? = null,
@@ -59,6 +63,8 @@ class MapProperties(
         isShowBuildings == other.isShowBuildings &&
         isIndoorEnabled == other.isIndoorEnabled &&
         enableMultipleInfoWindow == other.enableMultipleInfoWindow &&
+        restrictWidthBounds == other.restrictWidthBounds &&
+        restrictHeightBounds == other.restrictHeightBounds &&
         isMyLocationEnabled == other.isMyLocationEnabled &&
         isTrafficEnabled == other.isTrafficEnabled &&
         myLocationStyle == other.myLocationStyle &&
@@ -71,6 +77,8 @@ class MapProperties(
         isShowBuildings,
         isIndoorEnabled,
         enableMultipleInfoWindow,
+        restrictWidthBounds,
+        restrictHeightBounds,
         isMyLocationEnabled,
         isTrafficEnabled,
         myLocationStyle,
@@ -84,6 +92,8 @@ class MapProperties(
         isShowBuildings: Boolean = this.isShowBuildings,
         isIndoorEnabled: Boolean = this.isIndoorEnabled,
         enableMultipleInfoWindow: Boolean = this.enableMultipleInfoWindow,
+        restrictWidthBounds: LatLngBounds? = this.restrictWidthBounds,
+        restrictHeightBounds: LatLngBounds? = this.restrictHeightBounds,
         isMyLocationEnabled: Boolean = this.isMyLocationEnabled,
         isTrafficEnabled: Boolean = this.isTrafficEnabled,
         myLocationStyle: MyLocationStyle? = this.myLocationStyle,
@@ -95,6 +105,8 @@ class MapProperties(
         isShowBuildings = isShowBuildings,
         isIndoorEnabled = isIndoorEnabled,
         enableMultipleInfoWindow = enableMultipleInfoWindow,
+        restrictWidthBounds = restrictWidthBounds,
+        restrictHeightBounds = restrictHeightBounds,
         isMyLocationEnabled = isMyLocationEnabled,
         isTrafficEnabled = isTrafficEnabled,
         myLocationStyle = myLocationStyle,
@@ -108,6 +120,8 @@ class MapProperties(
         return "MapProperties(isShowBuildings=$isShowBuildings, " +
                 "isIndoorEnabled=$isIndoorEnabled, " +
                 "enableMultipleInfoWindow=$enableMultipleInfoWindow, " +
+                "restrictWidthBounds=$restrictWidthBounds, " +
+                "restrictHeightBounds=$restrictHeightBounds, " +
                 "isMyLocationEnabled=$isMyLocationEnabled, " +
                 "isTrafficEnabled=$isTrafficEnabled, " +
                 "myLocationStyle=$myLocationStyle, " +

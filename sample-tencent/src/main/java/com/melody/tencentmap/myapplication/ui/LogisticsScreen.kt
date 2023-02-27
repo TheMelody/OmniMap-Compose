@@ -28,59 +28,59 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.melody.map.tencent_compose.TXMap
-import com.melody.map.tencent_compose.overlay.MovingPointOverlay
-import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
-import com.melody.tencentmap.myapplication.R
-import com.melody.tencentmap.myapplication.viewmodel.MovementTrackViewModel
+import com.melody.sample.common.utils.showToast
+import com.melody.tencentmap.myapplication.contract.LogisticsContract
+import com.melody.tencentmap.myapplication.ui.route.LogisticsRouteOverlayContent
+import com.melody.tencentmap.myapplication.viewmodel.LogisticsViewModel
 import com.melody.ui.components.RedCenterLoading
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 /**
- * MovementTrackScreen
+ * LogisticsScreen
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/02/16 16:33
+ * created 2023/02/23 13:40
  */
 @Composable
-internal fun MovementTrackScreen2() {
-    val viewModel: MovementTrackViewModel = viewModel()
-    val currentState by viewModel.uiState.collectAsState()
+internal fun LogisticsScreen() {
+    val viewModel: LogisticsViewModel = viewModel()
     val cameraPositionState = rememberCameraPositionState()
-    LaunchedEffect(Unit) {
-        snapshotFlow { currentState.trackLatLng }.filterNotNull().collect {
-            cameraPositionState.animate(CameraUpdateFactory.newLatLngBounds(it, 200))
+    val currentState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(currentState.routePlanDataState) {
+        currentState.routePlanDataState?.let {
+            // 模仿pdd物流详情页，显示范围
+            cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(it.latLngBounds, 300))
+            // 目前腾讯地图的bug，有几率move过程中，首次添加polyline，出现末尾大范围断线的问题
+            viewModel.fixPolylineRainbowBug()
         }
     }
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.onEach {
+            if(it is LogisticsContract.Effect.Toast) {
+                showToast(it.msg)
+            }
+        }.collect()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         TXMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
+            properties = currentState.mapProperties,
             uiSettings = currentState.uiSettings,
-            onMapLoaded = viewModel::loadMovementTrackData
-        ){
-            PolylineRainbow(
-                points = currentState.latLngList,
-                width = 15F,
-                isLineCap = true,
-                useGradient = true,
-                rainbow = currentState.polylineRainbow,
-                animation = currentState.polylineAnimation
-            )
-            if(currentState.latLngList.isNotEmpty()) {
-                MovingPointOverlay(
-                    points = currentState.latLngList,
-                    icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher),
-                    isStartSmoothMove = true,
-                    totalDuration = currentState.polylineAnimDuration
-                )
+            onMapLoaded = viewModel::queryRoutePlan
+        ) {
+            if(null != currentState.routePlanDataState && currentState.fixPolylineRainbow) {
+                LogisticsRouteOverlayContent(currentState.routePlanDataState!!)
             }
         }
         if(currentState.isLoading) {

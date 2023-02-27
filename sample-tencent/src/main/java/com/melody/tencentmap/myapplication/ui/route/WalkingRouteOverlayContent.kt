@@ -23,16 +23,17 @@
 package com.melody.tencentmap.myapplication.ui.route
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.melody.map.tencent_compose.overlay.Marker
 import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
-import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.tencentmap.myapplication.model.WalkRouteDataState
-import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
 
@@ -45,24 +46,22 @@ import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
  */
 @TXMapComposable
 @Composable
-internal fun WalkingRouteOverlayContent(
-    dataState: WalkRouteDataState,
-    cameraPositionState: CameraPositionState
-) {
-    LaunchedEffect(Unit) {
-        cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(dataState.latLngBounds, 100))
-    }
-
+internal fun WalkingRouteOverlayContent(dataState: WalkRouteDataState) {
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
     dataState.wakingPoints.forEachIndexed { index, pointList ->
         Polyline(
             isLineCap = true,
             points = pointList,
             width = dataState.polylineWidth,
-            polylineColor = Color(0xFFFF0404),
-            polylineBorderColor = Color(0xFFFF0404),
+            polylineColor = if(selectedIndex == index) Color(0xFFFF0404) else Color(0xFFEE8D8D),
+            polylineBorderColor = if(selectedIndex == index) Color(0xFFFF0404) else Color(0xFFEE8D8D),
             borderWidth = 1F,
+            zIndex = if(selectedIndex == index) 2F else 1F,
             lineType = PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE,
-            pattern = listOf(35, 20)
+            pattern = listOf(35, 20),
+            onClick = {
+                selectedIndex = index
+            }
         )
     }
     Marker(

@@ -69,5 +69,7 @@
 
         <activity android:name=".RoutePlanActivity" android:exported="false"/>
 
+        <activity android:name=".LogisticsActivity" android:exported="false"/>
+
     </application>
 </manifest>

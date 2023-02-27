@@ -117,6 +117,18 @@ internal inline fun MapUpdater(
         set(locationSource) { map.setLocationSource(it) }
         // 设置地图是否允许多InfoWindow模式，默认是false(只允许显示一个InfoWindow)
         set(mapProperties.enableMultipleInfoWindow) { map.enableMultipleInfowindow(it) }
+        // 基于宽度限制地图显示范围
+        set(mapProperties.restrictWidthBounds) {
+            if(null != it) {
+                map.setRestrictBounds(it, RestrictBoundsFitMode.FIT_WIDTH)
+            }
+        }
+        // 基于高度显示地图范围
+        set(mapProperties.restrictHeightBounds) {
+            if(null != it) {
+                map.setRestrictBounds(it, RestrictBoundsFitMode.FIT_HEIGHT)
+            }
+        }
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false
         set(mapProperties.isMyLocationEnabled) { map.isMyLocationEnabled = it }
         // 设置默认定位按钮是否显示，非必需设置。

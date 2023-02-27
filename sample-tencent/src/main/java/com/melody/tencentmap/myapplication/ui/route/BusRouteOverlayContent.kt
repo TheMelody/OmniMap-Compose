@@ -23,7 +23,10 @@
 package com.melody.tencentmap.myapplication.ui.route
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.melody.map.tencent_compose.model.TXMapComposable
@@ -31,11 +34,9 @@ import com.melody.map.tencent_compose.overlay.Marker
 import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
-import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.model.BusRouteDataState
 import com.tencent.lbssearch.`object`.result.TransitResultObject
-import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
 
@@ -48,17 +49,9 @@ import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
  */
 @TXMapComposable
 @Composable
-internal fun BusRouteOverlayContent(
-    dataState: BusRouteDataState,
-    cameraPositionState: CameraPositionState
-) {
-
-    LaunchedEffect(Unit) {
-        cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(dataState.latLngBounds, 100))
-    }
-
-    dataState.routeList.forEach { route ->
-        // 规划出的多条路径，样式看个人喜欢，腾讯地图自定义的东西很多
+internal fun BusRouteOverlayContent(dataState: BusRouteDataState) {
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
+    dataState.routeList.forEachIndexed { index, route ->
         route.steps.forEach { segment ->
             if (segment is TransitResultObject.Transit) {
                 PolylineCustomTexture(
@@ -67,23 +60,31 @@ internal fun BusRouteOverlayContent(
                     borderWidth = dataState.polylineBorderWidth,
                     animation = null,
                     isLineCap = true,
-                    polylineColor = Color(0xFF58C180),
-                    polylineBorderColor = Color(0xFF387C54),
+                    zIndex = if(selectedIndex == index) 2F else 1F,
+                    polylineColor = if(selectedIndex == index) Color(0xFF58C180) else Color(0xFF83DAA4),
+                    polylineBorderColor = if(selectedIndex == index) Color(0xFF387C54) else Color(0xFF76BB93),
                     customTexture_stable = PolylineCustomTexture.create(
                         arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
                             R.drawable.color_arrow_texture
                         )
-                    )
+                    ),
+                    onClick = {
+                        selectedIndex = index
+                    }
                 )
             } else if (segment is TransitResultObject.Walking) {
                 Polyline(
                     isLineCap = true,
-                    polylineColor = Color(0xFFFF0404),
-                    polylineBorderColor = Color(0xFFFF0404),
+                    polylineColor = if(selectedIndex == index) Color(0xFFFF0404) else Color(0xFFEE8D8D),
+                    polylineBorderColor = if(selectedIndex == index) Color(0xFFFF0404) else Color(0xFFEE8D8D),
                     borderWidth = 1F,
                     points = segment.polyline,
                     lineType = PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE,
-                    pattern = listOf(35, 20)
+                    pattern = listOf(35, 20),
+                    zIndex = if(selectedIndex == index) 3F else 2F,
+                    onClick = {
+                        selectedIndex = index
+                    }
                 )
             }
         }

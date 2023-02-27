@@ -23,7 +23,6 @@
 package com.melody.tencentmap.myapplication.ui.route
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,10 +33,8 @@ import com.melody.map.tencent_compose.model.TXMapComposable
 import com.melody.map.tencent_compose.overlay.Marker
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
-import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.model.DrivingRouteDataState
-import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 
 /**
@@ -49,27 +46,21 @@ import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
  */
 @TXMapComposable
 @Composable
-internal fun DrivingRouteOverlayContent(
-    dataState: DrivingRouteDataState,
-    cameraPositionState: CameraPositionState
-) {
+internal fun DrivingRouteOverlayContent(dataState: DrivingRouteDataState) {
     var visibleStart by rememberSaveable { mutableStateOf(false) }
     var visibleEnd by rememberSaveable { mutableStateOf(false) }
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(dataState.latLngBounds, 100))
-    }
-
-    dataState.points.forEach { pointList ->
-        // 规划出的多条路径，样式看个人喜欢，腾讯地图自定义的东西很多
+    dataState.points.forEachIndexed { index, pointList ->
         PolylineCustomTexture(
             isLineCap = true,
             points = pointList,
             width = dataState.polylineWidth,
             borderWidth = dataState.polylineBorderWidth,
             animation = dataState.polylineAnim,
-            polylineColor = Color(0xFF58C180),
-            polylineBorderColor = Color(0xFF387C54),
+            zIndex = if(selectedIndex == index) 2F else 1F,
+            polylineColor = if(selectedIndex == index) Color(0xFF58C180) else Color(0xFF83DAA4),
+            polylineBorderColor = if(selectedIndex == index) Color(0xFF387C54) else Color(0xFF76BB93),
             customTexture_stable = PolylineCustomTexture.create(arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
                 R.drawable.color_arrow_texture
             )),
@@ -79,6 +70,9 @@ internal fun DrivingRouteOverlayContent(
             },
             onAnimationEnd = {
                 visibleEnd = true
+            },
+            onClick = {
+                selectedIndex = index
             }
         )
     }

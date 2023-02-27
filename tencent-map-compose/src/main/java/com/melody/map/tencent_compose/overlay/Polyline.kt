@@ -40,7 +40,6 @@ import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.Polyline
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
-import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions.SegmentText
 
@@ -64,6 +63,18 @@ class PolylineRainbow private constructor(
     companion object {
         /**
          * 线的分段颜色（彩虹线）配置
+         *
+         * 【对应关系如下】:
+         * colors: listOf(color1,color2,color3,color4)，indexes: listOf(0,1,2,3)
+         *
+         * 线上点【0, 1】之间颜色 => 取 color1
+         *
+         * 线上点【1, 2】之间颜色 => 取 color2
+         *
+         * 线上点【2, 3】之间颜色 => 取 color3
+         *
+         * 线上点 【3, 最后一个点】之间颜色 => 取 color4
+         *
          * @param colors 每段索引之间的颜色，这个颜色同样支持纹理颜色
          * @param indexes 分段线的顶点索引，这个索引值的数量必须和colors颜色列表数量相同
          */
@@ -207,11 +218,10 @@ fun Polyline(
  * @param appendPoints 在原有顶点上附加新的顶点
  * @param rainbow 线的分段颜色（彩虹线）
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
- * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
- * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
  * @param visible 线段的可见属性
  * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
  * @param isRoad 线段是否为路线
+ * @param useGradient 线段是否为渐变的彩虹线段，如果设置为false，颜色一块是一块，如果设置为true，线段是多个颜色渐变连贯的
  * @param isLineCap 路线是否显示半圆端点
  * @param isClickable 是否可点击
  * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
@@ -229,9 +239,8 @@ fun PolylineRainbow(
     points: List<LatLng>,
     appendPoints: List<LatLng> = emptyList(),
     rainbow: PolylineRainbow?,
+    useGradient: Boolean,
     dynamicRoadName: PolylineDynamicRoadName? = null,
-    polylineColor: Color? = null,
-    polylineBorderColor: Color? = null,
     visible: Boolean = true,
     isRoad: Boolean = true,
     isLineCap: Boolean = false,
@@ -252,10 +261,10 @@ fun PolylineRainbow(
         rainbow = rainbow,
         customTexture_stable = null,
         dynamicRoadName = dynamicRoadName,
-        polylineColor = polylineColor,
-        polylineBorderColor = polylineBorderColor,
+        polylineColor = null,
+        polylineBorderColor = null,
         visible = visible,
-        useGradient = true,
+        useGradient = useGradient,
         isRoad = isRoad,
         isLineCap = isLineCap,
         isClickable = isClickable,
@@ -362,7 +371,7 @@ fun PolylineCustomTexture(
  * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
  * @param pattern 设置虚线的样式，仅在：lineType = [PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE]时才有效，pattern的元素数量必须是偶数个，每对元素分别表示虚线中实线区域的长度，以及空白区域的长度（单位px)，
  *        【注意】：设置虚线，还需要设置[polylineColor]和[polylineBorderColor]属性值，否则：无法覆盖默认的虚线颜色，或者无法显示虚线
- * @param useGradient 线段是否使用渐变色
+ * @param useGradient 线段是否为渐变的彩虹线段【默认为true】，如果设置为false，颜色一块是一块，如果设置为true，线段是多个颜色渐变连贯的
  * @param isRoad 线段是否为路线
  * @param isLineCap 路线是否显示半圆端点
  * @param isClickable 是否可点击
@@ -385,10 +394,10 @@ private fun PolylineImpl(
     dynamicRoadName: PolylineDynamicRoadName?,
     polylineColor: Color?,
     polylineBorderColor: Color?,
-    visible: Boolean = true,
-    useGradient: Boolean = false,
-    isRoad: Boolean = true,
-    isLineCap: Boolean = false,
+    visible: Boolean,
+    useGradient: Boolean,
+    isRoad: Boolean,
+    isLineCap: Boolean,
     isClickable: Boolean,
     animation: Animation?,
     lineType: Int,
@@ -397,9 +406,9 @@ private fun PolylineImpl(
     width: Float,
     borderWidth: Float,
     zIndex: Float,
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
-    onClick: (Polyline) -> Unit = {}
+    onAnimationStart: () -> Unit,
+    onAnimationEnd: () -> Unit,
+    onClick: (Polyline) -> Unit
 ) {
     if(null != animation && !(animation is AlphaAnimation || animation is EmergeAnimation)) {
         error("animation must be either AlphaAnimation or EmergeAnimation")
@@ -427,6 +436,7 @@ private fun PolylineImpl(
                         road(isRoad)
                     }
                     if(pattern?.isNotEmpty() == true) {
+                        // 线段虚线样式
                         pattern(pattern)
                     }
                     clickable(isClickable)
@@ -438,17 +448,6 @@ private fun PolylineImpl(
             polyline.tag = tag
             polyline.rainbowColorLine(rainbow)
             polyline.dynamicRoadName(dynamicRoadName)
-            if(null != animation) {
-                animation.animationListener = object : AnimationListener{
-                    override fun onAnimationStart() {
-                        currentOnAnimationStart.invoke()
-                    }
-                    override fun onAnimationEnd() {
-                        currentOnAnimationEnd.invoke()
-                    }
-                }
-                polyline.startAnimation(animation)
-            }
             PolylineNode(polyline, onClick)
         },
         update = {

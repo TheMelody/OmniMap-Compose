@@ -206,7 +206,6 @@ fun Marker(
  * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
- * @param showInfoWindow 通过代码控制InfoWindow的显示开关，如果要同时显示多个InfoWindow，请配置[com.melody.map.tencent_compose.poperties.MapProperties.enableMultipleInfoWindow] = true
  * @param isClickable Marker覆盖物是否可以点击
  * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
  * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
@@ -220,7 +219,7 @@ fun Marker(
  * @param animation 标注动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
- * @param content 【可选】，用于自定义整个信息窗口。
+ * @param content 【可选】，用于自定义整个信息窗口，【里面动态的内容，建议通过title、snippet、tag的方式获取】
  */
 @Composable
 @TXMapComposable
@@ -229,7 +228,6 @@ fun MarkerInfoWindow(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
-    showInfoWindow: Boolean = false,
     isClickable: Boolean = true,
     flat_stable: Boolean = false,
     clockwise_stable: Boolean = true,
@@ -250,7 +248,6 @@ fun MarkerInfoWindow(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
-        showInfoWindow = showInfoWindow,
         isClickable = isClickable,
         flat_stable = flat_stable,
         clockwise_stable = clockwise_stable,
@@ -275,7 +272,6 @@ fun MarkerInfoWindow(
  * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
- * @param showInfoWindow 通过代码控制InfoWindow的显示开关，如果要同时显示多个InfoWindow，请配置[com.melody.map.tencent_compose.poperties.MapProperties.enableMultipleInfoWindow] = true
  * @param isClickable Marker覆盖物是否可以点击
  * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
  * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
@@ -289,7 +285,7 @@ fun MarkerInfoWindow(
  * @param animation 标注动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
- * @param content (可选)，用于自定义信息窗口的内容。
+ * @param content (可选)，用于自定义信息窗口的内容，【里面动态的内容，建议通过title、snippet、tag的方式获取】
 */
 @Composable
 @TXMapComposable
@@ -298,7 +294,6 @@ fun MarkerInfoWindowContent(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
-    showInfoWindow: Boolean = false,
     isClickable: Boolean = true,
     flat_stable: Boolean = false,
     clockwise_stable: Boolean = true,
@@ -319,7 +314,6 @@ fun MarkerInfoWindowContent(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
-        showInfoWindow = showInfoWindow,
         isClickable = isClickable,
         flat_stable = flat_stable,
         clockwise_stable = clockwise_stable,
@@ -344,7 +338,6 @@ fun MarkerInfoWindowContent(
  * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
- * @param showInfoWindow 通过代码控制InfoWindow的显示开关，如果要同时显示多个InfoWindow，请配置[com.melody.map.tencent_compose.poperties.MapProperties.enableMultipleInfoWindow] = true
  * @param isClickable Marker覆盖物是否可以点击
  * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
  * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
@@ -368,7 +361,6 @@ private fun MarkerImpl(
     alpha: Float = 1.0f,
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
-    showInfoWindow: Boolean = false,
     isClickable: Boolean = true,
     flat_stable: Boolean = false,
     clockwise_stable: Boolean = true,
@@ -407,12 +399,6 @@ private fun MarkerImpl(
             ) ?: error("Error adding marker")
             marker.tag = tag
             marker.isClickable = isClickable
-            if(showInfoWindow) {
-                marker.showInfoWindow()
-            }
-            if(null != animation) {
-                marker.startAnimation(animation)
-            }
             MarkerNode(
                 compositionContext = compositionContext,
                 marker = marker,
@@ -451,13 +437,6 @@ private fun MarkerImpl(
                 this.marker.title = it
                 if (this.marker.isInfoWindowShown) {
                     this.marker.showInfoWindow()
-                }
-            }
-            set(showInfoWindow) {
-                if(showInfoWindow) {
-                    this.marker.showInfoWindow()
-                } else {
-                    this.marker.hideInfoWindow()
                 }
             }
             set(visible) { this.marker.isVisible = it }

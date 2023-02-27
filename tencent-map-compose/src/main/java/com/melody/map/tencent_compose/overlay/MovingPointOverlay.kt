@@ -93,10 +93,6 @@ fun MovingPointOverlay(
             })
             marker.tag = points
             val animator = MarkerTranslateAnimator(marker,totalDuration.toLong(), points.toTypedArray(), true)
-            if(isStartSmoothMove) {
-                // 处理直接传true的情况
-                animator.startAnimation()
-            }
             MovingPointOverlayNode(
                 marker = marker,
                 onMarkerClick = onClick,

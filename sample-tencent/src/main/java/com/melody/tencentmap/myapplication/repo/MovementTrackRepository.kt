@@ -102,7 +102,7 @@ object MovementTrackRepository {
                 Color(0xFFF38D0F).toArgb()
             ),
             // 腾讯地图内部会根据取完颜色值，填充到对应的index位置处
-            indexes = listOf(0,totalSize/3,totalSize/8,totalSize)
+            indexes = listOf(0,totalSize/8,totalSize/3,totalSize)
         )
     }
 
