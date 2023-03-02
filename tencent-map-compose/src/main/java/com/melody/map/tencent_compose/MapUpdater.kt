@@ -36,6 +36,7 @@ import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.map.tencent_compose.position.CameraPositionState
 import com.tencent.tencentmap.mapsdk.maps.LocationSource
 import com.tencent.tencentmap.mapsdk.maps.TencentMap
+import com.tencent.tencentmap.mapsdk.maps.TencentMap.OnMapLoadedCallback
 import com.tencent.tencentmap.mapsdk.maps.model.CameraPosition
 import com.tencent.tencentmap.mapsdk.maps.model.RestrictBoundsFitMode
 
@@ -60,7 +61,14 @@ internal class MapPropertiesNode(
         }
 
     override fun onAttached() {
-        map.setOnMapLoadedCallback { clickListeners.onMapLoaded() }
+        // 设置地图加载完成回调接口
+        map.addOnMapLoadedCallback(object :OnMapLoadedCallback{
+            override fun onMapLoaded() {
+                clickListeners.onMapLoaded()
+                // 移除监听
+                map.removeOnMapLoadedCallback(this)
+            }
+        })
         map.setOnCameraChangeListener(object : TencentMap.OnCameraChangeListener {
             override fun onCameraChange(cameraPosition: CameraPosition?) {
                 cameraPositionState.transformToTxCameraPosition(map.cameraPosition)
@@ -117,6 +125,8 @@ internal inline fun MapUpdater(
         set(locationSource) { map.setLocationSource(it) }
         // 设置地图是否允许多InfoWindow模式，默认是false(只允许显示一个InfoWindow)
         set(mapProperties.enableMultipleInfoWindow) { map.enableMultipleInfowindow(it) }
+        // 是否显示地图标注及名称
+        set(mapProperties.isShowMapLabels) { map.setPoisEnabled(it) }
         // 基于宽度限制地图显示范围
         set(mapProperties.restrictWidthBounds) {
             if(null != it) {
@@ -149,8 +159,8 @@ internal inline fun MapUpdater(
         set(mapUiSettings.isTiltGesturesEnabled) { map.uiSettings.isTiltGesturesEnabled = it }
         // 拖拽手势是否可用
         set(mapUiSettings.isScrollGesturesEnabled) { map.uiSettings.isScrollGesturesEnabled = it }
-        // 缩放按钮是否可见
-        set(mapUiSettings.isZoomEnabled) { map.uiSettings.isZoomControlsEnabled = it }
+        // 缩放按钮是否可见，SDK从4.3.1弃用，Android对ZoomButton已不维护，建议使用自定义View
+        //set(mapUiSettings.isZoomEnabled) { map.uiSettings.isZoomControlsEnabled = it }
         // 比例尺控件是否可见
         set(mapUiSettings.isScaleControlsEnabled) { map.uiSettings.isScaleViewEnabled = it }
         // 比例尺是否淡出

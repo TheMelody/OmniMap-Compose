@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.tencent_compose.model
+package com.melody.tencentmap.myapplication
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.melody.tencentmap.myapplication.ui.MarkerClusterScreen
 
-internal class MapClickListeners {
-    var onMapLoaded: () -> Unit by mutableStateOf({})
+/**
+ * MarkerClusterActivity
+ * @author 被风吹过的夏天
+ * @email developer_melody@163.com
+ * @github: https://github.com/TheMelody/OmniMap
+ * created 2023/02/28 16:55
+ */
+class MarkerClusterActivity: ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MarkerClusterScreen()
+        }
+    }
 }

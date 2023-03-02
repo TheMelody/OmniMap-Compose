@@ -24,8 +24,6 @@ package com.melody.tencentmap.myapplication.model
 
 import androidx.compose.runtime.Stable
 import com.tencent.lbssearch.`object`.result.TransitResultObject
-import com.tencent.map.sdk.utilities.visualization.datamodels.FromToLatLng
-import com.tencent.tencentmap.mapsdk.maps.model.Animation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
 

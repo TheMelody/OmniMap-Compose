@@ -71,5 +71,9 @@
 
         <activity android:name=".LogisticsActivity" android:exported="false"/>
 
+        <activity android:name=".MarkerAnimationActivity" android:exported="false"/>
+
+        <activity android:name=".MarkerClusterActivity" android:exported="false"/>
+
     </application>
 </manifest>

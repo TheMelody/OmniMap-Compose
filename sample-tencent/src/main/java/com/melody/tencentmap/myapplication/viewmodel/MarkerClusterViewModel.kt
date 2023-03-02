@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.tencent_compose.model
+package com.melody.tencentmap.myapplication.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import com.melody.sample.common.base.BaseViewModel
+import com.melody.tencentmap.myapplication.contract.MarkerClusterContract
+import com.melody.tencentmap.myapplication.repo.MarkerClusterRepository
 
-internal class MapClickListeners {
-    var onMapLoaded: () -> Unit by mutableStateOf({})
+/**
+ * MarkerClusterViewModel
+ * @author 被风吹过的夏天
+ * @email developer_melody@163.com
+ * @github: https://github.com/TheMelody/OmniMap
+ * created 2023/03/01 09:37
+ */
+class MarkerClusterViewModel :
+    BaseViewModel<MarkerClusterContract.Event, MarkerClusterContract.State, MarkerClusterContract.Effect>() {
+    override fun createInitialState(): MarkerClusterContract.State {
+        return MarkerClusterContract.State(
+            mapUiSettings = MarkerClusterRepository.initMapUiSettings(),
+            mapClusterItems = null
+        )
+    }
+    override fun handleEvents(event: MarkerClusterContract.Event) {
+    }
+
+    init {
+        setState { copy(mapClusterItems = MarkerClusterRepository.initClusterItems()) }
+    }
+
 }

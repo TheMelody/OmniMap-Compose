@@ -65,6 +65,7 @@ internal fun BasicFeatureScreen() {
                 "卫星图",
                 "暗色地图",
                 "3D楼块效果",
+                "地图标注及名称",
                 "实时交通状况开关",
                 "显示室内地图开关",
                 "设置地图显示范围",
@@ -73,7 +74,6 @@ internal fun BasicFeatureScreen() {
                 "拖拽手势开关",
                 "倾斜手势开关",
                 "缩放手势开关",
-                "缩放按钮开关",
                 "指南针控件开关",
                 "比例尺控件开关",
                 "比例尺淡入淡出"
@@ -105,6 +105,7 @@ internal fun BasicFeatureScreen() {
                             "卫星图"-> mapProperties.mapType == MapType.SATELLITE
                             "暗色地图"-> mapProperties.mapType == MapType.DARK
                             "3D楼块效果"-> mapProperties.isShowBuildings
+                            "地图标注及名称"-> mapProperties.isShowMapLabels
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
                             "显示室内地图开关" -> mapProperties.isIndoorEnabled
                             "设置地图显示范围" -> if(mapProperties.mapShowLatLngBounds == null) null else "腾讯总部大楼"
@@ -113,7 +114,6 @@ internal fun BasicFeatureScreen() {
                             "拖拽手势开关" -> uiSettings.isScrollGesturesEnabled
                             "倾斜手势开关" -> uiSettings.isTiltGesturesEnabled
                             "缩放手势开关" -> uiSettings.isZoomGesturesEnabled
-                            "缩放按钮开关" -> uiSettings.isZoomEnabled
                             "指南针控件开关" -> uiSettings.isCompassEnabled
                             "比例尺控件开关" -> uiSettings.isScaleControlsEnabled
                             "比例尺淡入淡出" -> uiSettings.isScaleViewFadeEnable
@@ -142,6 +142,9 @@ internal fun BasicFeatureScreen() {
                         }
                         "3D楼块效果" -> {
                             mapProperties = mapProperties.copy(isShowBuildings = !mapProperties.isShowBuildings)
+                        }
+                        "地图标注及名称" -> {
+                            mapProperties = mapProperties.copy(isShowMapLabels = !mapProperties.isShowMapLabels)
                         }
                         "实时交通状况开关"-> {
                             mapProperties = mapProperties.copy(isTrafficEnabled = !mapProperties.isTrafficEnabled)
@@ -177,9 +180,6 @@ internal fun BasicFeatureScreen() {
                         }
                         "缩放手势开关"-> {
                             uiSettings = uiSettings.copy(isZoomGesturesEnabled = !uiSettings.isZoomGesturesEnabled)
-                        }
-                        "缩放按钮开关"-> {
-                            uiSettings = uiSettings.copy(isZoomEnabled = !uiSettings.isZoomEnabled)
                         }
                         "指南针控件开关"-> {
                             uiSettings = uiSettings.copy(isCompassEnabled = !uiSettings.isCompassEnabled)

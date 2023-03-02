@@ -30,9 +30,11 @@ import java.util.Objects
 val DefaultMapProperties = MapProperties()
 
 /**
+ * MapProperties
  * @param isShowBuildings  是否显示3D楼块效果
  * @param isIndoorEnabled  是否显示室内地图，目前室内图这玩意，权限申请【没有开通在线申请】，如需要请联系室内图商务协助办理：
  *                         https://lbs.qq.com/mobile/androidMapSDK/developerGuide/indoor
+ * @param isShowMapLabels  是否显示地图标注及名称
  * @param enableMultipleInfoWindow 多窗口模式默认是关闭的，是否启用可以在地图上显示多个Marker覆盖物上方的信息窗口
  * @param restrictWidthBounds 基于宽度限制地图显示范围: tencentMap.setRestrictBounds(latLngBounds, RestrictBoundsFitMode.FIT_WIDTH)
  * @param restrictHeightBounds 基于高度显示地图范围: tencentMap.setRestrictBounds(latLngBounds, RestrictBoundsFitMode.FIT_HEIGHT)
@@ -47,6 +49,7 @@ val DefaultMapProperties = MapProperties()
 class MapProperties(
     val isShowBuildings: Boolean = false,
     val isIndoorEnabled: Boolean = false,
+    val isShowMapLabels: Boolean = true,
     val enableMultipleInfoWindow: Boolean = false,
     val restrictWidthBounds: LatLngBounds? = null,
     val restrictHeightBounds: LatLngBounds? = null,
@@ -62,6 +65,7 @@ class MapProperties(
     override fun equals(other: Any?): Boolean = other is MapProperties &&
         isShowBuildings == other.isShowBuildings &&
         isIndoorEnabled == other.isIndoorEnabled &&
+        isShowMapLabels == other.isShowMapLabels &&
         enableMultipleInfoWindow == other.enableMultipleInfoWindow &&
         restrictWidthBounds == other.restrictWidthBounds &&
         restrictHeightBounds == other.restrictHeightBounds &&
@@ -76,6 +80,7 @@ class MapProperties(
     override fun hashCode(): Int = Objects.hash(
         isShowBuildings,
         isIndoorEnabled,
+        isShowMapLabels,
         enableMultipleInfoWindow,
         restrictWidthBounds,
         restrictHeightBounds,
@@ -91,6 +96,7 @@ class MapProperties(
     fun copy(
         isShowBuildings: Boolean = this.isShowBuildings,
         isIndoorEnabled: Boolean = this.isIndoorEnabled,
+        isShowMapLabels: Boolean = this.isShowMapLabels,
         enableMultipleInfoWindow: Boolean = this.enableMultipleInfoWindow,
         restrictWidthBounds: LatLngBounds? = this.restrictWidthBounds,
         restrictHeightBounds: LatLngBounds? = this.restrictHeightBounds,
@@ -104,6 +110,7 @@ class MapProperties(
     ): MapProperties = MapProperties(
         isShowBuildings = isShowBuildings,
         isIndoorEnabled = isIndoorEnabled,
+        isShowMapLabels = isShowMapLabels,
         enableMultipleInfoWindow = enableMultipleInfoWindow,
         restrictWidthBounds = restrictWidthBounds,
         restrictHeightBounds = restrictHeightBounds,
@@ -119,6 +126,7 @@ class MapProperties(
     override fun toString(): String {
         return "MapProperties(isShowBuildings=$isShowBuildings, " +
                 "isIndoorEnabled=$isIndoorEnabled, " +
+                "isShowMapLabels=$isShowMapLabels, " +
                 "enableMultipleInfoWindow=$enableMultipleInfoWindow, " +
                 "restrictWidthBounds=$restrictWidthBounds, " +
                 "restrictHeightBounds=$restrictHeightBounds, " +

@@ -64,7 +64,6 @@ object RoutePlanRepository {
 
     fun initMapUiSettings() : MapUiSettings {
         return MapUiSettings(
-            isZoomEnabled = true,
             isScrollGesturesEnabled = true,
             isZoomGesturesEnabled = true,
             isScaleControlsEnabled = true

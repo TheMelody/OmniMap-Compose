@@ -87,7 +87,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
     private var rawPosition by mutableStateOf(position)
 
     /**
-     * 注意：这里要转换一下CameraPosition，高德地图实现了Parcelable，腾讯地图没有实现，我们这里转换一下，才能用rememberSaveable
+     * 注意：这里要转换一下CameraPosition，腾讯地图没有实现Parcelable，我们这里转换一下，才能用rememberSaveable
      */
     fun transformToTxCameraPosition(cameraPosition: CameraPosition) {
         rawPosition = TXCameraPosition(cameraPosition.target,cameraPosition.zoom,cameraPosition.tilt,cameraPosition.bearing)

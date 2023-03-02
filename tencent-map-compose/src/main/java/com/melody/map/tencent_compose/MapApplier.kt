@@ -22,7 +22,9 @@
 
 package com.melody.map.tencent_compose
 
+import android.view.ViewGroup
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.ComposeView
 import com.melody.map.tencent_compose.adapter.ComposeInfoWindowAdapter
 import com.melody.map.tencent_compose.overlay.DragState
 import com.melody.map.tencent_compose.overlay.MarkerNode
@@ -51,12 +53,26 @@ internal class MapApplier(
 
     private val decorations = mutableListOf<MapNode>()
 
+    /**
+     * 用于点聚合中，聚合点自定义InfoWindow样式的容器
+     */
+    internal val mClusterInfoWindowView: ComposeView
+        get() = ComposeView(mapView.context).apply {
+            mapView.addView(
+                this,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }
+
     init {
         attachClickListeners()
     }
 
     override fun onClear() {
-        map.clear()
+        map.clearAllOverlays()
         decorations.forEach { it.onCleared() }
         decorations.clear()
     }
@@ -84,9 +100,6 @@ internal class MapApplier(
     private fun attachClickListeners() {
         // 设置Marker的点击事件，return true拦截
         map.setOnMarkerClickListener { marker ->
-            // 优先处理普通Marker的事件，不匹配，再去查找轨迹移动的Marker
-            /*decorations.nodeForMarker(marker)?.onMarkerClick?.invoke(marker)?:
-            (decorations.nodeForMovingPointOverlay(marker)?.onMarkerClick?.invoke(marker)?: false)*/
             decorations.nodeForMarker(marker)?.onMarkerClick?.invoke(marker)?:false
         }
         // Polyline的点击事件
@@ -103,15 +116,6 @@ internal class MapApplier(
             override fun onInfoWindowClickLocation(p0: Int, p1: Int, p2: Int, p3: Int) {
             }
         })
-        // MultiPointOverlay的点击事件
-        /*map.setOnMultiPointClickListener { multiPointItem ->
-            val node = decorations.nodeForMultiPoint(multiPointItem)
-            if(null != node) {
-                node.onPointItemClick.invoke(multiPointItem)
-                return@setOnMultiPointClickListener true
-            }
-            return@setOnMultiPointClickListener false
-        }*/
         // 多边形点击事件
         map.setOnPolygonClickListener { polygon, _ ->
             decorations.nodeForPolygon(polygon)?.onClick?.invoke(polygon)
@@ -142,7 +146,7 @@ internal class MapApplier(
         // 设置InfoWindow内容
         map.setInfoWindowAdapter(
             ComposeInfoWindowAdapter(
-                mapView,
+                mapView = mapView,
                 markerNodeFinder = {
                     decorations.nodeForMarker(it)
                 }
@@ -156,12 +160,6 @@ internal class MapApplier(
 private fun MutableList<MapNode>.nodeForMarker(marker: Marker): MarkerNode? =
     fastFirstOrNull { it is MarkerNode && it.marker.options.title == marker.options.title && it.marker.options.snippet == marker.options.snippet } as? MarkerNode
 
-///**
-// * MovingPointOverlay轨迹移动
-// */
-//private fun MutableList<MapNode>.nodeForMovingPointOverlay(marker: Marker): MovingPointOverlayNode? =
-//    fastFirstOrNull { it is MovingPointOverlayNode && it.marker.`object` == marker.`object` } as? MovingPointOverlayNode
-//
 /**
  * Polyline
  */
@@ -173,16 +171,3 @@ private fun MutableList<MapNode>.nodeForPolyline(polyline: Polyline): PolylineNo
  */
 private fun MutableList<MapNode>.nodeForPolygon(polygon: Polygon): PolygonNode? =
     fastFirstOrNull { it is PolygonNode && it.polygon == polygon } as? PolygonNode
-
-
-///**
-// * RoutePlanOverlay
-// */
-//private fun MutableList<MapNode>.nodeForRoutePlanPolyline(polyline: Polyline): RoutePlanOverlayNode? =
-//    fastFirstOrNull { it is RoutePlanOverlayNode && null != it.routePlanOverlay?.allPolyLines?.fastFirstOrNull { child -> child == polyline } } as? RoutePlanOverlayNode
-//
-///**
-// * MultiPointOverlay
-// */
-//private fun MutableList<MapNode>.nodeForMultiPoint(multiPointItem: MultiPointItem): MultiPointOverlayNode? =
-//    fastFirstOrNull { it is MultiPointOverlayNode && null != it.multiPointOverlay.items.fastFirstOrNull { child -> child == multiPointItem  } } as? MultiPointOverlayNode

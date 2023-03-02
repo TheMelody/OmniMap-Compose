@@ -97,8 +97,13 @@ abstract class BaseViewModel<Event : IUiEvent, State : IUiState, Effect : IUiEff
      */
     override fun onCleared() {
         _effect.close()
-        asyncJobs.forEach {
-            it.cancel()
+        val iterator = asyncJobs.iterator()
+        while(iterator.hasNext()) {
+            val job = iterator.next()
+            if(!job.isCancelled) {
+                job.cancel()
+            }
+            iterator.remove()
         }
         super.onCleared()
     }

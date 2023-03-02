@@ -28,8 +28,7 @@ object MovementTrackRepository {
         return MapUiSettings(
             isScaleControlsEnabled = true,
             isZoomGesturesEnabled = true,
-            isScrollGesturesEnabled = true,
-            isZoomEnabled = true
+            isScrollGesturesEnabled = true
         )
     }
 

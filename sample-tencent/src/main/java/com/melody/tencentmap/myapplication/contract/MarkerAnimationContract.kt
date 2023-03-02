@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.tencent_compose.model
+package com.melody.tencentmap.myapplication.contract
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import com.melody.map.tencent_compose.poperties.MapProperties
+import com.melody.map.tencent_compose.poperties.MapUiSettings
+import com.melody.sample.common.state.IUiEffect
+import com.melody.sample.common.state.IUiEvent
+import com.melody.sample.common.state.IUiState
+import com.tencent.tencentmap.mapsdk.maps.model.LatLng
+import com.tencent.tencentmap.mapsdk.maps.model.TranslateAnimation
 
-internal class MapClickListeners {
-    var onMapLoaded: () -> Unit by mutableStateOf({})
+/**
+ * MarkerAnimationContract
+ * @author 被风吹过的夏天
+ * @email developer_melody@163.com
+ * @github: https://github.com/TheMelody/OmniMap
+ * created 2023/02/28 16:29
+ */
+class MarkerAnimationContract {
+    sealed class Event : IUiEvent {
+        object StartMarkerAnimation: Event()
+        object FinishMarkerAnimation: Event()
+    }
+
+    data class State(
+        val mapUiSettings: MapUiSettings,
+        val mapLoaded: Boolean,
+        val markerDefaultLocation: LatLng,
+        val markerAnimation: TranslateAnimation?
+    ) : IUiState
+
+    sealed class Effect : IUiEffect
 }

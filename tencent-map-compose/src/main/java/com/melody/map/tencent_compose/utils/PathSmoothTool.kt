@@ -117,31 +117,31 @@ class PathSmoothTool {
 
     /**
      * 单点滤波
-     * @param lastLoc 上次定位点坐标
-     * @param curLoc 本次定位点坐标
+     * @param lastLocation 上次定位点坐标
+     * @param curLocation 本次定位点坐标
      * @param intensity 滤波强度（1—5）
      * @return 滤波后本次定位点坐标值
      */
-    private fun kalmanFilterPoint(lastLoc: LatLng?, curLoc: LatLng, intensity: Int): LatLng? {
-        var curLoc: LatLng? = curLoc
-        var intensity = intensity
+    private fun kalmanFilterPoint(lastLocation: LatLng?, curLocation: LatLng, intensity: Int): LatLng? {
+        var curLoc: LatLng? = curLocation
+        var newIntensity = intensity
         if (pdelt_x == 0.0 || pdelt_y == 0.0) {
             initial()
         }
         var kalmanLatlng: LatLng? = null
-        if (lastLoc == null || curLoc == null) {
-            return kalmanLatlng
+        if (lastLocation == null || curLoc == null) {
+            return null
         }
-        if (intensity < 1) {
-            intensity = 1
-        } else if (intensity > 5) {
-            intensity = 5
+        if (newIntensity < 1) {
+            newIntensity = 1
+        } else if (newIntensity > 5) {
+            newIntensity = 5
         }
-        for (j in 0 until intensity) {
+        for (j in 0 until newIntensity) {
             kalmanLatlng = kalmanFilter(
-                lastLoc.longitude,
+                lastLocation.longitude,
                 curLoc!!.longitude,
-                lastLoc.latitude,
+                lastLocation.latitude,
                 curLoc.latitude
             )
             curLoc = kalmanLatlng
@@ -185,8 +185,8 @@ class PathSmoothTool {
     private fun initial() {
         pdelt_x = 0.001
         pdelt_y = 0.001
-        //        mdelt_x = 0;
-//        mdelt_y = 0;
+        // mdelt_x = 0;
+        //mdelt_y = 0;
         mdelt_x = 5.698402909980532E-4
         mdelt_y = 5.698402909980532E-4
     }
