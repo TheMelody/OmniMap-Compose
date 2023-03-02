@@ -40,6 +40,7 @@ val DefaultMapProperties = MapProperties()
  * @param restrictHeightBounds 基于高度显示地图范围: tencentMap.setRestrictBounds(latLngBounds, RestrictBoundsFitMode.FIT_HEIGHT)
  * @param isMyLocationEnabled 设置是否打开定位图层（myLocationOverlay）
  * @param isTrafficEnabled 是否打开交通路况图层
+ * @param isHandDrawMapEnable 是否显示手绘图，**手绘图的主要应用场景是：景区**
  * @param myLocationStyle 设置定位图层（myLocationOverlay）的样式
  * @param maxZoomPreference 设置地图最大缩放级别 缩放级别范围为[3, 20],超出范围将按最大级别计算
  * @param minZoomPreference 设置最小缩放级别 缩放级别范围为[3, 20],超出范围将按最小级别计算
@@ -55,6 +56,7 @@ class MapProperties(
     val restrictHeightBounds: LatLngBounds? = null,
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
+    val isHandDrawMapEnable: Boolean = false,
     val myLocationStyle: MyLocationStyle? = null,
     val maxZoomPreference: Float = 21.0F,
     val minZoomPreference: Float = 0F,
@@ -71,6 +73,7 @@ class MapProperties(
         restrictHeightBounds == other.restrictHeightBounds &&
         isMyLocationEnabled == other.isMyLocationEnabled &&
         isTrafficEnabled == other.isTrafficEnabled &&
+        isHandDrawMapEnable == other.isHandDrawMapEnable &&
         myLocationStyle == other.myLocationStyle &&
         maxZoomPreference == other.maxZoomPreference &&
         minZoomPreference == other.minZoomPreference &&
@@ -86,6 +89,7 @@ class MapProperties(
         restrictHeightBounds,
         isMyLocationEnabled,
         isTrafficEnabled,
+        isHandDrawMapEnable,
         myLocationStyle,
         maxZoomPreference,
         minZoomPreference,
@@ -102,6 +106,7 @@ class MapProperties(
         restrictHeightBounds: LatLngBounds? = this.restrictHeightBounds,
         isMyLocationEnabled: Boolean = this.isMyLocationEnabled,
         isTrafficEnabled: Boolean = this.isTrafficEnabled,
+        isHandDrawMapEnable: Boolean = this.isHandDrawMapEnable,
         myLocationStyle: MyLocationStyle? = this.myLocationStyle,
         maxZoomPreference: Float = this.maxZoomPreference,
         minZoomPreference: Float = this.minZoomPreference,
@@ -116,6 +121,7 @@ class MapProperties(
         restrictHeightBounds = restrictHeightBounds,
         isMyLocationEnabled = isMyLocationEnabled,
         isTrafficEnabled = isTrafficEnabled,
+        isHandDrawMapEnable = isHandDrawMapEnable,
         myLocationStyle = myLocationStyle,
         maxZoomPreference = maxZoomPreference,
         minZoomPreference = minZoomPreference,
@@ -132,6 +138,7 @@ class MapProperties(
                 "restrictHeightBounds=$restrictHeightBounds, " +
                 "isMyLocationEnabled=$isMyLocationEnabled, " +
                 "isTrafficEnabled=$isTrafficEnabled, " +
+                "isHandDrawMapEnable=$isHandDrawMapEnable, " +
                 "myLocationStyle=$myLocationStyle, " +
                 "maxZoomPreference=$maxZoomPreference, " +
                 "minZoomPreference=$minZoomPreference, " +

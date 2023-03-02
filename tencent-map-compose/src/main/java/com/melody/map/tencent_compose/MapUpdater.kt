@@ -149,6 +149,8 @@ internal inline fun MapUpdater(
         set(mapProperties.isShowBuildings) { map.setBuilding3dEffectEnable(it) }
         // 是否显示室内地图
         set(mapProperties.isIndoorEnabled) { map.setIndoorEnabled(it)  }
+        // 是否显示手绘图，**手绘图的主要应用场景是：景区**
+        set(mapProperties.isHandDrawMapEnable) { map.isHandDrawMapEnable = it }
         // 是否显示路况图层
         set(mapProperties.isTrafficEnabled) { map.isTrafficEnabled = it }
         // 指南针控件是否可见

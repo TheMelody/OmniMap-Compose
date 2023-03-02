@@ -40,8 +40,10 @@ import com.melody.map.tencent_compose.TXMap
 import com.melody.map.tencent_compose.model.MapType
 import com.melody.map.tencent_compose.poperties.MapProperties
 import com.melody.map.tencent_compose.poperties.MapUiSettings
+import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.model.ImmutableListWrapper
 import com.melody.ui.components.BasicFeatureMenuBar
+import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
 
@@ -54,8 +56,8 @@ import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
  */
 @Composable
 internal fun BasicFeatureScreen() {
+    val cameraPositionState = rememberCameraPositionState()
     var uiSettings by remember { mutableStateOf(MapUiSettings()) }
-
     var mapProperties by remember { mutableStateOf(MapProperties()) }
 
     val menuList by remember {
@@ -68,6 +70,7 @@ internal fun BasicFeatureScreen() {
                 "地图标注及名称",
                 "实时交通状况开关",
                 "显示室内地图开关",
+                "显示手绘图",
                 "设置地图显示范围",
                 "地图Logo缩放",
                 "旋转手势开关",
@@ -85,6 +88,7 @@ internal fun BasicFeatureScreen() {
         // 地图
         TXMap(
             modifier = Modifier.matchParentSize(),
+            cameraPositionState = cameraPositionState,
             uiSettings = uiSettings,
             properties = mapProperties
         )
@@ -108,6 +112,7 @@ internal fun BasicFeatureScreen() {
                             "地图标注及名称"-> mapProperties.isShowMapLabels
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
                             "显示室内地图开关" -> mapProperties.isIndoorEnabled
+                            "显示手绘图" -> mapProperties.isHandDrawMapEnable
                             "设置地图显示范围" -> if(mapProperties.mapShowLatLngBounds == null) null else "腾讯总部大楼"
                             "地图Logo缩放" -> uiSettings.logoScale
                             "旋转手势开关" -> uiSettings.isRotateGesturesEnabled
@@ -151,6 +156,14 @@ internal fun BasicFeatureScreen() {
                         }
                         "显示室内地图开关"-> {
                             mapProperties = mapProperties.copy(isIndoorEnabled = !mapProperties.isIndoorEnabled)
+                        }
+                        "显示手绘图"-> {
+                            // 注意：手绘图主要用于：景区！！！！！
+                            mapProperties = mapProperties.copy(isHandDrawMapEnable = !mapProperties.isHandDrawMapEnable)
+                            if(mapProperties.isHandDrawMapEnable) {
+                                // 地图视野移动，指定了经纬度和缩放级别
+                                cameraPositionState.move(CameraUpdateFactory.newLatLngZoom(LatLng(25.072295,102.761478), 18F))
+                            }
                         }
                         "设置地图显示范围"-> {
                             if(mapProperties.mapShowLatLngBounds == null) {
