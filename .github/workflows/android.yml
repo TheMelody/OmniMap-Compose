@@ -1,0 +1,57 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - 'v1.0.0'
+      # master分支不触发工作流
+      - '!master'
+      # dev_开头的分支不触发工作流
+      - '!dev_**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Clean with Gradle
+        run: ./gradlew clean
+
+      - name: Build with Gradle
+        run: ./gradlew sample-gaode:assembleRelease
+
+      # 对安装包进行签名
+      - name: Build Signed APK
+        uses: victorbnl/build-signed-apk@main
+        with:
+          keystore_b64: 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
+          keystore_password: 123456
+          key_alias: key0
+          key_password: 123456
+
+      # 创建并提交签名后的APK包和源码提交至对应ref_name的tag
+      - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          #artifacts: "sample-baidu/build/outputs/apk/release/*.apk,sample-gaode/build/outputs/apk/release/*.apk,sample-google/build/outputs/apk/release/*.apk,sample-huawei/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
+          # v1.0.0 目前只做完了高德地图和腾讯地图
+          artifacts: "sample-gaode/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
+          artifactErrorsFailBuild: true
+          #body: "五大地图集成示例APK包以及全量源码"
+          body: "高德地图和腾讯地图示例包APK包以及全量源码"
+          token: ${{ secrets.github_token }}
+          commit: master
+          # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
+          tag: ${{ github.ref_name }}

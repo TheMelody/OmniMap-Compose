@@ -22,10 +22,11 @@
 
 package com.melody.map.tencent_compose.overlay
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.melody.map.tencent_compose.MapApplier
@@ -33,11 +34,13 @@ import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.tencent.tencentmap.mapsdk.maps.model.AlphaAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
+import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.Polyline
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
+import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE
 import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions.SegmentText
 
 internal class PolylineNode(
@@ -60,6 +63,18 @@ class PolylineRainbow private constructor(
     companion object {
         /**
          * 线的分段颜色（彩虹线）配置
+         *
+         * 【对应关系如下】:
+         * colors: listOf(color1,color2,color3,color4)，indexes: listOf(0,1,2,3)
+         *
+         * 线上点【0, 1】之间颜色 => 取 color1
+         *
+         * 线上点【1, 2】之间颜色 => 取 color2
+         *
+         * 线上点【2, 3】之间颜色 => 取 color3
+         *
+         * 线上点 【3, 最后一个点】之间颜色 => 取 color4
+         *
          * @param colors 每段索引之间的颜色，这个颜色同样支持纹理颜色
          * @param indexes 分段线的顶点索引，这个索引值的数量必须和colors颜色列表数量相同
          */
@@ -117,7 +132,231 @@ class PolylineDynamicRoadName private constructor(
 }
 
 /**
- * 地图线段覆盖物。一个线段是多个连贯点的集合线段。
+ * 地图线段覆盖物。一个线段是多个连贯点的集合【普通线段】。
+ *
+ * 官方详细文档：https://lbs.qq.com/mobile/androidMapSDK/developerGuide/drawLines
+ *
+ * @param points 线段的坐标点列表
+ * @param appendPoints 在原有顶点上附加新的顶点
+ * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
+ * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
+ * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
+ * @param visible 线段的可见属性
+ * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
+ * @param pattern 设置虚线的样式，仅在：lineType = [PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE]时才有效，pattern的元素数量必须是偶数个，每对元素分别表示虚线中实线区域的长度，以及空白区域的长度（单位px)，
+ *        【注意】：设置虚线，还需要设置[polylineColor]和[polylineBorderColor]属性值，否则：无法覆盖默认的虚线颜色，或者无法显示虚线
+ * @param useGradient 线段是否使用渐变色
+ * @param isRoad 线段是否为路线
+ * @param isLineCap 路线是否显示半圆端点
+ * @param isClickable 是否可点击
+ * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
+ * @param tag 线段的附件对象
+ * @param width 线段宽度
+ * @param borderWidth 线段边框的宽度，默认为0
+ * @param zIndex 显示层级
+ * @param onAnimationStart 线段动画开始的回调
+ * @param onAnimationEnd 线段动画完成的回调
+ * @param onClick polyline点击事件回调
+ */
+@Composable
+@TXMapComposable
+fun Polyline(
+    points: List<LatLng>,
+    appendPoints: List<LatLng> = emptyList(),
+    dynamicRoadName: PolylineDynamicRoadName? = null,
+    polylineColor: Color? = null,
+    polylineBorderColor: Color?  = null,
+    visible: Boolean = true,
+    useGradient: Boolean = false,
+    isRoad: Boolean = true,
+    isLineCap: Boolean = false,
+    isClickable: Boolean = true,
+    animation: Animation? = null,
+    lineType: Int = LINE_TYPE_MULTICOLORLINE,
+    pattern: List<Int> = listOf(),
+    tag: Any? = null,
+    width: Float = 10F,
+    borderWidth: Float = 0F,
+    zIndex: Float = 0F,
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
+    onClick: (Polyline) -> Unit = {}
+) {
+    PolylineImpl(
+        points = points,
+        appendPoints = appendPoints,
+        rainbow = null,
+        customTexture_stable = null,
+        dynamicRoadName = dynamicRoadName,
+        polylineColor = polylineColor,
+        polylineBorderColor = polylineBorderColor,
+        visible = visible,
+        useGradient = useGradient,
+        isRoad = isRoad,
+        isLineCap = isLineCap,
+        isClickable = isClickable,
+        animation = animation,
+        lineType = lineType,
+        pattern = pattern,
+        tag = tag,
+        width = width,
+        borderWidth = borderWidth,
+        zIndex = zIndex,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
+        onClick = onClick
+    )
+}
+
+
+/**
+ * 地图线段覆盖物。一个线段是多个连贯点的集合【彩虹线段】
+ *
+ * 官方详细文档：https://lbs.qq.com/mobile/androidMapSDK/developerGuide/drawLines
+ *
+ * @param points 线段的坐标点列表
+ * @param appendPoints 在原有顶点上附加新的顶点
+ * @param rainbow 线的分段颜色（彩虹线）
+ * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
+ * @param visible 线段的可见属性
+ * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
+ * @param isRoad 线段是否为路线
+ * @param useGradient 线段是否为渐变的彩虹线段，如果设置为false，颜色一块是一块，如果设置为true，线段是多个颜色渐变连贯的
+ * @param isLineCap 路线是否显示半圆端点
+ * @param isClickable 是否可点击
+ * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
+ * @param tag 线段的附件对象
+ * @param width 线段宽度
+ * @param borderWidth 线段边框的宽度，默认为0
+ * @param zIndex 显示层级
+ * @param onAnimationStart 线段动画开始的回调
+ * @param onAnimationEnd 线段动画完成的回调
+ * @param onClick polyline点击事件回调
+ */
+@Composable
+@TXMapComposable
+fun PolylineRainbow(
+    points: List<LatLng>,
+    appendPoints: List<LatLng> = emptyList(),
+    rainbow: PolylineRainbow?,
+    useGradient: Boolean,
+    dynamicRoadName: PolylineDynamicRoadName? = null,
+    visible: Boolean = true,
+    isRoad: Boolean = true,
+    isLineCap: Boolean = false,
+    isClickable: Boolean = true,
+    animation: Animation? = null,
+    lineType: Int = LINE_TYPE_MULTICOLORLINE,
+    tag: Any? = null,
+    width: Float = 10F,
+    borderWidth: Float = 0F,
+    zIndex: Float = 0F,
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
+    onClick: (Polyline) -> Unit = {}
+) {
+    PolylineImpl(
+        points = points,
+        appendPoints = appendPoints,
+        rainbow = rainbow,
+        customTexture_stable = null,
+        dynamicRoadName = dynamicRoadName,
+        polylineColor = null,
+        polylineBorderColor = null,
+        visible = visible,
+        useGradient = useGradient,
+        isRoad = isRoad,
+        isLineCap = isLineCap,
+        isClickable = isClickable,
+        animation = animation,
+        lineType = lineType,
+        pattern = null,
+        tag = tag,
+        width = width,
+        borderWidth = borderWidth,
+        zIndex = zIndex,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
+        onClick = onClick
+    )
+}
+
+/**
+ * 地图线段覆盖物。一个线段是多个连贯点的集合【纹理线段】
+ *
+ * 官方详细文档：https://lbs.qq.com/mobile/androidMapSDK/developerGuide/drawLines
+ *
+ * @param points 线段的坐标点列表
+ * @param appendPoints 在原有顶点上附加新的顶点
+ * @param customTexture_stable (初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
+ * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
+ * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
+ * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
+ * @param visible 线段的可见属性
+ * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
+ * @param isRoad 线段是否为路线
+ * @param isLineCap 路线是否显示半圆端点
+ * @param isClickable 是否可点击
+ * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
+ * @param tag 线段的附件对象
+ * @param width 线段宽度
+ * @param borderWidth 线段边框的宽度，默认为0
+ * @param zIndex 显示层级
+ * @param onAnimationStart 线段动画开始的回调
+ * @param onAnimationEnd 线段动画完成的回调
+ * @param onClick polyline点击事件回调
+ */
+@Composable
+@TXMapComposable
+fun PolylineCustomTexture(
+    points: List<LatLng>,
+    appendPoints: List<LatLng> = emptyList(),
+    customTexture_stable: PolylineCustomTexture?,
+    dynamicRoadName: PolylineDynamicRoadName? = null,
+    polylineColor: Color? = null,
+    polylineBorderColor: Color?  = null,
+    visible: Boolean = true,
+    isRoad: Boolean = true,
+    isLineCap: Boolean = false,
+    isClickable: Boolean = true,
+    animation: Animation? = null,
+    lineType: Int = LINE_TYPE_MULTICOLORLINE,
+    tag: Any? = null,
+    width: Float = 10F,
+    borderWidth: Float = 0F,
+    zIndex: Float = 0F,
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
+    onClick: (Polyline) -> Unit = {}
+) {
+    PolylineImpl(
+        points = points,
+        appendPoints = appendPoints,
+        rainbow = null,
+        customTexture_stable = customTexture_stable,
+        dynamicRoadName = dynamicRoadName,
+        polylineColor = polylineColor,
+        polylineBorderColor = polylineBorderColor,
+        visible = visible,
+        useGradient = true,
+        isRoad = isRoad,
+        isLineCap = isLineCap,
+        isClickable = isClickable,
+        animation = animation,
+        lineType = lineType,
+        pattern = null,
+        tag = tag,
+        width = width,
+        borderWidth = borderWidth,
+        zIndex = zIndex,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
+        onClick = onClick
+    )
+}
+
+/**
+ * 【Polyline实现类】地图线段覆盖物。一个线段是多个连贯点的集合线段。
  *
  * 官方详细文档：https://lbs.qq.com/mobile/androidMapSDK/developerGuide/drawLines
  *
@@ -126,43 +365,56 @@ class PolylineDynamicRoadName private constructor(
  * @param rainbow (可选)，线的分段颜色（彩虹线）
  * @param customTexture_stable (可选，稳定参数，初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
- * @param polylineColor 线段的颜色
+ * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
+ * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
  * @param visible 线段的可见属性
- * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE
- * @param useGradient 线段是否使用渐变色
+ * @param lineType 线段的类型，必须是[PolylineOptions.LineType]里面的一种，如：[PolylineOptions.LineType.LINE_TYPE_MULTICOLORLINE]
+ * @param pattern 设置虚线的样式，仅在：lineType = [PolylineOptions.LineType.LINE_TYPE_IMAGEINARYLINE]时才有效，pattern的元素数量必须是偶数个，每对元素分别表示虚线中实线区域的长度，以及空白区域的长度（单位px)，
+ *        【注意】：设置虚线，还需要设置[polylineColor]和[polylineBorderColor]属性值，否则：无法覆盖默认的虚线颜色，或者无法显示虚线
+ * @param useGradient 线段是否为渐变的彩虹线段【默认为true】，如果设置为false，颜色一块是一块，如果设置为true，线段是多个颜色渐变连贯的
  * @param isRoad 线段是否为路线
  * @param isLineCap 路线是否显示半圆端点
  * @param isClickable 是否可点击
  * @param animation 动画，目前仅支持[AlphaAnimation]或者[EmergeAnimation]
  * @param tag 线段的附件对象
  * @param width 线段宽度
+ * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
+ * @param onAnimationStart 线段动画开始的回调
+ * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
 @TXMapComposable
-fun Polyline(
+private fun PolylineImpl(
     points: List<LatLng>,
-    appendPoints: List<LatLng> = emptyList(),
-    rainbow: PolylineRainbow? = null,
-    customTexture_stable: PolylineCustomTexture? = null,
-    dynamicRoadName: PolylineDynamicRoadName? = null,
-    polylineColor: Color = Color.Black,
-    visible: Boolean = true,
-    useGradient: Boolean = false,
-    isRoad: Boolean = true,
-    isLineCap: Boolean = false,
-    isClickable: Boolean = true,
-    animation: Animation? = null,
-    lineType : Int? = null,
-    tag: Any? = null,
-    width: Float = 10f,
-    zIndex: Float = 0f,
-    onClick: (Polyline) -> Unit = {}
+    appendPoints: List<LatLng>,
+    rainbow: PolylineRainbow?,
+    customTexture_stable: PolylineCustomTexture?,
+    dynamicRoadName: PolylineDynamicRoadName?,
+    polylineColor: Color?,
+    polylineBorderColor: Color?,
+    visible: Boolean,
+    useGradient: Boolean,
+    isRoad: Boolean,
+    isLineCap: Boolean,
+    isClickable: Boolean,
+    animation: Animation?,
+    lineType: Int,
+    pattern: List<Int>?,
+    tag: Any?,
+    width: Float,
+    borderWidth: Float,
+    zIndex: Float,
+    onAnimationStart: () -> Unit,
+    onAnimationEnd: () -> Unit,
+    onClick: (Polyline) -> Unit
 ) {
     if(null != animation && !(animation is AlphaAnimation || animation is EmergeAnimation)) {
         error("animation must be either AlphaAnimation or EmergeAnimation")
     }
+    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
+    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolylineNode, MapApplier>(
         factory = {
@@ -170,29 +422,49 @@ fun Polyline(
                 PolylineOptions().apply {
                     addAll(points)
                     lineCap(isLineCap)
-                    color(polylineColor.toArgb())
-                    lineType?.let { lineType(it) }
+                    polylineColor?.let { color(polylineColor.toArgb()) }
+                    if(borderWidth > 0 && null != polylineBorderColor){
+                        borderColors(intArrayOf(polylineBorderColor.toArgb()))
+                    }
                     gradient(useGradient)
-                    road(isRoad)
+                    if(useGradient) {
+                        // 这里规避下，如果外部设置为true，则必须设置下面这个类型，且road也必须为true
+                        lineType(LINE_TYPE_MULTICOLORLINE)
+                        road(true)
+                    } else {
+                        lineType(lineType)
+                        road(isRoad)
+                    }
+                    if(pattern?.isNotEmpty() == true) {
+                        // 线段虚线样式
+                        pattern(pattern)
+                    }
                     clickable(isClickable)
                     visible(visible)
                     width(width)
+                    borderWidth(borderWidth)
                     customTexture(customTexture_stable)
                 }) ?: error("Error adding Polyline")
             polyline.tag = tag
             polyline.rainbowColorLine(rainbow)
             polyline.dynamicRoadName(dynamicRoadName)
-            if(null != animation) {
-                polyline.startAnimation(animation)
-            }
             PolylineNode(polyline, onClick)
         },
         update = {
             update(onClick) { this.onPolylineClick = it }
 
             set(points) { this.polyline.points = it }
-            set(appendPoints) { this.polyline.appendPoints(it) }
-            set(polylineColor) { this.polyline.color = it.toArgb() }
+            set(appendPoints) {
+                if(it.isNotEmpty()) {
+                    this.polyline.appendPoints(it)
+                }
+            }
+            set(polylineColor) { it?.let { this.polyline.color = it.toArgb() } }
+            set(polylineBorderColor) {
+                if(borderWidth > 0 && null != polylineBorderColor){
+                    this.polyline.setBorderColors(intArrayOf(polylineBorderColor.toArgb()))
+                }
+            }
             set(tag) { this.polyline.tag = it }
             set(rainbow) { this.polyline.rainbowColorLine(it) }
             set(useGradient) { this.polyline.isGradientEnable = it }
@@ -201,6 +473,14 @@ fun Polyline(
             set(isClickable) { this.polyline.isClickable = it }
             set(animation) {
                 if(null != it) {
+                    it.animationListener = object : AnimationListener{
+                        override fun onAnimationStart() {
+                            currentOnAnimationStart.invoke()
+                        }
+                        override fun onAnimationEnd() {
+                            currentOnAnimationEnd.invoke()
+                        }
+                    }
                     this.polyline.startAnimation(it)
                 } else {
                     this.polyline.setAnimation(null)

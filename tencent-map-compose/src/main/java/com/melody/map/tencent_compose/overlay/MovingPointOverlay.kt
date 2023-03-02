@@ -53,7 +53,7 @@ internal class MovingPointOverlayNode(
  * @param isStartSmoothMove 是否开始移动
  * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker是否平贴在地图上
  * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker旋转角度是否沿顺时针方向
- * @param totalDuration 2点之间移动的总时长
+ * @param totalDuration 移动的总时长
  * @param anchor 移动的Marker的锚点位置
  * @param alpha 移动的Marker透明度
  * @param visible MovingPointOverlay的可见性
@@ -79,6 +79,9 @@ fun MovingPointOverlay(
     ComposeNode<MovingPointOverlayNode, MapApplier>(
         factory = {
             val aMap = mapApplier?.map?: error("Error init MovingPointOverlay")
+            if(points.isEmpty()){
+                error("Error points size == 0")
+            }
             val marker = aMap.addMarker(MarkerOptions(points[0]).apply {
                 icon(icon)
                 zIndex(zIndex)

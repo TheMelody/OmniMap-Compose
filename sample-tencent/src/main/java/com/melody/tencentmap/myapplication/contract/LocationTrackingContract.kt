@@ -52,6 +52,10 @@ class LocationTrackingContract {
         val grantLocationPermission:Boolean,
         // 当前位置的经纬度
         val locationLatLng: LatLng?,
+        // 当前位置圆心的半径
+        val locationCircleRadius: Float,
+        // 当前手持设备的方向
+        val currentRotation: Float,
         val mapProperties: MapProperties,
         val mapUiSettings: MapUiSettings
     ) : IUiState

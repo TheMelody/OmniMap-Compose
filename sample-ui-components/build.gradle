@@ -53,5 +53,6 @@ dependencies {
     api "androidx.compose.ui:ui-tooling-preview:$compose_version"
     api "androidx.compose.ui:ui:$compose_version"
     api "com.google.accompanist:accompanist-flowlayout:0.26.2-beta"
+    api "com.google.accompanist:accompanist-drawablepainter:0.26.2-beta"
     implementation project(path: ':sample-common')
 }

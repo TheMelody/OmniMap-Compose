@@ -23,14 +23,10 @@
 package com.melody.map.myapplication.viewmodel
 
 import com.amap.api.maps.model.LatLng
-import com.amap.api.services.route.*
 import com.melody.map.myapplication.contract.RoutePlanContract
-import com.melody.map.myapplication.model.BusRouteDataState
-import com.melody.map.myapplication.model.DrivingRouteDataState
-import com.melody.map.myapplication.model.RideRouteDataState
-import com.melody.map.myapplication.model.WalkRouteDataState
 import com.melody.map.myapplication.repo.RoutePlanRepository
 import com.melody.sample.common.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 
 /**
  * RoutePlanViewModel
@@ -40,10 +36,7 @@ import com.melody.sample.common.base.BaseViewModel
  * created 2022/10/14 15:02
  */
 class RoutePlanViewModel :
-    BaseViewModel<RoutePlanContract.Event, RoutePlanContract.State, RoutePlanContract.Effect>(),
-    RouteSearchV2.OnRouteSearchListener {
-
-    private var routeSearch: RouteSearchV2? = null
+    BaseViewModel<RoutePlanContract.Event, RoutePlanContract.State, RoutePlanContract.Effect>(){
 
     override fun createInitialState(): RoutePlanContract.State {
         return RoutePlanContract.State(
@@ -63,11 +56,22 @@ class RoutePlanViewModel :
             }
             is RoutePlanContract.Event.QueryRoutePlan -> {
                 setState { copy(isLoading = true, dataState = null) }
-                when (event.queryType) {
-                    0 -> queryDrivingRoutePlan()
-                    1 -> queryBusRoutePlan()
-                    2 -> queryWalkRoutePlan()
-                    else -> queryRideRoutePlan()
+                asyncLaunch(Dispatchers.IO) {
+                    val result = kotlin.runCatching {
+                        RoutePlanRepository.getRoutePlanResult(
+                            queryType = event.queryType,
+                            startPoint = currentState.queryStartPoint,
+                            endPoint = currentState.queryEndPoint,
+                            // 北京的城市区号：10
+                            cityCode = "10"
+                        )
+                    }
+                    if(result.isSuccess) {
+                        setState { copy(isLoading = false, dataState = result.getOrNull()) }
+                    } else {
+                        setState { copy(isLoading = false) }
+                        setEffect { RoutePlanContract.Effect.Toast(result.exceptionOrNull()?.message) }
+                    }
                 }
             }
         }
@@ -79,164 +83,5 @@ class RoutePlanViewModel :
 
     fun switchRoadTraffic() {
         setEvent(RoutePlanContract.Event.RoadTrafficClick)
-    }
-
-    private fun queryDrivingRoutePlan() {
-        RoutePlanRepository.drivingRoutePlanSearch(
-            startPoint = currentState.queryStartPoint,
-            endPoint = currentState.queryEndPoint,
-            routeSearch = routeSearch,
-            listener = this
-        )
-    }
-
-    private fun queryBusRoutePlan() {
-        RoutePlanRepository.busRoutePlanSearch(
-            startPoint = currentState.queryStartPoint,
-            endPoint = currentState.queryEndPoint,
-            // 北京的城市区号：10
-            cityCode = "10",
-            routeSearch = routeSearch,
-            listener = this
-        )
-    }
-
-    private fun queryWalkRoutePlan() {
-        RoutePlanRepository.walkRoutePlanSearch(
-            startPoint = currentState.queryStartPoint,
-            endPoint = currentState.queryEndPoint,
-            routeSearch = routeSearch,
-            listener = this
-        )
-    }
-
-    private fun queryRideRoutePlan() {
-        RoutePlanRepository.rideRoutePlanSearch(
-            startPoint = currentState.queryStartPoint,
-            endPoint = currentState.queryEndPoint,
-            routeSearch = routeSearch,
-            listener = this
-        )
-    }
-
-    override fun onDriveRouteSearched(result: DriveRouteResultV2?, errorCode: Int) {
-        setState { copy(isLoading = false) }
-        RoutePlanRepository.handleDriveRouteV2Searched(
-            result,
-            errorCode
-        ) { drivePathV2, startPos, endPos, message ->
-            if (null != drivePathV2) {
-                setState {
-                    copy(
-                        dataState = DrivingRouteDataState(
-                            routeWidth = 30F,
-                            startPos = startPos ?: currentState.queryStartPoint,
-                            targetPos = endPos ?: currentState.queryEndPoint,
-                            startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
-                            endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
-                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
-                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
-                            drivePathV2List = drivePathV2,
-                            driveLineSelectedTexture = RoutePlanRepository.getDrivingCustomTexture(true),
-                            driveLineUnSelectedTexture = RoutePlanRepository.getDrivingCustomTexture(false),
-                            throughIcon = null,
-                            throughPointList = emptyList()
-                        )
-                    )
-                }
-            } else {
-                setEffect { RoutePlanContract.Effect.Toast(message) }
-            }
-        }
-    }
-
-    override fun onBusRouteSearched(result: BusRouteResultV2?, errorCode: Int) {
-        setState { copy(isLoading = false) }
-        RoutePlanRepository.handleBusRouteSearched(
-            result,
-            errorCode
-        ) { busPathV2, startPos, endPos, message ->
-            if (null != busPathV2) {
-                setState {
-                    copy(
-                        dataState = BusRouteDataState(
-                            routeWidth = 30F,
-                            startPos = startPos ?: currentState.queryStartPoint,
-                            targetPos = endPos ?: currentState.queryEndPoint,
-                            startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
-                            endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
-                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
-                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
-                            busLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
-                            busLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
-                            busPathV2List = busPathV2
-                        )
-                    )
-                }
-            } else {
-                setEffect { RoutePlanContract.Effect.Toast(message) }
-            }
-        }
-    }
-
-    override fun onWalkRouteSearched(result: WalkRouteResultV2?, errorCode: Int) {
-        setState { copy(isLoading = false) }
-        RoutePlanRepository.handleWalkRouteSearched(
-            result,
-            errorCode
-        ) { walkPath, startPos, endPos, message ->
-            if (null != walkPath) {
-                setState {
-                    copy(
-                        dataState = WalkRouteDataState(
-                            routeWidth = 30F,
-                            startPos = startPos ?: currentState.queryStartPoint,
-                            targetPos = endPos ?: currentState.queryEndPoint,
-                            startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
-                            endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
-                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
-                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
-                            walkLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
-                            walkLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
-                            walkNodeIcon = null,
-                            walkPathList = walkPath
-                        )
-                    )
-                }
-            } else {
-                setEffect { RoutePlanContract.Effect.Toast(message) }
-            }
-        }
-    }
-
-    override fun onRideRouteSearched(result: RideRouteResultV2?, errorCode: Int) {
-        setState { copy(isLoading = false) }
-        RoutePlanRepository.handleRideRouteSearched(
-            result,
-            errorCode
-        ) { ridePath, startPos, endPos, message ->
-            if (null != ridePath) {
-                setState {
-                    copy(
-                        dataState = RideRouteDataState(
-                            routeWidth = 30F,
-                            startPos = startPos ?: currentState.queryStartPoint,
-                            targetPos = endPos ?: currentState.queryEndPoint,
-                            startMarkerIcon = RoutePlanRepository.getStartMarkerIcon(),
-                            endMarkerIcon = RoutePlanRepository.getEndMarkerIcon(),
-                            startGuideIcon = RoutePlanRepository.getStartGuideIcon(),
-                            endGuideIcon = RoutePlanRepository.getEndGuideIcon(),
-                            rideLineSelectedTexture = RoutePlanRepository.getBusCustomTexture(true),
-                            rideLineUnSelectedTexture = RoutePlanRepository.getBusCustomTexture(false),
-                            rideNodeIcon = null,
-                            nodeVisible = false,
-                            ridePathList = ridePath
-                        )
-                    )
-                }
-            } else {
-                setEffect { RoutePlanContract.Effect.Toast(message) }
-            }
-        }
     }
 }

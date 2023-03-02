@@ -19,8 +19,7 @@ object OverlayRepository {
     fun initMapUiSetting(): MapUiSettings {
         return MapUiSettings(
             isZoomGesturesEnabled = true,
-            isScrollGesturesEnabled = true,
-            isZoomEnabled = true
+            isScrollGesturesEnabled = true
         )
     }
     fun initPolygonPointList(): List<LatLng>{

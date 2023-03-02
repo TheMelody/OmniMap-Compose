@@ -18,6 +18,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
+        android:allowNativeHeapPointerTagging="false"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -25,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:ignore="UnusedAttribute">
         <!--腾讯地图Api key-->
         <meta-data
             android:name="TencentMapSDK"
@@ -40,7 +41,6 @@
                 android:name="com.melody.tencentmap.myapplication.initializer.AppDataInitStartup"
                 android:value="androidx.startup" />
         </provider>
-
 
         <activity
             android:name=".MainActivity"
@@ -60,6 +60,20 @@
         <activity android:name=".LocationTrackingActivity" android:exported="false"/>
 
         <activity android:name=".SmoothMoveActivity" android:exported="false"/>
+
+        <activity android:name=".MovementTrackActivity" android:exported="false"/>
+
+        <activity android:name=".MovementTrackActivity2" android:exported="false"/>
+
+        <activity android:name=".DragDropSelectPointActivity" android:exported="false"/>
+
+        <activity android:name=".RoutePlanActivity" android:exported="false"/>
+
+        <activity android:name=".LogisticsActivity" android:exported="false"/>
+
+        <activity android:name=".MarkerAnimationActivity" android:exported="false"/>
+
+        <activity android:name=".MarkerClusterActivity" android:exported="false"/>
 
     </application>
 </manifest>

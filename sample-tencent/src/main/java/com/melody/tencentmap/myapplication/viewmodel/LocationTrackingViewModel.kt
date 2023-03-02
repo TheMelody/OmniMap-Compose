@@ -28,6 +28,8 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import com.melody.map.tencent_compose.poperties.MapProperties
 import com.melody.sample.common.base.BaseViewModel
+import com.melody.sample.common.model.ISensorDegreeListener
+import com.melody.sample.common.utils.SensorEventHelper
 import com.melody.sample.common.utils.openAppPermissionSettingPage
 import com.melody.sample.common.utils.safeLaunch
 import com.melody.tencentmap.myapplication.contract.LocationTrackingContract
@@ -50,16 +52,19 @@ import kotlinx.coroutines.Dispatchers
  */
 class LocationTrackingViewModel :
     BaseViewModel<LocationTrackingContract.Event, LocationTrackingContract.State, LocationTrackingContract.Effect>(),
-    LocationSource,TencentLocationListener {
+    LocationSource,TencentLocationListener, ISensorDegreeListener {
 
     private var mLocationChangedListener: LocationSource.OnLocationChangedListener? = null
     private var mLocationManager: TencentLocationManager? = null
     private var mLocationRequest: TencentLocationRequest? = null
+    private val sensorEventHelper = SensorEventHelper()
 
     override fun createInitialState(): LocationTrackingContract.State {
         return LocationTrackingContract.State(
             mapProperties = MapProperties(),
             mapUiSettings = LocationTrackingRepository.initMapUiSettings(),
+            locationCircleRadius = 0F,
+            currentRotation = 0F,
             isShowOpenGPSDialog = false,
             grantLocationPermission = false,
             locationLatLng = null,
@@ -79,6 +84,7 @@ class LocationTrackingViewModel :
     }
 
     init {
+        sensorEventHelper.registerSensorListener(this)
         LocationTrackingRepository.initLocation { manager,request ->
             mLocationManager = manager
             mLocationRequest = request
@@ -132,10 +138,17 @@ class LocationTrackingViewModel :
     private fun updateMyLocationStyle() {
         // 因为腾讯的BitmapDescriptor需要在获取到MapContext之后才能用，否则会返回null，会导致定位蓝点图标无法修改生效
         val myLocationStyle = LocationTrackingRepository.initMyLocationStyle()
-        // 打开定位图层，修改定位样式
-        setState { copy(mapProperties = mapProperties.copy(isMyLocationEnabled = true, myLocationStyle = myLocationStyle)) }
-        // 显示定位按钮
-        setState { copy(mapUiSettings = mapUiSettings.copy(myLocationButtonEnabled = true)) }
+        setState {
+            copy(
+                // 打开定位图层，修改定位样式
+                mapProperties = mapProperties.copy(
+                    isMyLocationEnabled = true,
+                    myLocationStyle = myLocationStyle
+                ),
+                // 显示定位按钮
+                mapUiSettings = mapUiSettings.copy(myLocationButtonEnabled = true)
+            )
+        }
     }
 
     override fun deactivate() {
@@ -146,6 +159,7 @@ class LocationTrackingViewModel :
     }
 
     override fun onCleared() {
+        sensorEventHelper.unRegisterSensorListener()
         deactivate()
         super.onCleared()
     }
@@ -157,7 +171,7 @@ class LocationTrackingViewModel :
             locationChangedListener = mLocationChangedListener
         ) {
             setState {
-                copy(locationLatLng = LatLng(it.latitude, it.longitude))
+                copy(locationLatLng = LatLng(it.latitude, it.longitude),locationCircleRadius = it.accuracy)
             }
         }
     }
@@ -177,5 +191,9 @@ class LocationTrackingViewModel :
         ) {
             setEffect { LocationTrackingContract.Effect.Toast(it) }
         }
+    }
+
+    override fun onSensorDegree(degree: Float) {
+        setState { copy(currentRotation = 360 - degree) }
     }
 }

@@ -25,10 +25,7 @@ package com.melody.map.tencent_compose.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.tencent.lbssearch.httpresponse.Poi
 
 internal class MapClickListeners {
     var onMapLoaded: () -> Unit by mutableStateOf({})
-    var onPOIClick: (Poi) -> Unit by mutableStateOf({})
-//    var indoorBuildingActive: (IndoorBuildingInfo) -> Unit by mutableStateOf({})
 }
