@@ -12,7 +12,6 @@ import android.view.WindowManager
 import com.melody.sample.common.model.ISensorDegreeListener
 import kotlin.math.abs
 
-
 class SensorEventHelper : SensorEventListener {
     private val mSensorManager: SensorManager = SDKUtils.getApplicationContext()
         .getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -20,8 +19,8 @@ class SensorEventHelper : SensorEventListener {
     private val magneticField: Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     private var lastTime: Long = 0
     private var mAngle = 0f
-    private var accelermoterValues = FloatArray(3)
-    private var magneticFieldValues = FloatArray(3)
+    private var accelermoterValues : FloatArray ?= null  //  FloatArray(3) 不在这里初始化
+    private var magneticFieldValues : FloatArray ?= null // FloatArray(3)  不在这里初始化
     private var iSensorDegreeListener:ISensorDegreeListener? = null
 
     companion object {
@@ -32,11 +31,13 @@ class SensorEventHelper : SensorEventListener {
         iSensorDegreeListener = changeDegreeListener
         mSensorManager.registerListener(
             this, mAccelerometer,
-            Sensor.TYPE_ACCELEROMETER
+            /*Sensor.TYPE_ACCELEROMETER*/
+            SensorManager.SENSOR_DELAY_UI
         )
         mSensorManager.registerListener(
             this, magneticField,
-            Sensor.TYPE_MAGNETIC_FIELD
+            /*Sensor.TYPE_MAGNETIC_FIELD*/
+            SensorManager.SENSOR_DELAY_UI
         )
     }
 
@@ -59,6 +60,7 @@ class SensorEventHelper : SensorEventListener {
         if(event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
             magneticFieldValues = event.values
         }
+        if(null == accelermoterValues || null == magneticFieldValues) return
         val values = FloatArray(3)
         val R = FloatArray(9)
         SensorManager.getRotationMatrix(R, null, accelermoterValues, magneticFieldValues)
@@ -71,12 +73,12 @@ class SensorEventHelper : SensorEventListener {
         }else if (x < -180.0F) {
             x += 360.0F
         }
-        if (abs(mAngle - x) <= 8.0F) {
+        if (abs(mAngle - x) < 3F) {  // if (abs(mAngle - x) <= 8.0F)
             return
         }
         mAngle = if (java.lang.Float.isNaN(x)) 0F else x
-        lastTime = System.currentTimeMillis()
         iSensorDegreeListener?.onSensorDegree(360 - mAngle)
+        lastTime = System.currentTimeMillis()
     }
 
     /**

@@ -39,7 +39,6 @@ import com.melody.map.tencent_compose.poperties.MapProperties
 import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
-import com.tencent.lbssearch.httpresponse.Poi
 import com.tencent.tencentmap.mapsdk.maps.LocationSource
 import com.tencent.tencentmap.mapsdk.maps.MapView
 import com.tencent.tencentmap.mapsdk.maps.TencentMapOptions
@@ -47,6 +46,16 @@ import kotlinx.coroutines.awaitCancellation
 
 /**
  * 腾讯地图 TXMap
+ *
+ * @param modifier [Modifier]修饰符
+ * @param cameraPositionState 地图相机位置状态[CameraPositionState]
+ * @param tMapOptionsFactory 可以传腾讯地图[TencentMapOptions]参数，如离线地图开关等。
+ * @param properties 地图属性配置[MapProperties]
+ * @param uiSettings 地图SDK UI配置[MapUiSettings]
+ * @param locationSource 地图定位蓝点功能必传[LocationSource]
+ * @param onMapLoaded 地图加载完成的回调
+ * @param content 这里面放置-地图覆盖物
+ *
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
@@ -56,13 +65,11 @@ import kotlinx.coroutines.awaitCancellation
 fun TXMap(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    aMapOptionsFactory: () -> TencentMapOptions = { TencentMapOptions() },
+    tMapOptionsFactory: () -> TencentMapOptions = { TencentMapOptions() },
     properties: MapProperties = DefaultMapProperties,
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: LocationSource? = null,
     onMapLoaded: () -> Unit = {},
-    onPOIClick: (Poi) -> Unit = {},
-    //indoorBuildingActive: (IndoorBuildingInfo) -> Unit = {},
     content: (@Composable @TXMapComposable () -> Unit)? = null
 ) {
     if (LocalInspectionMode.current) {
@@ -70,7 +77,7 @@ fun TXMap(
     }
     val context = LocalContext.current
     val mapView = remember {
-        MapView(context, aMapOptionsFactory()).apply {
+        MapView(context, tMapOptionsFactory()).apply {
             id = R.id.map
         }
     }
@@ -78,7 +85,6 @@ fun TXMap(
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
-        it.onPOIClick = onPOIClick
     }
 
     val currentLocationSource by rememberUpdatedState(locationSource)

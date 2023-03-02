@@ -25,6 +25,8 @@ package com.melody.map.gd_compose.overlay
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import com.amap.api.maps.model.BitmapDescriptor
 import com.amap.api.maps.model.Marker
@@ -61,6 +63,7 @@ fun ClusterOverlay(
     defaultClusterIcon: BitmapDescriptor,
     onClick: (Marker, List<ClusterItem>)-> Unit
 ) {
+    val currentOnClick by rememberUpdatedState(newValue = onClick)
     val mapApplier = currentComposer.applier as? MapApplier
     val context = LocalContext.current
     ComposeNode<ClusterOverlayNode, MapApplier>(
@@ -77,7 +80,7 @@ fun ClusterOverlay(
             clusterOverlay.setClusterRenderer(clusterRenderer)
             clusterOverlay.setOnClusterClickListener(object : ClusterClickListener {
                 override fun onClick(marker: Marker, clusterItems: List<ClusterItem>) {
-                    onClick.invoke(marker,clusterItems)
+                    currentOnClick.invoke(marker,clusterItems)
                 }
             })
             ClusterOverlayNode(clusterOverlay)

@@ -30,6 +30,7 @@ import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCompositionContext
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -37,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import com.melody.map.tencent_compose.MapApplier
 import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
+import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BaseAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -176,6 +178,8 @@ fun Marker(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
 ) {
     MarkerImpl(
@@ -194,8 +198,12 @@ fun Marker(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
+        infoContent = null,
+        infoWindow = null
     )
 }
 
@@ -219,7 +227,7 @@ fun Marker(
  * @param animation 标注动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
- * @param content 【可选】，用于自定义整个信息窗口。
+ * @param content 【可选】，用于自定义整个信息窗口，【里面动态的内容，建议通过title、snippet、tag的方式获取】
  */
 @Composable
 @TXMapComposable
@@ -240,6 +248,8 @@ fun MarkerInfoWindow(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -259,9 +269,12 @@ fun MarkerInfoWindow(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
         infoWindow = content,
+        infoContent = null,
     )
 }
 
@@ -285,7 +298,7 @@ fun MarkerInfoWindow(
  * @param animation 标注动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
- * @param content (可选)，用于自定义信息窗口的内容。
+ * @param content (可选)，用于自定义信息窗口的内容，【里面动态的内容，建议通过title、snippet、tag的方式获取】
 */
 @Composable
 @TXMapComposable
@@ -306,6 +319,8 @@ fun MarkerInfoWindowContent(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
+    onAnimationStart: () -> Unit = {},
+    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -325,9 +340,12 @@ fun MarkerInfoWindowContent(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
+        onAnimationStart = onAnimationStart,
+        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = content,
+        infoWindow = null
     )
 }
 
@@ -357,26 +375,30 @@ fun MarkerInfoWindowContent(
 @Composable
 @TXMapComposable
 private fun MarkerImpl(
-    state: MarkerState = rememberMarkerState(),
-    alpha: Float = 1.0f,
-    anchor: Offset = Offset(0.5f, 1.0f),
-    draggable: Boolean = false,
-    isClickable: Boolean = true,
-    flat_stable: Boolean = false,
-    clockwise_stable: Boolean = true,
-    icon: BitmapDescriptor? = null,
-    rotation: Float = 0.0f,
-    tag: Any? = null,
-    snippet: String? = null,
-    title: String? = null,
-    visible: Boolean = true,
-    zIndex: Float = 0.0f,
-    animation: BaseAnimation? = null,
-    onClick: (Marker) -> Boolean = { false },
+    state: MarkerState,
+    alpha: Float,
+    anchor: Offset,
+    draggable: Boolean,
+    isClickable: Boolean,
+    flat_stable: Boolean,
+    clockwise_stable: Boolean,
+    icon: BitmapDescriptor?,
+    rotation: Float,
+    tag: Any?,
+    snippet: String?,
+    title: String?,
+    visible: Boolean,
+    zIndex: Float,
+    animation: BaseAnimation?,
+    onClick: (Marker) -> Boolean,
+    onAnimationStart: () -> Unit,
+    onAnimationEnd: () -> Unit,
     onInfoWindowClick: (Marker) -> Unit = {},
-    infoWindow: (@Composable (Marker) -> Unit)? = null,
-    infoContent: (@Composable (Marker) -> Unit)? = null,
+    infoWindow: (@Composable (Marker) -> Unit)?,
+    infoContent: (@Composable (Marker) -> Unit)?,
 ) {
+    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
+    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as? MapApplier
     val compositionContext = rememberCompositionContext()
     ComposeNode<MarkerNode, MapApplier>(
@@ -399,9 +421,6 @@ private fun MarkerImpl(
             ) ?: error("Error adding marker")
             marker.tag = tag
             marker.isClickable = isClickable
-            if(null != animation) {
-                marker.startAnimation(animation)
-            }
             MarkerNode(
                 compositionContext = compositionContext,
                 marker = marker,
@@ -446,6 +465,14 @@ private fun MarkerImpl(
             set(zIndex) { this.marker.setZIndex(it) }
             set(animation) {
                 if(null != it) {
+                    it.animationListener = object :AnimationListener{
+                        override fun onAnimationStart() {
+                            currentOnAnimationStart.invoke()
+                        }
+                        override fun onAnimationEnd() {
+                            currentOnAnimationEnd.invoke()
+                        }
+                    }
                     marker.startAnimation(it)
                 } else {
                     marker.setAnimation(null)

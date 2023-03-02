@@ -6,6 +6,8 @@ on:
       - 'v1.0.0'
       # master分支不触发工作流
       - '!master'
+      # dev_开头的分支不触发工作流
+      - '!dev_**'
 
 jobs:
   build:
@@ -43,10 +45,13 @@ jobs:
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "sample-baidu/build/outputs/apk/release/*.apk,sample-gaode/build/outputs/apk/release/*.apk,sample-google/build/outputs/apk/release/*.apk,sample-huawei/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
+          #artifacts: "sample-baidu/build/outputs/apk/release/*.apk,sample-gaode/build/outputs/apk/release/*.apk,sample-google/build/outputs/apk/release/*.apk,sample-huawei/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
+          # v1.0.0 目前只做完了高德地图和腾讯地图
+          artifacts: "sample-gaode/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
           artifactErrorsFailBuild: true
-          body: "五大地图集成示例APK包以及全量源码"
+          #body: "五大地图集成示例APK包以及全量源码"
+          body: "高德地图和腾讯地图示例包APK包以及全量源码"
           token: ${{ secrets.github_token }}
           commit: master
-          # tag名称和分支名称保持一致
+          # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
           tag: ${{ github.ref_name }}

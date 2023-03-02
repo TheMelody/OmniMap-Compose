@@ -7,8 +7,9 @@
     <string name="tx_map_main_feature_item_smooth_move">轨迹平滑(移动/回放)</string>
     <string name="tx_map_main_feature_item_drag_drop_select_point">Dragdrop拖拽选点</string>
     <string name="tx_map_main_feature_item_movement_track">运动轨迹</string>
+    <string name="tx_map_main_feature_item_movement_track2">【播放】运动轨迹</string>
     <string name="tx_map_main_feature_item_route_plan">路径规划</string>
-    <string name="tx_map_main_feature_item_multipoint_click">海量点点击</string>
+    <string name="tx_map_main_feature_item_logistics">物流订单</string>
     <string name="tx_map_main_feature_item_marker_animation">Marker动画</string>
     <string name="tx_map_main_feature_item_cluster_effect">点聚合效果</string>
 

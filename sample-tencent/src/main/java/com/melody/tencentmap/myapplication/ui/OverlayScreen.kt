@@ -54,6 +54,7 @@ import com.melody.map.tencent_compose.overlay.MarkerInfoWindowContent
 import com.melody.map.tencent_compose.overlay.Polygon
 import com.melody.map.tencent_compose.overlay.PolygonBorder
 import com.melody.map.tencent_compose.overlay.Polyline
+import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.overlay.TileOverlay
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
@@ -168,10 +169,11 @@ internal fun OverlayScreen() {
             )
 
             // 线段的出现动画
-            Polyline(
+            PolylineRainbow(
                 points = currentState.polylineAnimPointList,
                 width = 15F,
                 isLineCap = true,
+                useGradient = false,
                 // 彩虹线段...
                 rainbow = currentState.polylineRainbow,
                 animation = currentState.polylineAnimation,

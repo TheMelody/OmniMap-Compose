@@ -22,16 +22,13 @@
 
 package com.melody.tencentmap.myapplication.repo
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Matrix
 import android.location.Location
 import android.os.Looper
-import com.melody.map.tencent_compose.poperties.MapProperties
 import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.melody.sample.common.utils.SDKUtils
-import com.melody.ui.components.R
+import com.melody.tencentmap.myapplication.R
 import com.tencent.map.geolocation.TencentLocation
 import com.tencent.map.geolocation.TencentLocationListener
 import com.tencent.map.geolocation.TencentLocationManager
@@ -49,20 +46,22 @@ import com.tencent.tencentmap.mapsdk.maps.model.MyLocationStyle
  */
 object LocationTrackingRepository {
 
+    /**
+     * 去除默认的蓝点
+     */
     fun initMyLocationStyle(): MyLocationStyle {
-        // 注意：保证地图初始化完成之后，再调用，否则getActiveMapContext是null，fromBitmap返回的也是null
-        val locationIcon = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(SDKUtils.getApplicationContext().resources,R.drawable.ic_map_location_self))
+        // 使用一个1x1像素的透明图片替换默认的蓝点图标
+        val locationIcon = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(SDKUtils.getApplicationContext().resources,
+            R.drawable.ic_transparent_location))
         return MyLocationStyle().apply {
             // 设置小蓝点的图标
             icon(locationIcon)
             // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-            myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE)
+            myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER)  // 此种类型：不会移动到地图中心点
             // 设置圆形的边框颜色
-            strokeColor(Color.argb(100, 0, 0, 180))
+            strokeColor(Color.TRANSPARENT)
             // 设置圆形的填充颜色
-            fillColor(Color.argb(100, 0, 0, 180))
-            // 设置圆形的边框粗细
-            strokeWidth(1)
+            fillColor(Color.TRANSPARENT)
         }
     }
 

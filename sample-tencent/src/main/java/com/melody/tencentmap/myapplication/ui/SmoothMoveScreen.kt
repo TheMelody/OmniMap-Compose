@@ -33,9 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.melody.map.tencent_compose.TXMap
 import com.melody.map.tencent_compose.overlay.MovingPointOverlay
-import com.melody.map.tencent_compose.overlay.Polyline
 import com.melody.map.tencent_compose.overlay.PolylineCustomTexture
-import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.utils.showToast
 import com.melody.tencentmap.myapplication.contract.SmoothMoveContract
@@ -43,7 +41,6 @@ import com.melody.tencentmap.myapplication.viewmodel.SmoothMoveViewModel
 import com.melody.ui.components.MapMenuButton
 import com.melody.ui.components.RedCenterLoading
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
-import com.tencent.tencentmap.mapsdk.maps.model.PolylineOptions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -81,7 +78,7 @@ internal fun SmoothMoveScreen() {
             onMapLoaded = viewModel::handleMapLoaded
         ) {
             if(currentState.trackPoints.isNotEmpty()) {
-                Polyline(
+                PolylineCustomTexture(
                     points = currentState.trackPoints,
                     polylineColor = Color(0xFF0492FF),
                     customTexture_stable = PolylineCustomTexture.create(arrowSpacing = 30, arrowTexture = currentState.bitmapTexture),
@@ -105,6 +102,7 @@ internal fun SmoothMoveScreen() {
                 .background(Color.Black.copy(alpha = 0.3F))){
                 MapMenuButton(
                     modifier = Modifier.align(Alignment.Center),
+                    // 腾讯地图的Smooth，不能真正的暂停和恢复，因为小车方向角度会失效，所以这里提供的示例也只有停止和开始
                     text = if (currentState.isStart) "停止" else "开始",
                     onClick = viewModel::toggle
                 )

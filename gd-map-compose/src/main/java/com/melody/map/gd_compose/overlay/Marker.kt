@@ -407,11 +407,6 @@ private fun MarkerImpl(
             ) ?: error("Error adding marker")
             marker.`object` = tag
             marker.isClickable = isClickable
-            marker.setAnimationListener(animationListener)
-            marker.setAnimation(animation)
-            if(null != animation) {
-                marker.startAnimation()
-            }
             MarkerNode(
                 compositionContext = compositionContext,
                 marker = marker,

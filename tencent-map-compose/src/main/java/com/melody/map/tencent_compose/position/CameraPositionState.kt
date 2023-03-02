@@ -76,7 +76,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
      * coordinates and lat/lng.
      */
     val projection: Projection?
-        get() = map?.projection
+        get() = tMap?.projection
 
     /**
      * Local source of truth for the current camera position.
@@ -87,7 +87,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
     private var rawPosition by mutableStateOf(position)
 
     /**
-     * 注意：这里要转换一下CameraPosition，高德地图实现了Parcelable，腾讯地图没有实现，我们这里转换一下，才能用rememberSaveable
+     * 注意：这里要转换一下CameraPosition，腾讯地图没有实现Parcelable，我们这里转换一下，才能用rememberSaveable
      */
     fun transformToTxCameraPosition(cameraPosition: CameraPosition) {
         rawPosition = TXCameraPosition(cameraPosition.target,cameraPosition.zoom,cameraPosition.tilt,cameraPosition.bearing)
@@ -97,7 +97,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
         get() = rawPosition
         set(value) {
             synchronized(lock) {
-                val map = map
+                val map = tMap
                 if (map == null) {
                     rawPosition = value
                 } else {
@@ -106,7 +106,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
             }
         }
 
-    private var map: TencentMap? = null
+    private var tMap: TencentMap? = null
 
     private val lock = Any()
 
@@ -141,11 +141,11 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
 
     internal fun setMap(map: TencentMap?) {
         synchronized(lock) {
-            if (this.map == null && map == null) return
-            if (this.map != null && map != null) {
+            if (this.tMap == null && map == null) return
+            if (this.tMap != null && map != null) {
                 error("CameraPositionState may only be associated with one TencentMap at a time")
             }
-            this.map = map
+            this.tMap = map
             if (map == null) {
                 isMoving = false
             } else {
@@ -189,14 +189,13 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
             suspendCancellableCoroutine { continuation ->
                 synchronized(lock) {
                     movementOwner = myJob
-                    val map = map
+                    val map = tMap
                     if (map == null) {
                         // Do it later
                         val animateOnMapAvailable = object : OnMapChangedCallback {
                             override fun onMapChangedLocked(newMap: TencentMap?) {
                                 if (newMap == null) {
                                     // Cancel the animate caller and crash the map setter
-                                    @Suppress("ThrowableNotThrown")
                                     continuation.resumeWithException(CancellationException(
                                         "internal error; no TencentMap available"))
                                     error(
@@ -234,7 +233,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
             synchronized(lock) {
                 if (myJob != null && movementOwner === myJob) {
                     movementOwner = null
-                    map?.stopAnimation()
+                    tMap?.stopAnimation()
                 }
             }
         }
@@ -280,7 +279,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
     @UiThread
     fun move(update: CameraUpdate) {
         synchronized(lock) {
-            val map = map
+            val map = tMap
             movementOwner = null
             if (map == null) {
                 // Do it when we have a map available
