@@ -62,6 +62,8 @@ jobs:
           # sample-gaode/build/outputs/apk/release/*.apk,...,sample-tencent/build/repo/io/github/TheMelody/tencent_compose/1.0.0/*.aar
           artifacts: ${{ secrets.BUILD_SOURCE_ARTIFACTS_v1_0_0 }}
           artifactErrorsFailBuild: true
+          ### 此版本中更改的内容
+          # ${{ steps.changelog.outputs.changelog }}
           body:  |
             集成高德地图MapCompose，请添加如下依赖：
             ```groovy
@@ -71,8 +73,6 @@ jobs:
             ```groovy
               implementation 'io.github.TheMelody:tencent_compose:${{ github.event.inputs.releaseversion }}'
             ```
-            ### 此版本中更改的内容
-            ${{ steps.changelog.outputs.changelog }}
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
