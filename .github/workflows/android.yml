@@ -67,11 +67,11 @@ jobs:
           body:  |
             集成高德地图MapCompose，请添加如下依赖：
             ```groovy
-              implementation 'io.github.TheMelody:gd_compose:${{ github.event.inputs.releaseversion }}'
+              implementation 'io.github.TheMelody:gd_compose:1.0.0'
             ```
             集成腾讯地图MapCompose，请添加如下依赖：
             ```groovy
-              implementation 'io.github.TheMelody:tencent_compose:${{ github.event.inputs.releaseversion }}'
+              implementation 'io.github.TheMelody:tencent_compose:1.0.0'
             ```
           token: ${{ secrets.github_token }}
           commit: master
