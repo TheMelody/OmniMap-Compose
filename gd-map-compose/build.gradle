@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
@@ -47,4 +48,23 @@ dependencies {
     api 'com.amap.api:3dmap:9.5.0'
     // 高德地图：搜索相关API
     api "com.amap.api:search:9.4.5"
+}
+
+// 生成的aar等产物： ./gradlew clean build publish
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId 'io.github.TheMelody'
+                artifactId 'gd_compose'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url "$buildDir/repo"
+            }
+        }
+    }
 }

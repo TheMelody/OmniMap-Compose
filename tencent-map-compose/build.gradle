@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'maven-publish'
 }
 
 android {
@@ -38,6 +39,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    publishing {
+        singleVariant("release") {
+            // if you don't want sources/javadoc, remove these lines
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
@@ -50,4 +58,23 @@ dependencies {
     api 'com.tencent.map:sdk-utilities:1.0.8'
     // 定位SDK
     api 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.0'
+}
+
+// 生成的aar等产物： ./gradlew clean build publish
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId 'io.github.TheMelody'
+                artifactId 'tencent_compose'
+                version = '1.0.0'
+            }
+        }
+        repositories {
+            maven {
+                url "$buildDir/repo"
+            }
+        }
+    }
 }
