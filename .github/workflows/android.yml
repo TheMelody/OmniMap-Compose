@@ -3,7 +3,7 @@ name: Android CI
 on:
   push:
     branches:
-      - 'v1.0.0'
+      - 'v**'
       # master分支不触发工作流
       - '!master'
       # dev_开头的分支不触发工作流
@@ -26,11 +26,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Clean with Gradle
-        run: ./gradlew clean
-
-      - name: Build with Gradle
-        run: ./gradlew sample-gaode:assembleRelease
+      #- name: Clean with Gradle
+        #run: ./gradlew clean
+        
+      # 生成aar包，只针对已经配置了maven-plugin的module生效
+      - name: Generate aar with Gradle
+        run: ./gradlew clean build publish
 
       # 对安装包进行签名
       - name: Build Signed APK
@@ -45,6 +46,7 @@ jobs:
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
           #artifacts: "sample-baidu/build/outputs/apk/release/*.apk,sample-gaode/build/outputs/apk/release/*.apk,sample-google/build/outputs/apk/release/*.apk,sample-huawei/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
           # v1.0.0 目前只做完了高德地图和腾讯地图
           artifacts: "sample-gaode/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
