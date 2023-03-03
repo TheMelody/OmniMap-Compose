@@ -11,11 +11,13 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
@@ -26,8 +28,11 @@ jobs:
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
+          # 允许覆盖更新
           allowUpdates: true
+          # aar产物位置
           artifacts: "sample-gaode/build/outputs/aar/*.aar,sample-tencent/build/outputs/aar/*.aar"
+          # 失败终止下一步
           artifactErrorsFailBuild: true
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to the Maven Central Repository
