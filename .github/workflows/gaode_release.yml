@@ -1,13 +1,9 @@
 name: "GaoDe Release"
 
-#on:
-#  release:
-#    # 通过工作流创建的只会触发：published，通过网页创建的会触发：released
-#    types: [published,released]
 on:
-  push:
-    tags:
-      - 'v**'
+  release:
+    # github-actions由机器人发起的 release 不会触发 GitHub Action！FUCK！！
+    types: [released]
 
 jobs:
   publish:
