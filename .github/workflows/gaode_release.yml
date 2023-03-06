@@ -1,14 +1,14 @@
-name: "GaoDe Release"
+name: GD Release
 
 on:
   release:
     # github-actions由机器人发起的 release 不会触发 GitHub Action！！！
     # 只有自己手动，以自己名义 create release，才会触发
-    types: [published]
+    types: [released]
 
 jobs:
   publish:
-    name: "GaoDe Release"
+    name: "Release"
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
