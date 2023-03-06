@@ -1,9 +1,13 @@
 name: "GaoDe Release"
 
+#on:
+#  release:
+#    # 通过工作流创建的只会触发：published，通过网页创建的会触发：released
+#    types: [published,released]
 on:
-  release:
-    # 通过工作流创建的只会触发：published，通过网页创建的会触发：released
-    types: [edited,published,released]
+  push:
+    tags:
+      - 'v**'
 
 jobs:
   publish:
