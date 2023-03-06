@@ -2,12 +2,13 @@ name: "Tencent Release"
 
 on:
   release:
-    types: [released]
+    # 通过工作流创建的只会触发：published，通过网页创建的会触发：released
+    types: [published]
 
 jobs:
   publish:
     name: "Tencent Release"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
