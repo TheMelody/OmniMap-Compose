@@ -8,12 +8,6 @@ on:
       - '!master'
       # dev_开头的分支不触发工作流
       - '!dev_**'
-  workflow_dispatch:
-    inputs:
-      releaseversion:
-        description: 'Release version'
-        required: true
-        default: 1.0.0
 
 jobs:
   build:
@@ -26,24 +20,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      #- name: build artifact
-        #run: mvn clean package
-
-      #- name: Clean with Gradle
-        #run: ./gradlew clean
-        
-      # 生成aar包，只针对已经配置了maven-plugin的module生效
-      - name: Generate aar with Gradle
-        run: ./gradlew clean build publish
+      - name: Clean with Gradle
+        run: ./gradlew clean
 
       # 对安装包进行签名
       - name: Build Signed APK
@@ -59,8 +41,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          # sample-gaode/build/outputs/apk/release/*.apk,...,sample-tencent/build/repo/io/github/TheMelody/tencent_compose/1.0.0/*.aar
-          artifacts: ${{ secrets.BUILD_SOURCE_ARTIFACTS_v1_0_0 }}
+          # 安装包
+          artifacts: "sample-gaode/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk"
           artifactErrorsFailBuild: true
           ### 此版本中更改的内容
           # ${{ steps.changelog.outputs.changelog }}
@@ -77,15 +59,3 @@ jobs:
           commit: master
           # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
           tag: ${{ github.ref_name }}
-
-      # 上传到maven
-      - name: Publish to the Maven Central Repository
-        run: |
-          mvn \
-            --no-transfer-progress \
-            --batch-mode \
-            deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

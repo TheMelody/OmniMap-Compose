@@ -2,7 +2,10 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
-    id 'maven-publish'
+}
+
+afterEvaluate {
+    apply from: '../gradle/release/tencent_publish.gradle'
 }
 
 android {
@@ -16,12 +19,6 @@ android {
     }
     buildFeatures {
         compose true
-
-        // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        shaders false
     }
     buildTypes {
         release {
@@ -58,23 +55,4 @@ dependencies {
     api 'com.tencent.map:sdk-utilities:1.0.8'
     // 定位SDK
     api 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.0'
-}
-
-// 生成的aar等产物： ./gradlew clean build publish
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-                groupId 'io.github.TheMelody'
-                artifactId 'tencent_compose'
-                version = '1.0.0'
-            }
-        }
-        repositories {
-            maven {
-                url "$buildDir/repo"
-            }
-        }
-    }
 }

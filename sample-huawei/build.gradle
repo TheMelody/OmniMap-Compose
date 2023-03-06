@@ -54,12 +54,6 @@ android {
     }
     buildFeatures {
         compose true
-
-        // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        shaders false
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
