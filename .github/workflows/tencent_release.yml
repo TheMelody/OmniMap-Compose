@@ -3,7 +3,7 @@ name: "Tencent Release"
 on:
   release:
     # 通过工作流创建的只会触发：published，通过网页创建的会触发：released
-    types: [published]
+    types: [edited,published,released]
 
 jobs:
   publish:
