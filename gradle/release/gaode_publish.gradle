@@ -44,8 +44,8 @@ static def addPomDependency(groovy.util.Node dependenciesNode, Dependency depend
  * `$ ./gradlew clean library:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeSonatypeStagingRepository`
  *
  * 环境变量
- *  - `MAVEN_USERNAME` : Sonatype用户名
- *  - `MAVEN_PASSWORD` : Sonatype密码
+ *  - `MAVEN_USERNAME` : Sonatype token 用户名
+ *  - `MAVEN_PASSWORD` : Sonatype  token 密码
  *  - `SIGNING_KEY_ID` : 秘钥后8位
  *  - `SIGNING_KEY` : GPG密钥
  *  - `SIGNING_KEY_PASSWORD` : GPG密钥的密码
