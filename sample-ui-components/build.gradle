@@ -22,12 +22,6 @@ android {
     }
     buildFeatures {
         compose true
-
-        // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        shaders false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

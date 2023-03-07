@@ -4,6 +4,10 @@ plugins {
     id 'kotlin-parcelize'
 }
 
+afterEvaluate {
+    apply from: '../gradle/release/tencent_publish.gradle'
+}
+
 android {
     compileSdk 33
 
@@ -15,12 +19,6 @@ android {
     }
     buildFeatures {
         compose true
-
-        // Disable unused AGP features
-        buildConfig false
-        aidl false
-        renderScript false
-        shaders false
     }
     buildTypes {
         release {
@@ -37,6 +35,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    lint {
+        abortOnError false
     }
 }
 
