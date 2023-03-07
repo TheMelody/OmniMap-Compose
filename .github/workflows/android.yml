@@ -13,8 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-      MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+      MAVEN_TOKEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      MAVEN_TOKEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
       SIGNING_KEY_ID: ${{ secrets.MAVEN_GPG_KEY_ID }}
       SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
       SIGNING_KEY_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
@@ -55,20 +55,22 @@ jobs:
           body:  |
             MapCompose集成高德地图能力，请添加如下依赖：
             ```groovy
-              implementation 'io.github.TheMelody:gd_compose:1.0.0'
+              implementation 'io.github.TheMelody:gd_compose:1.0.1'
             ```
             MapCompose集成腾讯地图能力，请添加如下依赖：
             ```groovy
-              implementation 'io.github.TheMelody:tencent_compose:1.0.0'
+              implementation 'io.github.TheMelody:tencent_compose:1.0.1'
             ```
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
           tag: ${{ github.ref_name }}
 
-      - name: "Publish TX Map-Compose"
-        run: ./gradlew clean tencent-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
-      - name: "Publish GD Map-Compose"
-        run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-        # 下面的方式：不自动关闭暂存库，手动去执行关闭的话，可以在网页中选择是否删除或者释放：https://s01.oss.sonatype.org/#stagingRepositories
-        #run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
+      - name: "Publish Map-Compose"
+        run: ./gradlew clean assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+#      - name: "Publish TX Map-Compose"
+#        run: ./gradlew clean tencent-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
+#      - name: "Publish GD Map-Compose"
+#        run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+#        # 下面的方式：不自动关闭暂存库，手动去执行关闭的话，可以在网页中选择是否删除或者释放：https://s01.oss.sonatype.org/#stagingRepositories
+#        #run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository

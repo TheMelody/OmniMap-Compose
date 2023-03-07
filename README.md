@@ -2,35 +2,107 @@ OmniMap Compose 🗺
 ===============
 <a href="https://github.com/TheMelody/OmniMap-Compose/blob/main/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/TheMelody/OmniMap-Compose"/></a>  <img alt="issues" src="https://img.shields.io/github/issues/TheMelody/OmniMap-Compose?color=important"/>  <img alt="forks" src="https://img.shields.io/github/forks/TheMelody/OmniMap-Compose?color=blueviolet"/>  <img alt="stars" src="https://img.shields.io/github/stars/TheMelody/OmniMap-Compose?color=success"/>  <a href="https://juejin.cn/user/8451824316670/posts"><img alt="稀土掘金" src="https://img.shields.io/badge/%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91-354-green?labelColor=%231e80FF&color=black" ></a>  <a href="https://www.zhihu.com/people/fq_halifax"><img src="https://img.shields.io/badge/dynamic/json?color=282c34&amp;labelColor=0084ff&amp;label=%E7%9F%A5%E4%B9%8E%E5%85%B3%E6%B3%A8&amp;query=%24.data.totalSubs&amp;url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3Dfq_halifax&amp;longCache=true" alt="知乎"></a>  <a href="https://blog.csdn.net/logicsboy"><img src="https://img.shields.io/badge/CSDN-1k+-red?labelColor=%231e80FF&color=black" alt="CSDN"></a>
 
-Compose一键集成5大地图平台神器:
-- ![百度](https://via.placeholder.com/15/4e6ef2/4e6ef2.png) **`百度地图`**
-- ![腾讯](https://via.placeholder.com/15/E69B19/E69B19.png) **`腾讯地图`**
-- ![高德](https://via.placeholder.com/15/f03c15/f03c15.png) **`高德地图`**
-- ![华为](https://via.placeholder.com/15/1589F0/1589F0.png) **`华为花瓣地图`**
-- ![谷歌](https://via.placeholder.com/15/1589F0/1589F0.png) **`谷歌地图`**
+**Compose一键集成5大地图神器**
 
+<a href="https://lbsyun.baidu.com/index.php?title=androidsdk"><img src="https://img.shields.io/badge/-%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE-4e6ef2"></a>    <a href="https://lbs.amap.com/api/android-sdk/summary/"><img src="https://img.shields.io/badge/-%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BE-success"></a>    <a href="https://lbs.qq.com/mobile/androidMapSDK/developerGuide/androidSummary"><img src="https://img.shields.io/badge/-%E8%85%BE%E8%AE%AF%E5%9C%B0%E5%9B%BE-E91E1E"></a>    <a href="https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/android-sdk-brief-introduction-0000001061991343"><img src="https://img.shields.io/badge/-%E8%8A%B1%E7%93%A3%E5%9C%B0%E5%9B%BE-orange"></a>    <a href="https://developers.google.com/maps/documentation/android-sdk/start?hl=zh-cn"><img src="https://img.shields.io/badge/-Google%E5%9C%B0%E5%9B%BE-blue"></a>
 
-## 注意
-5大地图平台，目前只有华为的花瓣地图只支持Android 7.0+，其他平台支持Android 5.0+
+集成
+-------
+<table>
+ <tr>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.0"></td>
+ </tr>
+ <tr>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.0"></td>
+ </tr>
+</table>
 
-**腾讯地图的缺点**：提工单，客服态度不行，没有高德地图客服好，高德地图解决效率高，腾讯地图基本上客服不会给你解决问题
+```gradle
+repositories {
+  maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
+}
 
-**使用时需注意**：
+dependencies {
+  // 根据自己项目情况，选择下面其中一种地图
+  implementation 'io.github.TheMelody:gd_compose:<version>'       // 高德地图
+  implementation 'io.github.TheMelody:tencent_compose:<version>'  // 腾讯地图
+  implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图 → 实现中
+  implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 未开始
+  implementation 'io.github.TheMelody:google_compose:<version>'   // Google地图 → 未开始
+}
+```
 
-1.高德地图比例尺控件需要和地图Logo一起作用显示，腾讯地图不需要一起显示，可分开显示
-2.高德地图有显示底图标注开关，腾讯地图没有
-3.高德地图和腾讯地图的地图模式不同，腾讯地图：没有导航图，而腾讯的夜景图现在叫：暗色地图
-4.腾讯地图，室内图需要找商务协助办理
-5.腾讯地图不能切换地图语言
-6.腾讯地图无法隐藏地图Logo，现提供修改Logo位置和边距+Logo缩放的参数配置
-7.腾讯地图的BitmapDescriptor需要在获取到MapContext之后才能用，否则会返回null
+用法
+-------
 
+- 1、添加一个高德地图
+```kt
+val cameraPositionState = rememberCameraPositionState {
+    position = CameraPosition.fromLatLngZoom(LatLng(39.984108,116.307557), 10F)
+}
+GDMap(
+    modifier = Modifier.fillMaxSize(),
+    cameraPositionState = cameraPositionState
+)
+```
+- 2、添加一个腾讯地图
+```kt
+val cameraPositionState = rememberCameraPositionState {
+   position =  TXCameraPosition(latlng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
+}
+TXMap(
+    modifier = Modifier.fillMaxSize(),
+    cameraPositionState = cameraPositionState
+)
+```
+- 3、配置地图
+```kt
+// 高德地图
+GDMap(
+    modifier = Modifier.fillMaxSize(),
+    properties = MapProperties(/**自行修改参数**/),
+    uiSettings  = MapUiSettings(/**自行修改参数**/)
+)
 
+//腾讯地图
+TXMap(
+    modifier = Modifier.fillMaxSize(),
+    properties = MapProperties(/**自行修改参数**/),
+    uiSettings  = MapUiSettings(/**自行修改参数**/)
+)
+```
+- 4、自定义Marker覆盖物的InfoWindow
+```kt
+// 只修改内容，不修改容器
+MarkerInfoWindowContent(
+    //...
+    title = "我是title",
+    snippet = "我是snippet"
+) { marker ->
+    Column {
+        Text(marker.title ?: "", color = Color.Green)
+        Text(marker.snippet ?: "", color = Color.Red)
+    }
+}
 
-### TODO List
-
-- [x] 高德地图
-- [ ] 腾讯地图，完善中...
-- [ ] 百度地图
-- [ ] 谷歌地图
-- [ ] 华为花瓣地图(Android 7.0-12)
+// 修改容器及内容
+MarkerInfoWindow(
+    //...
+    snippet = "我是一个卖报的小画家(自定义InfoWindow)"
+) { marker ->
+    Card(modifier = Modifier.requiredSizeIn(maxWidth = 88.dp, minHeight = 66.dp)) {
+        Text(
+            modifier = Modifier.padding(4.dp),
+            text = marker.snippet ?: "", color = Color.Red)
+    }
+}
+```
+- 5、已支持的覆盖物
+<table>
+ <tr>
+  <td width="66px">高德地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、MultiPointOverlay、OpenGLOverlay、Polygon、Polyline、RoutePlanOverlay、TileOverlay</td>
+ </tr>
+ <tr>
+  <td width="66px">腾讯地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、Polygon、Polyline、TileOverlay</td>
+ </tr>
+</table>
