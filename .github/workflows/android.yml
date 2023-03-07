@@ -69,6 +69,6 @@ jobs:
       - name: "Publish TX Map-Compose"
         run: ./gradlew clean tencent-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
       - name: "Publish GD Map-Compose"
-        #不自动关闭暂存库，手动去执行关闭释放
-        #run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-        run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
+        run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+        # 下面的方式：不自动关闭暂存库，手动去执行关闭的话，可以在网页中选择是否删除或者释放：https://s01.oss.sonatype.org/#stagingRepositories
+        #run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
