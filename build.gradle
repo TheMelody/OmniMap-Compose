@@ -10,8 +10,14 @@ plugins {
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
 }
 
-group = "io.github.TheMelody"
-version = "1.0.0"
+apply from: 'gradle/release/map_lib_info.gradle'
+
+ext {
+    libraryInfo = getLibraryInfo()
+}
+
+group = libraryInfo.groupId
+version = libraryInfo.lib_versionName
 
 task clean(type: Delete) {
     delete rootProject.buildDir
@@ -20,11 +26,10 @@ task clean(type: Delete) {
 nexusPublishing {
     repositories {
         sonatype {
-//            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"))
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username = System.getenv("MAVEN_USERNAME")
-            password = System.getenv("MAVEN_PASSWORD")
+            username = System.getenv("MAVEN_TOKEN_USERNAME")
+            password = System.getenv("MAVEN_TOKEN_PASSWORD")
         }
     }
 }
