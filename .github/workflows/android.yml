@@ -67,6 +67,6 @@ jobs:
           tag: ${{ github.ref_name }}
 
       - name: "Publish TX Map-Compose"
-        run: ./gradlew clean tencent-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew clean tencent-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
       - name: "Publish GD Map-Compose"
         run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
