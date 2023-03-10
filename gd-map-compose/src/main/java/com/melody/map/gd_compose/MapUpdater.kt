@@ -110,14 +110,6 @@ internal inline fun MapUpdater(
         update(density) { this.density = it }
         update(layoutDirection) { this.layoutDirection = it }
 
-        // 是否在地图上面显示，默认的Logo
-        set(mapUiSettings.showMapLogo) {
-            if(mapUiSettings.showMapLogo) {
-                map.uiSettings.setLogoLeftMargin(0)
-            } else {
-                map.uiSettings.setLogoLeftMargin(Int.MAX_VALUE/2)
-            }
-        }
         // 设置定位监听
         set(locationSource) { map.setLocationSource(it) }
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false

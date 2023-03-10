@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="map" type="id" />
-
     <!-- 下面的图片资源，自行覆盖，Library只引用资源ID，如使用ResGuard记得把下面的图片忽略混淆 -->
     <item name="ic_map_route_status_deepred_selected" type="drawable"/>
     <item name="ic_map_route_status_green" type="drawable"/>

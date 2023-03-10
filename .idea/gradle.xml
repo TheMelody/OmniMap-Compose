@@ -11,6 +11,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/baidu-map-compose" />
             <option value="$PROJECT_DIR$/gd-map-compose" />
             <option value="$PROJECT_DIR$/sample-baidu" />
             <option value="$PROJECT_DIR$/sample-common" />

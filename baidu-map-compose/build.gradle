@@ -1,0 +1,56 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+}
+
+afterEvaluate {
+    apply from: '../gradle/release/baidu_publish.gradle'
+}
+
+android {
+    compileSdk rootProject.ext.libraryInfo.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.libraryInfo.minSdk
+        targetSdk rootProject.ext.libraryInfo.targetSdk
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+    buildFeatures {
+        compose true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    lint {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    // 地图组件
+    api 'com.baidu.lbsyun:BaiduMapSDK_Map:7.5.4'
+    // 检索组件
+    api 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.4'
+    // 工具组件
+    api 'com.baidu.lbsyun:BaiduMapSDK_Util:7.5.4'
+    // 基础库
+    api 'com.baidu.lbsyun:base:7.5.4'
+}

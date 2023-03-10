@@ -2,6 +2,11 @@ class LibraryInfo {
   String groupId
   String gd_artifactId
   String tx_artifactId
+  String baidu_artifactId
+  Integer compileSdk
+  Integer targetSdk
+  Integer minSdk
+  Integer huaweiMinSdk
 
   String lib_versionName
 }
@@ -20,9 +25,14 @@ def getLibraryInfo() {
 
   info.gd_artifactId = props.get('GD_ARTIFACT_ID') as String
   info.tx_artifactId = props.get('TX_ARTIFACT_ID') as String
+  info.baidu_artifactId = props.get('BAIDU_ARTIFACT_ID') as String
   info.groupId = props.get('GROUP_ID') as String
 
   info.lib_versionName = props.get('LIB_VERSION_NAME') as String
+  info.compileSdk = props.get('COMPILE_SDK_VERSION') as Integer
+  info.targetSdk = props.get('TARGET_SDK_VERSION') as Integer
+  info.minSdk = props.get('MIN_SDK_VERSION') as Integer
+  info.huaweiMinSdk = props.get('HUAWEI_MIN_SDK_VERSION') as Integer
 
   return info
 }

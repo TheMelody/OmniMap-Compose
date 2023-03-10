@@ -77,9 +77,7 @@ fun TXMap(
     }
     val context = LocalContext.current
     val mapView = remember {
-        MapView(context, tMapOptionsFactory()).apply {
-            id = R.id.map
-        }
+        MapView(context, tMapOptionsFactory())
     }
     AndroidView(modifier = modifier, factory = { mapView })
     MapLifecycle(mapView)

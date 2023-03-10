@@ -17,7 +17,7 @@ OmniMap Compose 🗺
  </tr>
 </table>
 
-```gradle
+```groovy
 repositories {
   maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
 }
@@ -43,17 +43,21 @@ val cameraPositionState = rememberCameraPositionState {
 GDMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState
-)
+){
+    //这里面放地图覆盖物...
+}
 ```
 - 2、添加一个腾讯地图
 ```kt
 val cameraPositionState = rememberCameraPositionState {
-   position =  TXCameraPosition(latlng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
+   position =  TXCameraPosition(latLng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
 }
 TXMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState
-)
+){
+    //这里面可以放地图覆盖物...
+}
 ```
 - 3、配置地图
 ```kt
@@ -62,14 +66,18 @@ GDMap(
     modifier = Modifier.fillMaxSize(),
     properties = MapProperties(/**自行修改参数**/),
     uiSettings  = MapUiSettings(/**自行修改参数**/)
-)
+){
+    //这里面可以放地图覆盖物...
+}
 
 //腾讯地图
 TXMap(
     modifier = Modifier.fillMaxSize(),
     properties = MapProperties(/**自行修改参数**/),
     uiSettings  = MapUiSettings(/**自行修改参数**/)
-)
+){
+    //这里面可以放地图覆盖物...
+}
 ```
 - 4、自定义Marker覆盖物的InfoWindow
 ```kt
@@ -85,7 +93,7 @@ MarkerInfoWindowContent(
     }
 }
 
-// 修改容器及内容
+// 修改整个信息窗(容器及内容)
 MarkerInfoWindow(
     //...
     snippet = "我是一个卖报的小画家(自定义InfoWindow)"
@@ -106,3 +114,29 @@ MarkerInfoWindow(
   <td width="66px">腾讯地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、Polygon、Polyline、TileOverlay</td>
  </tr>
 </table>
+
+License
+-------
+```
+MIT License
+
+Copyright (c) 2022 被风吹过的夏天
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

@@ -74,9 +74,7 @@ fun GDMap(
     }
     val context = LocalContext.current
     val mapView = remember {
-        MapView(context, aMapOptionsFactory()).apply {
-            id = R.id.map
-        }
+        MapView(context, aMapOptionsFactory())
     }
     AndroidView(modifier = modifier, factory = { mapView })
     MapLifecycle(mapView)

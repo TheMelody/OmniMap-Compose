@@ -8,11 +8,11 @@ afterEvaluate {
 }
 
 android {
-    compileSdk 33
+    compileSdk rootProject.ext.libraryInfo.compileSdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 33
+        minSdk rootProject.ext.libraryInfo.minSdk
+        targetSdk rootProject.ext.libraryInfo.targetSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }

@@ -54,7 +54,6 @@ object RoutePlanRepository {
             isZoomEnabled = true,
             isScrollGesturesEnabled = true,
             isZoomGesturesEnabled = true,
-            showMapLogo = true,
             isScaleControlsEnabled = true
         )
     }

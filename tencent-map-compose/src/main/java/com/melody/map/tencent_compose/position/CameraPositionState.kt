@@ -101,7 +101,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
                 if (map == null) {
                     rawPosition = value
                 } else {
-                    map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(value.latlng,value.zoom,value.tilt,value.bearing)))
+                    map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(value.latLng,value.zoom,value.tilt,value.bearing)))
                 }
             }
         }
@@ -149,7 +149,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
             if (map == null) {
                 isMoving = false
             } else {
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(position.latlng,position.zoom,position.tilt,position.bearing)))
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(position.latLng,position.zoom,position.tilt,position.bearing)))
             }
             onMapChanged?.let {
                 // Clear this first since the callback itself might set it again for later

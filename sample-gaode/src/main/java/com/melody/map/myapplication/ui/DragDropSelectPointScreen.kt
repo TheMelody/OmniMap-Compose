@@ -143,7 +143,6 @@ internal fun DragDropSelectPointScreen() {
                 modifier = Modifier.matchParentSize(),
                 cameraPositionState = cameraPositionState,
                 uiSettings = MapUiSettings(
-                    showMapLogo = false,
                     isZoomGesturesEnabled = true,
                     isScrollGesturesEnabled = true,
                 ),
