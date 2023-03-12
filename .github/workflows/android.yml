@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - 'v**'
-      # master分支不触发工作流
+      # !不触发工作流
       - '!master'
-      # dev_开头的分支不触发工作流
       - '!dev_**'
 
 jobs:
@@ -57,10 +56,11 @@ jobs:
             - 移除高德地图隐藏Logo不合规的问题
             - TODO:更多能力写在这里.....
             ### 问题修复
+            - 修复:安卓11+上的错误上下文
             - TODO:更多能力写在这里.....
           token: ${{ secrets.github_token }}
           commit: master
-          # tag名称和分支名称保持一致，dev_**分支不触发工作流，vx.x.x分支触发工作流
+          # tag名称
           tag: ${{ github.ref_name }}
 
       - name: "Publish Map-Compose"

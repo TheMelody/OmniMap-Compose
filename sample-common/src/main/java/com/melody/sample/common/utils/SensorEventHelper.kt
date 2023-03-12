@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Display
 import android.view.Surface
@@ -87,7 +88,9 @@ class SensorEventHelper : SensorEventListener {
      */
     private fun getScreenRotationOnPhone(context: Context): Int {
         val display: Display? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            context.display
+            // 修复：安卓11+上的错误上下文
+            val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager
+            displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
         } else {
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         }
