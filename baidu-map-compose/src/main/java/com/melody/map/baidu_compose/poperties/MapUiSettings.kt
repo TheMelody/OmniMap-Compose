@@ -28,6 +28,7 @@ import java.util.*
 internal val DefaultMapUiSettings = MapUiSettings()
 
 /**
+ * 与UI相关的设置的数据类
  * @param mapViewPadding 地图上控件与地图边界的距离，包含比例尺、缩放控件、logo、指南针的位置 只有在 OnMapLoadedCallback.onMapLoaded() 之后设置才生效
  * @param isRotateGesturesEnabled 旋转手势是否可用
  * @param isScrollGesturesEnabled 拖拽手势是否可用

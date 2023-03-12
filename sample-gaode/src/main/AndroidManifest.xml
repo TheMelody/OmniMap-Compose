@@ -52,7 +52,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="com.melody.bdmap.myapplication.initializer.AppDataInitStartup"
+                android:name="com.melody.map.myapplication.initializer.AppDataInitStartup"
                 android:value="androidx.startup" />
         </provider>
 

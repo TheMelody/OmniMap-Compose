@@ -31,7 +31,7 @@ import java.util.Objects
 val DefaultMapProperties = MapProperties()
 
 /**
- * MapProperties
+ * 可在地图上修改的属性的数据类
  * @param language 设置地图底图语言
  * @param isShowBuildings  是否显示3D楼块效果
  * @param isShowMapLabels  是否显示底图标注

@@ -37,7 +37,7 @@ import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.model.BDCameraPosition
 
 /**
- * CameraPositionState
+ * 控制和观察地图的相机状态
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
@@ -52,11 +52,7 @@ inline fun rememberCameraPositionState(
 }
 
 /**
- * 不设置CameraPosition，则使用默认设置北京天安门为地图中心，也保证没有获取到位置的时候，能先渲染出来，
- * 如需修改默认值，请参考这样使用：
- * rememberCameraPositionState {
- *    position = BDCameraPosition(latLng = LatLng(0.0, 0.0), zoom = 11f, rotate = 0f, overlook = 0f)
- * }
+ * 控制和观察地图的相机状态
  */
 class CameraPositionState(position: BDCameraPosition = BDCameraPosition(LatLng(39.91, 116.40), 11f, 0f, 0f)) {
 

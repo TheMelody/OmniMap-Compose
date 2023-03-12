@@ -190,8 +190,6 @@ internal inline fun MapUpdater(
                 it.ltrb.right
             )
         }
-        // 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域
-        set(mapProperties.mapShowLatLngBounds) { map.setRestrictBounds(it, RestrictBoundsFitMode.FIT_WIDTH) }
 
         update(cameraPositionState) { this.cameraPositionState = it }
         update(clickListeners) { this.clickListeners = it }

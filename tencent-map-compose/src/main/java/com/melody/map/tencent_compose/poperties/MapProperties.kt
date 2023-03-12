@@ -30,7 +30,7 @@ import java.util.Objects
 val DefaultMapProperties = MapProperties()
 
 /**
- * MapProperties
+ * 可在地图上修改的属性的数据类
  * @param isShowBuildings  是否显示3D楼块效果
  * @param isIndoorEnabled  是否显示室内地图，目前室内图这玩意，权限申请【没有开通在线申请】，如需要请联系室内图商务协助办理：
  *                         https://lbs.qq.com/mobile/androidMapSDK/developerGuide/indoor
@@ -44,7 +44,6 @@ val DefaultMapProperties = MapProperties()
  * @param myLocationStyle 设置定位图层（myLocationOverlay）的样式
  * @param maxZoomPreference 设置地图最大缩放级别 缩放级别范围为[3, 20],超出范围将按最大级别计算
  * @param minZoomPreference 设置最小缩放级别 缩放级别范围为[3, 20],超出范围将按最小级别计算
- * @param mapShowLatLngBounds 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域
  * @param mapType 设置地图模式，默认为：MAP_TYPE_NORMAL
  */
 class MapProperties(
@@ -60,7 +59,6 @@ class MapProperties(
     val myLocationStyle: MyLocationStyle? = null,
     val maxZoomPreference: Float = 21.0F,
     val minZoomPreference: Float = 0F,
-    val mapShowLatLngBounds: LatLngBounds? = null,
     val mapType: MapType = MapType.NORMAL,
 ) {
 
@@ -77,7 +75,6 @@ class MapProperties(
         myLocationStyle == other.myLocationStyle &&
         maxZoomPreference == other.maxZoomPreference &&
         minZoomPreference == other.minZoomPreference &&
-        mapShowLatLngBounds == other.mapShowLatLngBounds &&
         mapType == other.mapType
 
     override fun hashCode(): Int = Objects.hash(
@@ -93,7 +90,6 @@ class MapProperties(
         myLocationStyle,
         maxZoomPreference,
         minZoomPreference,
-        mapShowLatLngBounds,
         mapType
     )
 
@@ -110,7 +106,6 @@ class MapProperties(
         myLocationStyle: MyLocationStyle? = this.myLocationStyle,
         maxZoomPreference: Float = this.maxZoomPreference,
         minZoomPreference: Float = this.minZoomPreference,
-        mapShowLatLngBounds: LatLngBounds? = this.mapShowLatLngBounds,
         mapType: MapType = this.mapType,
     ): MapProperties = MapProperties(
         isShowBuildings = isShowBuildings,
@@ -125,7 +120,6 @@ class MapProperties(
         myLocationStyle = myLocationStyle,
         maxZoomPreference = maxZoomPreference,
         minZoomPreference = minZoomPreference,
-        mapShowLatLngBounds = mapShowLatLngBounds,
         mapType = mapType,
     )
 
@@ -142,7 +136,6 @@ class MapProperties(
                 "myLocationStyle=$myLocationStyle, " +
                 "maxZoomPreference=$maxZoomPreference, " +
                 "minZoomPreference=$minZoomPreference, " +
-                "mapShowLatLngBounds=$mapShowLatLngBounds, " +
                 "mapType=$mapType)"
     }
 }
