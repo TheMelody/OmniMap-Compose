@@ -27,7 +27,7 @@ import java.util.*
 internal val DefaultMapUiSettings = MapUiSettings()
 
 /**
- * 与UI相关的设置的数据类
+ * 与UI相关设置的数据类
  * @param isRotateGesturesEnabled 旋转手势是否可用
  * @param isScrollGesturesEnabled 拖拽手势是否可用
  * @param isTiltGesturesEnabled 倾斜手势是否可用

@@ -30,7 +30,7 @@ import java.util.Objects
 val DefaultMapProperties = MapProperties()
 
 /**
- * 可在地图上修改的属性的数据类
+ * 可在地图上修改属性的数据类
  * @param isShowBuildings  是否显示3D楼块效果
  * @param isIndoorEnabled  是否显示室内地图，目前室内图这玩意，权限申请【没有开通在线申请】，如需要请联系室内图商务协助办理：
  *                         https://lbs.qq.com/mobile/androidMapSDK/developerGuide/indoor
