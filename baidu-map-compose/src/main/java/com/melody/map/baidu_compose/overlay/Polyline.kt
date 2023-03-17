@@ -41,7 +41,7 @@ import com.melody.map.baidu_compose.model.BDMapComposable
 
 internal class PolylineNode(
     val polyline: Polyline,
-    var onPolylineClick: (Polyline) -> Unit
+    var onPolylineClick: (Polyline) -> Boolean
 ) : MapNode {
     override fun onRemoved() {
         polyline.remove()
@@ -50,6 +50,9 @@ internal class PolylineNode(
 
 /**
  * 线的分段颜色（彩虹线）配置
+ *
+ * @param colors 每段索引之间的颜色
+ * @param points 线段的顶点坐标
  */
 class PolylineRainbow private constructor(
     val colors: List<Int>,
@@ -73,12 +76,18 @@ class PolylineRainbow private constructor(
 
 /**
  * 沿线展示纹理图片
+ * @param isKeepScale 设置纹理宽、高是否保持原比例渲染，默认false
+ * @param points 设置线段的顶点坐标
+ * @param textureList (可选，单个重复的纹理图请使用**texture**参数)纹理图片列表
+ * @param indexList (可选，保证和textureList大小一致)纹理图片索引
+ * @param texture (可选，不用texture就用textureList)纹理图片
  */
 class PolylineCustomTexture private constructor(
     val isKeepScale: Boolean,
     val points: List<LatLng>,
-    val textureList: List<BitmapDescriptor>,
-    val indexList : List<Int>
+    val textureList: List<BitmapDescriptor>?,
+    val texture: BitmapDescriptor?,
+    val indexList : List<Int>?
 ) {
     companion object {
         /**
@@ -99,7 +108,28 @@ class PolylineCustomTexture private constructor(
                 isKeepScale = isKeepScale,
                 points = points,
                 textureList = textureList,
+                texture = null,
                 indexList = indexList,
+            )
+        }
+
+        /**
+         * 纹理绘制折线， 需要与setPoints(List)一起使用
+         * @param isKeepScale 设置纹理宽、高是否保持原比例渲染，默认false
+         * @param points 设置线段的顶点坐标
+         * @param texture 纹理图片
+         */
+        fun create(
+            isKeepScale: Boolean = false,
+            points: List<LatLng>,
+            texture: BitmapDescriptor?
+        ): PolylineCustomTexture {
+            return PolylineCustomTexture(
+                isKeepScale = isKeepScale,
+                points = points,
+                texture = texture,
+                textureList = null,
+                indexList = null,
             )
         }
     }
@@ -121,7 +151,7 @@ class PolylineCustomTexture private constructor(
  * @param isClickable 是否可点击
  * @param width 线段宽度
  * @param zIndex 显示层级
- * @param onClick polyline点击事件回调
+ * @param onClick polyline点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  */
 @Composable
 @BDMapComposable
@@ -129,7 +159,6 @@ fun Polyline(
     points: List<LatLng>,
     polylineColor: Color? = null,
     visible: Boolean = true,
-    isClickable: Boolean = true,
     geodesic: Boolean = false,
     isThined: Boolean = true,
     isDottedLine: Boolean = false,
@@ -137,9 +166,10 @@ fun Polyline(
     lineJoinType: LineJoinType = LineJoinType.LineJoinBevel,
     lineCapType: LineCapType = LineCapType.LineCapRound,
     lineDirectionCross180: LineDirectionCross180 = LineDirectionCross180.NONE,
+    isClickable: Boolean = true,
     width: Int = 10,
     zIndex: Int = 0,
-    onClick: (Polyline) -> Unit = {}
+    onClick: (Polyline) -> Boolean = { false }
 ) {
     PolylineImpl(
         points = points,
@@ -179,14 +209,13 @@ fun Polyline(
  * @param isClickable 是否可点击
  * @param width 线段宽度
  * @param zIndex 显示层级
- * @param onClick polyline点击事件回调
+ * @param onClick polyline点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  */
 @Composable
 @BDMapComposable
 fun PolylineRainbow(
     rainbow: PolylineRainbow?,
     useGradient: Boolean = false,
-    isClickable: Boolean = true,
     isDottedLine: Boolean = false,
     dottedLineType: PolylineDottedLineType? = null,
     lineJoinType: LineJoinType = LineJoinType.LineJoinBevel,
@@ -195,9 +224,10 @@ fun PolylineRainbow(
     geodesic: Boolean = false,
     visible: Boolean = true,
     isThined: Boolean = true,
+    isClickable: Boolean = true,
     width: Int = 10,
     zIndex: Int = 0,
-    onClick: (Polyline) -> Unit = {}
+    onClick: (Polyline) -> Boolean = { false }
 ) {
     PolylineImpl(
         rainbow = rainbow,
@@ -224,19 +254,19 @@ fun PolylineRainbow(
  * 地图线段覆盖物。一个线段是多个连贯点的集合【纹理线段】
  *
  * @param customTexture (可选)，线上自定义的纹理，如：叠加纹理图
+ * @param isDottedLine 设置Polyline是否为虚线，**分段纹理绘制折线时建议开启绘制虚线，不是分段纹理，则不需要开启**
+ * @param dottedLineType 设置Polyline的虚线类型[PolylineDottedLineType]
  * @param lineJoinType 设置Polyline的拐点连接类型[LineJoinType]
  * @param lineCapType  设置Polyline的端点类型[LineCapType]
  * @param lineDirectionCross180 设置Polyline跨越180度的方向。默认: [LineDirectionCross180.NONE], 不跨越180度
- * @param dottedLineType 设置Polyline的虚线类型[PolylineDottedLineType]
  * @param geodesic 是否绘制为大地曲线【默认为false】
  * @param visible 线段的可见属性【默认为true】
  * @param isThined 是否需要对Polyline坐标数据进行抽稀, 默认抽稀
- * @param isDottedLine 设置Polyline是否为虚线，**分段纹理绘制折线时建议开启绘制虚线，不是分段纹理，则不需要开启**
  * @param useGradient 线段是否为渐变的线段【默认为false】
  * @param isClickable 是否可点击
  * @param width 线段宽度
  * @param zIndex 显示层级
- * @param onClick polyline点击事件回调
+ * @param onClick polyline点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  */
 @Composable
 @BDMapComposable
@@ -254,7 +284,7 @@ fun PolylineCustomTexture(
     isClickable: Boolean = true,
     width: Int = 10,
     zIndex: Int = 0,
-    onClick: (Polyline) -> Unit = {}
+    onClick: (Polyline) -> Boolean = { false }
 ) {
     PolylineImpl(
         points = null,
@@ -317,7 +347,7 @@ private fun PolylineImpl(
     isClickable: Boolean,
     width: Int,
     zIndex: Int,
-    onClick: (Polyline) -> Unit
+    onClick: (Polyline) -> Boolean
 ) {
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolylineNode, MapApplier>(
@@ -387,8 +417,13 @@ private fun PolylineOptions.rainbowColorLine(polylineRainbow: PolylineRainbow?) 
  */
 private fun PolylineOptions.customTexture(customInfo: PolylineCustomTexture?) {
     if(null == customInfo) return
-    if(customInfo.indexList.isNotEmpty()) {
-        //keepScale(customInfo.isKeepScale)
+    keepScale(customInfo.isKeepScale)
+    if(customInfo.texture != null) {
+        customTexture(customInfo.texture)
+        points(customInfo.points)
+        return
+    }
+    if(customInfo.indexList?.isNotEmpty() == true) {
         customTextureList(customInfo.textureList)
         textureIndex(customInfo.indexList)
         points(customInfo.points)
@@ -399,8 +434,13 @@ private fun PolylineOptions.customTexture(customInfo: PolylineCustomTexture?) {
  */
 private fun Polyline.customTexture(customInfo: PolylineCustomTexture?) {
     if(null == customInfo) return
-    if(customInfo.indexList.isNotEmpty()) {
-        //isIsKeepScale = customInfo.isKeepScale
+    isIsKeepScale = customInfo.isKeepScale
+    if(customInfo.texture != null) {
+        texture = customInfo.texture
+        points = customInfo.points
+        return
+    }
+    if(customInfo.indexList?.isNotEmpty() == true) {
         setTextureList(customInfo.textureList)
         setIndexs(customInfo.indexList.toIntArray())
         points = customInfo.points

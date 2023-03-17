@@ -38,6 +38,8 @@ internal val DefaultMapUiSettings = MapUiSettings()
  * @param isFlingEnable 是否允许抛出手势，默认为true，只要启用了[isScrollGesturesEnabled]就可以直接使用了
  * @param isInertialAnimation 是否打开缩放动画惯性，默认为true
  * @param isCompassEnabled 指南针控件是否可见
+ * @param isZoomEnabled 是否显示缩放按钮
+ * @param isScaleControlsEnabled 是否显示比例尺
  */
 class MapUiSettings(
     val mapViewPadding: Rect = Rect(),
@@ -49,6 +51,8 @@ class MapUiSettings(
     val isFlingEnable: Boolean = true,
     val isInertialAnimation: Boolean = true,
     val isCompassEnabled: Boolean = false,
+    val isZoomEnabled: Boolean = false,
+    val isScaleControlsEnabled: Boolean = false
 ) {
 
     override fun equals(other: Any?): Boolean = other is MapUiSettings &&
@@ -60,7 +64,9 @@ class MapUiSettings(
             isDoubleClickZoomEnabled == other.isDoubleClickZoomEnabled &&
             isFlingEnable == other.isFlingEnable &&
             isInertialAnimation == other.isInertialAnimation &&
-            isCompassEnabled == other.isCompassEnabled
+            isCompassEnabled == other.isCompassEnabled &&
+            isZoomEnabled == other.isZoomEnabled &&
+            isScaleControlsEnabled == other.isScaleControlsEnabled
 
     override fun hashCode(): Int = Objects.hash(
         mapViewPadding,
@@ -71,7 +77,9 @@ class MapUiSettings(
         isDoubleClickZoomEnabled,
         isFlingEnable,
         isInertialAnimation,
-        isCompassEnabled
+        isCompassEnabled,
+        isZoomEnabled,
+        isScaleControlsEnabled
     )
 
     fun copy(
@@ -84,6 +92,8 @@ class MapUiSettings(
         isFlingEnable: Boolean = this.isFlingEnable,
         isInertialAnimation: Boolean = this.isInertialAnimation,
         isCompassEnabled: Boolean = this.isCompassEnabled,
+        isZoomEnabled: Boolean = this.isZoomEnabled,
+        isScaleControlsEnabled: Boolean = this.isScaleControlsEnabled
     ): MapUiSettings = MapUiSettings(
         mapViewPadding = mapViewPadding,
         isRotateGesturesEnabled = isRotateGesturesEnabled,
@@ -93,7 +103,9 @@ class MapUiSettings(
         isDoubleClickZoomEnabled = isDoubleClickZoomEnabled,
         isFlingEnable = isFlingEnable,
         isInertialAnimation = isInertialAnimation,
-        isCompassEnabled = isCompassEnabled
+        isCompassEnabled = isCompassEnabled,
+        isZoomEnabled = isZoomEnabled,
+        isScaleControlsEnabled = isScaleControlsEnabled
     )
 
     override fun toString(): String {
@@ -106,6 +118,8 @@ class MapUiSettings(
                 "isDoubleClickZoomEnabled=$isDoubleClickZoomEnabled, " +
                 "isFlingEnable=$isFlingEnable, " +
                 "isInertialAnimation=$isInertialAnimation, " +
+                "isZoomEnabled=$isZoomEnabled, " +
+                "isScaleControlsEnabled=$isScaleControlsEnabled, " +
                 "isCompassEnabled=$isCompassEnabled)"
     }
 

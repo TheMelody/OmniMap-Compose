@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.toArgb
 import com.tencent.tencentmap.mapsdk.maps.TencentMap
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.Cluster
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterItem
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterManager
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.view.DefaultClusterRenderer

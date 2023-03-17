@@ -44,8 +44,8 @@ class RideRouteDataState(
     startGuideIcon: BitmapDescriptor?,
     endGuideIcon: BitmapDescriptor?,
     val nodeVisible: Boolean,
-    val rideLineSelectedTexture: BitmapDescriptor,
-    val rideLineUnSelectedTexture: BitmapDescriptor,
+    val rideLineSelectedTexture: BitmapDescriptor?,
+    val rideLineUnSelectedTexture: BitmapDescriptor?,
     val rideNodeIcon: BitmapDescriptor?,
     val ridePathList: List<RidePath>
 ): BaseRouteDataState(

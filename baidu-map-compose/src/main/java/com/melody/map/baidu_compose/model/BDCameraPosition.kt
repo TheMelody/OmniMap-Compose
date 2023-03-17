@@ -7,10 +7,11 @@ import kotlinx.parcelize.Parcelize
 
 /**
  * 统一配置百度地图的MapStatus数据，用于百度地图移动相机数据配置
- * @param latlng    地图操作的中心点
+ * @param latLng    地图操作的中心点
  * @param zoom     地图缩放级别 4~21，室内图支持到22
  * @param rotate   地图旋转角度
  * @param overlook 地图俯仰角度： -45~0
+ *
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap

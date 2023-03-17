@@ -32,7 +32,6 @@ import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.maps.model.PolylineOptions
 import com.amap.api.services.route.WalkPath
 import com.amap.api.services.route.WalkStep
-import kotlinx.coroutines.launch
 
 
 /**

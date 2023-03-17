@@ -87,6 +87,10 @@ class PolylineRainbow private constructor(
 
 /**
  * 沿线展示纹理图片
+ *
+ * 注意：内部使用的时候，已经给你默认调用了arrow(true)了，请放心使用。
+ * @param arrowSpacing 线上的纹理的间距
+ * @param arrowTexture 线上的纹理图(**叠加**纹理)
  */
 class PolylineCustomTexture private constructor(
     val arrowSpacing: Int = 0,
@@ -99,7 +103,7 @@ class PolylineCustomTexture private constructor(
          *
          * 注意：内部使用的时候，已经给你默认调用了arrow(true)了，请放心使用。
          * @param arrowSpacing 线上的纹理的间距
-         * @param arrowTexture 线上的纹理图
+         * @param arrowTexture 线上的纹理图(**叠加**纹理)
          */
         fun create(arrowSpacing: Int, arrowTexture: BitmapDescriptor?): PolylineCustomTexture {
             return PolylineCustomTexture(
@@ -186,7 +190,7 @@ fun Polyline(
         points = points,
         appendPoints = appendPoints,
         rainbow = null,
-        customTexture_stable = null,
+        customTexture = null,
         dynamicRoadName = dynamicRoadName,
         polylineColor = polylineColor,
         polylineBorderColor = polylineBorderColor,
@@ -259,7 +263,7 @@ fun PolylineRainbow(
         points = points,
         appendPoints = appendPoints,
         rainbow = rainbow,
-        customTexture_stable = null,
+        customTexture = null,
         dynamicRoadName = dynamicRoadName,
         polylineColor = null,
         polylineBorderColor = null,
@@ -288,7 +292,7 @@ fun PolylineRainbow(
  *
  * @param points 线段的坐标点列表
  * @param appendPoints 在原有顶点上附加新的顶点
- * @param customTexture_stable (初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
+ * @param customTexture (**注意：arrowTexture不支持二次更新**)，线上自定义的纹理，如：**叠加**纹理图
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
  * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
  * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
@@ -311,7 +315,7 @@ fun PolylineRainbow(
 fun PolylineCustomTexture(
     points: List<LatLng>,
     appendPoints: List<LatLng> = emptyList(),
-    customTexture_stable: PolylineCustomTexture?,
+    customTexture: PolylineCustomTexture?,
     dynamicRoadName: PolylineDynamicRoadName? = null,
     polylineColor: Color? = null,
     polylineBorderColor: Color?  = null,
@@ -333,7 +337,7 @@ fun PolylineCustomTexture(
         points = points,
         appendPoints = appendPoints,
         rainbow = null,
-        customTexture_stable = customTexture_stable,
+        customTexture = customTexture,
         dynamicRoadName = dynamicRoadName,
         polylineColor = polylineColor,
         polylineBorderColor = polylineBorderColor,
@@ -363,7 +367,7 @@ fun PolylineCustomTexture(
  * @param points 线段的坐标点列表
  * @param appendPoints 在原有顶点上附加新的顶点
  * @param rainbow (可选)，线的分段颜色（彩虹线）
- * @param customTexture_stable (可选，稳定参数，初始化配置，不支持二次更新)，线上自定义的纹理，如：叠加纹理图
+ * @param customTexture (**注意：arrowTexture不支持二次更新**)，线上自定义的纹理，如：叠加纹理图
  * @param dynamicRoadName (可选)，线上动态路名，线段上添加文字标注，文字可以作为线的属性在线上绘制出来
  * @param polylineColor (可选，【不设置，则使用腾讯地图默认颜色】)线段的颜色
  * @param polylineBorderColor (可选，【不设置，则使用腾讯地图默认颜色】)线段边框的颜色，需要修改borderWidth才能生效
@@ -390,7 +394,7 @@ private fun PolylineImpl(
     points: List<LatLng>,
     appendPoints: List<LatLng>,
     rainbow: PolylineRainbow?,
-    customTexture_stable: PolylineCustomTexture?,
+    customTexture: PolylineCustomTexture?,
     dynamicRoadName: PolylineDynamicRoadName?,
     polylineColor: Color?,
     polylineBorderColor: Color?,
@@ -443,7 +447,7 @@ private fun PolylineImpl(
                     visible(visible)
                     width(width)
                     borderWidth(borderWidth)
-                    customTexture(customTexture_stable)
+                    customTexture(customTexture)
                 }) ?: error("Error adding Polyline")
             polyline.tag = tag
             polyline.rainbowColorLine(rainbow)
@@ -469,6 +473,7 @@ private fun PolylineImpl(
             set(rainbow) { this.polyline.rainbowColorLine(it) }
             set(useGradient) { this.polyline.isGradientEnable = it }
             set(dynamicRoadName) { this.polyline.dynamicRoadName(it) }
+            set(customTexture) { this.polyline.customTexture(it) }
             set(visible) { this.polyline.isVisible = it }
             set(isClickable) { this.polyline.isClickable = it }
             set(animation) {
@@ -501,7 +506,7 @@ private fun Polyline.rainbowColorLine(polylineRainbow: PolylineRainbow?) {
 }
 
 /**
- * 自定义线上纹理图
+ * PolylineOptions自定义线上纹理图
  */
 private fun PolylineOptions.customTexture(customInfo: PolylineCustomTexture?) {
     if(null == customInfo) return
@@ -515,7 +520,24 @@ private fun PolylineOptions.customTexture(customInfo: PolylineCustomTexture?) {
         arrow(true).arrowSpacing(customInfo.arrowSpacing).arrowTexture(customInfo.arrowTexture)
     }
 }
-
+/**
+ * Polyline自定义线上纹理图
+ */
+private fun Polyline.customTexture(customInfo: PolylineCustomTexture?) {
+    if(null == customInfo) return
+    if(null != customInfo.colorTexture) {
+        // 线路纹理图
+        setColorTexture(customInfo.colorTexture)
+        return
+    }
+    if(null != customInfo.arrowTexture) {
+        // 叠加的纹理图
+        setArrow(true)
+        arrowSpacing(customInfo.arrowSpacing)
+        // arrowTexture没有提供，不支持二次更新
+        //arrowTexture(customInfo.arrowTexture)
+    }
+}
 /**
  * 动态路名
  */

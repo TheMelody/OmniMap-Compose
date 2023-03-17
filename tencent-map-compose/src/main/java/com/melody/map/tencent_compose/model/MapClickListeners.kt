@@ -25,7 +25,12 @@ package com.melody.map.tencent_compose.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.tencent.tencentmap.mapsdk.maps.model.LatLng
+import com.tencent.tencentmap.mapsdk.maps.model.MapPoi
 
 internal class MapClickListeners {
     var onMapLoaded: () -> Unit by mutableStateOf({})
+    var onMapClick: (LatLng?) -> Unit by mutableStateOf({})
+    var onMapLongClick: (LatLng?) -> Unit by mutableStateOf({})
+    var onMapPOIClick: (MapPoi?) -> Unit by mutableStateOf({})
 }

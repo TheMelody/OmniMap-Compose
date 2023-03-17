@@ -71,8 +71,11 @@ internal class MapPropertiesNode(
                 cameraPositionState.isMoving = false
             }
         })
-        map.addOnPOIClickListener { clickListeners.onPOIClick(it) }
-        map.setOnIndoorBuildingActiveListener { clickListeners.indoorBuildingActive(it) }
+        map.setOnMapClickListener { clickListeners.onMapClick(it) }
+        map.setOnMapLongClickListener { clickListeners.onMapLongClick(it) }
+        map.addOnPOIClickListener { clickListeners.onMapPOIClick(it) }
+        map.setOnMapTouchListener { clickListeners.onOnMapTouchEvent(it) }
+        //map.setOnIndoorBuildingActiveListener { clickListeners.indoorBuildingActive(it) }
     }
 
     override fun onRemoved() {

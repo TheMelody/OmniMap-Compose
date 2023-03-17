@@ -51,8 +51,8 @@ internal class MovingPointOverlayNode(
  * @param points   所有轨迹
  * @param icon 移动的Marker图标
  * @param isStartSmoothMove 是否开始移动
- * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker是否平贴在地图上
- * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker旋转角度是否沿顺时针方向
+ * @param isFlat【初始化配置，**不支持二次更新**】Marker是否平贴在地图上
+ * @param isClockwise【初始化配置，**不支持二次更新**】Marker旋转角度是否沿顺时针方向
  * @param totalDuration 移动的总时长
  * @param anchor 移动的Marker的锚点位置
  * @param alpha 移动的Marker透明度
@@ -66,8 +66,8 @@ fun MovingPointOverlay(
     points: List<LatLng>,
     icon: BitmapDescriptor?,
     isStartSmoothMove: Boolean,
-    flat_stable: Boolean = true,
-    clockwise_stable: Boolean = false,
+    isFlat: Boolean = true,
+    isClockwise: Boolean = false,
     totalDuration: Int,
     anchor: Offset = Offset(0.5F, 0.5F),
     alpha: Float = 1.0F,
@@ -86,8 +86,8 @@ fun MovingPointOverlay(
                 icon(icon)
                 zIndex(zIndex)
                 alpha(alpha)
-                clockwise(clockwise_stable)
-                flat(flat_stable)
+                clockwise(isClockwise)
+                flat(isFlat)
                 visible(visible)
                 anchor(anchor.x, anchor.y)
             })
@@ -107,8 +107,8 @@ fun MovingPointOverlay(
             set(icon) { this.marker.setIcon(it) }
             set(visible) { this.marker.isVisible = it }
             // Marker.setMarkerOptions 已废弃
-            //set(flat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
-            //set(clockwise) { this.marker.setMarkerOptions(this.marker.options.clockwise(it)) }
+            //set(isFlat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
+            //set(isClockwise) { this.marker.setMarkerOptions(this.marker.options.clockwise(it)) }
             set(isStartSmoothMove) {
                 //不支持暂停，只支持停止，其实也能调用暂停，就是点击恢复的时候，小车方向和角度不正确了！！！！
                 if(it) {

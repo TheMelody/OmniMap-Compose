@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import com.baidu.mapapi.map.BaiduMap
 import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener
+import com.baidu.mapapi.map.MapPoi
 import com.baidu.mapapi.map.MapStatus
 import com.baidu.mapapi.map.MyLocationData
+import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.model.BDCameraPosition
 import com.melody.map.baidu_compose.model.MapClickListeners
 import com.melody.map.baidu_compose.poperties.MapProperties
@@ -62,23 +64,40 @@ internal class MapPropertiesNode(
 
     override fun onAttached() {
         map.setOnMapLoadedCallback { clickListeners.onMapLoaded() }
-        map.setOnMapStatusChangeListener(object : OnMapStatusChangeListener{
-            override fun onMapStatusChangeStart(mapStatus: MapStatus?) {
-                mapStatus?.let {
+        map.setOnMapClickListener(object :BaiduMap.OnMapClickListener{
+            override fun onMapClick(point: LatLng?) {
+                clickListeners.onMapClick(point)
+            }
+            override fun onMapPoiClick(poi: MapPoi?) {
+                clickListeners.onMapPOIClick(poi)
+            }
+        })
+        map.setOnMapLongClickListener { clickListeners.onMapLongClick(it) }
+        map.setOnMapTouchListener { clickListeners.onOnMapTouchEvent(it) }
+        map.setOnMapStatusChangeListener(object : OnMapStatusChangeListener {
+            override fun onMapStatusChangeStart(status: MapStatus?) {
+                //手势操作地图，设置地图状态等操作导致地图状态开始改变。
+                status?.let {
                     cameraPositionState.rawPosition = BDCameraPosition.convertMapStatusData(it)
                 }
                 cameraPositionState.isMoving = true
             }
-            override fun onMapStatusChangeStart(p0: MapStatus?, p1: Int) {
+            override fun onMapStatusChangeStart(status: MapStatus?, reason: Int) {
+                //用户手势触发导致的地图状态改变,比如双击、拖拽、滑动底图
+                //int REASON_GESTURE = 1;
+                //SDK导致的地图状态改变, 比如点击缩放控件、指南针图标
+                //int REASON_API_ANIMATION = 2;
+                //开发者调用,导致的地图状态改变
+                //int REASON_DEVELOPER_ANIMATION = 3;
+                onMapStatusChangeStart(status)
             }
-            override fun onMapStatusChange(mapStatus: MapStatus?) {
-                mapStatus?.let {
-                    cameraPositionState.rawPosition = BDCameraPosition.convertMapStatusData(it)
-                }
-                cameraPositionState.isMoving = true
+            override fun onMapStatusChange(status: MapStatus?) {
+                // 地图状态变化中
+                onMapStatusChangeStart(status)
             }
-            override fun onMapStatusChangeFinish(mapStatus: MapStatus?) {
-                mapStatus?.let {
+            override fun onMapStatusChangeFinish(status: MapStatus?) {
+                // 地图状态改变结束
+                status?.let {
                     cameraPositionState.rawPosition = BDCameraPosition.convertMapStatusData(it)
                 }
                 cameraPositionState.isMoving = false
@@ -105,6 +124,7 @@ internal inline fun MapUpdater(
     cameraPositionState: CameraPositionState
 ) {
     val map = (currentComposer.applier as MapApplier).map
+    val mapView = (currentComposer.applier as MapApplier).mapView
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
     ComposeNode<MapPropertiesNode, MapApplier>(
@@ -135,10 +155,16 @@ internal inline fun MapUpdater(
         set(mapProperties.isShowBuildings) { map.isBuildingsEnabled = it }
         // 是否显示底图标注,默认显示
         set(mapProperties.isShowMapLabels) { map.showMapPoi(it) }
+        // 设置室内图标注是否显示,默认显示
+        set(mapProperties.isShowMapIndoorLabels) { map.showMapIndoorPoi(it) }
         // 是否显示室内地图
         set(mapProperties.isIndoorEnabled) { map.setIndoorEnable(it)   }
         // 是否显示路况图层
         set(mapProperties.isTrafficEnabled) { map.isTrafficEnabled = it }
+        // 是否显示缩放按钮
+        set(mapUiSettings.isZoomEnabled) { mapView.showZoomControls(it) }
+        // 是否显示比例尺
+        set(mapUiSettings.isScaleControlsEnabled) { mapView.showScaleControl(it) }
         // 指南针控件是否可见
         set(mapUiSettings.isCompassEnabled) { map.uiSettings.isCompassEnabled = it }
         // 旋转手势是否可用

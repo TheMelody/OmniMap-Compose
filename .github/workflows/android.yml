@@ -52,8 +52,8 @@ jobs:
           body:  |
             ### 功能更新
             - 新增百度地图能力
-            - 删除ids.xml不使用的ID
             - 移除高德地图隐藏Logo不合规的问题
+            - Map可组合项新增：onMapClick、onMapLongClick、onMapPOIClick等事件的回调
             - TODO:更多能力写在这里.....
             ### 问题修复
             - 修复:安卓11+上的错误上下文

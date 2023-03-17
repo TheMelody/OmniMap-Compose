@@ -61,7 +61,7 @@ internal fun DrivingRouteOverlayContent(dataState: DrivingRouteDataState) {
             zIndex = if(selectedIndex == index) 2F else 1F,
             polylineColor = if(selectedIndex == index) Color(0xFF58C180) else Color(0xFF83DAA4),
             polylineBorderColor = if(selectedIndex == index) Color(0xFF387C54) else Color(0xFF76BB93),
-            customTexture_stable = PolylineCustomTexture.create(arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
+            customTexture = PolylineCustomTexture.create(arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
                 R.drawable.color_arrow_texture
             )),
             onAnimationStart = {

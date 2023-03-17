@@ -25,6 +25,7 @@ package com.melody.map.gd_compose
 import android.content.ComponentCallbacks
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +38,7 @@ import com.amap.api.maps.AMapOptions
 import com.amap.api.maps.LocationSource
 import com.amap.api.maps.MapView
 import com.amap.api.maps.model.IndoorBuildingInfo
+import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Poi
 import com.melody.map.gd_compose.extensions.awaitMap
 import com.melody.map.gd_compose.model.GDMapComposable
@@ -51,6 +53,20 @@ import kotlinx.coroutines.awaitCancellation
 
 /**
  * 高德地图 GDMap
+ *
+ * @param modifier [Modifier]修饰符
+ * @param cameraPositionState 地图相机位置状态[CameraPositionState]
+ * @param aMapOptionsFactory 可以传百度地图[AMapOptions]参数，如离线地图开关等。
+ * @param properties 地图属性配置[MapProperties]
+ * @param uiSettings 地图SDK UI配置[MapUiSettings]
+ * @param locationSource 设置定位数据, 只有先允许定位图层后设置数据才会生效，参见: [com.melody.map.gd_compose.poperties.MapProperties.isMyLocationEnabled]
+ * @param onMapLoaded 地图加载完成的回调
+ * @param onMapClick 地图单击事件回调，可在这里处理，其他覆盖物不消费拦截的事件
+ * @param onMapLongClick 地图长按事件回调
+ * @param onMapPOIClick 地图内Poi单击事件回调
+ * @param onOnMapTouchEvent 触摸地图的回调
+ * @param content 这里面放置-地图覆盖物
+ *
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
@@ -65,8 +81,11 @@ fun GDMap(
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: LocationSource? = null,
     onMapLoaded: () -> Unit = {},
-    onPOIClick: (Poi) -> Unit = {},
-    indoorBuildingActive: (IndoorBuildingInfo) -> Unit = {},
+    onMapClick: (LatLng?) -> Unit = {},
+    onMapLongClick: (LatLng?) -> Unit = {},
+    onMapPOIClick: (Poi?) -> Unit = {},
+    onOnMapTouchEvent: (MotionEvent?) -> Unit = {},
+    //indoorBuildingActive: (IndoorBuildingInfo?) -> Unit = {},
     content: (@Composable @GDMapComposable () -> Unit)? = null
 ) {
     if (LocalInspectionMode.current) {
@@ -80,8 +99,11 @@ fun GDMap(
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
-        it.onPOIClick = onPOIClick
-        it.indoorBuildingActive = indoorBuildingActive
+        it.onMapClick = onMapClick
+        it.onMapLongClick = onMapLongClick
+        it.onMapPOIClick = onMapPOIClick
+        it.onOnMapTouchEvent = onOnMapTouchEvent
+        //it.indoorBuildingActive = indoorBuildingActive
     }
 
     val currentLocationSource by rememberUpdatedState(locationSource)

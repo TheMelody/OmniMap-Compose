@@ -177,7 +177,7 @@ private fun CircleImpl(
                     radius(radius)
                     dottedStroke(isDottedStroke)
                     dottedStrokeType(dottedStrokeType)
-                    stroke(Stroke(strokeColor.toArgb(),10))
+                    stroke(Stroke(strokeWidth,strokeColor.toArgb()))
                     isIsGradientCircle = useGradientCircle
                     if(!useGradientCircle) {
                         // 如果设置了渐变，则不支持设置填充色和区域内镂空
@@ -201,8 +201,8 @@ private fun CircleImpl(
                 }
             }
             set(radius) { this.circle.radius = it }
-            set(strokeColor) { this.circle.stroke = Stroke(it.toArgb(),strokeWidth) }
-            set(strokeWidth) { this.circle.stroke = Stroke(strokeColor.toArgb(),it) }
+            set(strokeColor) { this.circle.stroke = Stroke(strokeWidth,it.toArgb()) }
+            set(strokeWidth) { this.circle.stroke = Stroke(it, strokeColor.toArgb()) }
             set(dottedStrokeType) { this.circle.setDottedStrokeType(it) }
             set(isDottedStroke) { this.circle.isDottedStroke = it }
             set(useGradientCircle) { this.circle.isIsGradientCircle = it }

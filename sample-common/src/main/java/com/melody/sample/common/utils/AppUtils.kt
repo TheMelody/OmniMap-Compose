@@ -2,6 +2,8 @@ package com.melody.sample.common.utils
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -49,4 +51,9 @@ fun showToast(message: String?) {
     if(showToastResult.isFailure) {
         Log.e("AppUtils","showToastFailed:"+showToastResult.exceptionOrNull()?.message)
     }
+}
+
+fun Bitmap.rotate(degrees: Float): Bitmap {
+    val matrix = Matrix().apply { postRotate(degrees) }
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }

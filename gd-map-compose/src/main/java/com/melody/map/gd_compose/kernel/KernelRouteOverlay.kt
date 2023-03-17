@@ -95,10 +95,14 @@ internal open class KernelRouteOverlay(
     open fun removeFromMap() {
         removeAllMarkers()
         removeAllPolyLines()
-        asyncJobs.forEach {
-            it.cancel()
+        val iterator = asyncJobs.iterator()
+        while(iterator.hasNext()) {
+            val job = iterator.next()
+            if(!job.isCancelled) {
+                job.cancel()
+            }
+            iterator.remove()
         }
-        asyncJobs.clear()
     }
 
     private fun removeAllMarkers() {

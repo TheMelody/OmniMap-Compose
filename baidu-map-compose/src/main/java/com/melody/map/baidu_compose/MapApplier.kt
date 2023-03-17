@@ -44,7 +44,7 @@ private object MapNodeRoot : MapNode
 
 internal class MapApplier(
     val map: BaiduMap,
-    private val mapView: MapView,
+    val mapView: MapView,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
 
     private val decorations = mutableListOf<MapNode>()
@@ -80,11 +80,11 @@ internal class MapApplier(
         decorations.remove(index, count)
     }
 
-    fun getInfoContents(marker: Marker, markerNode: MarkerNode): InfoWindow {
+    internal fun getInfoContents(marker: Marker, markerNode: MarkerNode): InfoWindow {
         return infoWindowAdapter.getInfoContents(marker, markerNode)
     }
 
-    fun getInfoWindow(marker: Marker, markerNode: MarkerNode): InfoWindow {
+    internal fun getInfoWindow(marker: Marker, markerNode: MarkerNode): InfoWindow {
         return infoWindowAdapter.getInfoWindow(marker, markerNode)
     }
 
@@ -93,20 +93,18 @@ internal class MapApplier(
         map.setOnMarkerClickListener { marker ->
             val markerNode = decorations.nodeForMarker(marker)
             val flag = markerNode?.onMarkerClick?.invoke(marker) ?: false
-            if(flag) return@setOnMarkerClickListener true
-            if (markerNode?.infoContent != null) {
-                map.showInfoWindow(getInfoContents(marker,markerNode))
-            } else if (markerNode?.infoWindow != null) {
-                map.showInfoWindow(getInfoWindow(marker,markerNode))
+            if(null != markerNode) {
+                if (markerNode.infoWindow != null) {
+                    map.showInfoWindow(getInfoWindow(marker,markerNode))
+                } else {
+                    map.showInfoWindow(getInfoContents(marker,markerNode))
+                }
             }
-            return@setOnMarkerClickListener false
-            //?:(decorations.nodeForMovingPointOverlay(marker)?.onMarkerClick?.invoke(marker)?: false)
+            flag
         }
         // Polyline的点击事件
         map.setOnPolylineClickListener {
-            decorations.nodeForPolyline(it)?.onPolylineClick?.invoke(it)
-//            ?: decorations.nodeForRoutePlanPolyline(it)?.onPolylineClick?.invoke(it)
-            false
+            decorations.nodeForPolyline(it)?.onPolylineClick?.invoke(it) ?: false
         }
         // 长按触发
         map.setOnMarkerDragListener(object : BaiduMap.OnMarkerDragListener {
@@ -148,12 +146,6 @@ internal class MapApplier(
  */
 private fun MutableList<MapNode>.nodeForMarker(marker: Marker): MarkerNode? =
     fastFirstOrNull { it is MarkerNode && it.marker.extraInfo == marker.extraInfo } as? MarkerNode
-
-///**
-// * MovingPointOverlay轨迹移动
-// */
-//private fun MutableList<MapNode>.nodeForMovingPointOverlay(marker: Marker): MovingPointOverlayNode? =
-//    fastFirstOrNull { it is MovingPointOverlayNode && it.marker.`object` == marker.`object` } as? MovingPointOverlayNode
 
 /**
  * Polyline

@@ -75,5 +75,6 @@ dependencies {
     implementation project(path: ':sample-common')
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':baidu-map-compose')
+    implementation "com.baidu.lbsyun:BaiduMapSDK_Location:9.3.7"
 
 }

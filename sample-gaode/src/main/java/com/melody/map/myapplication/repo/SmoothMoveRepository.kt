@@ -223,13 +223,14 @@ object SmoothMoveRepository {
         return builder.build()
     }
 
-    fun getPolylineTextureBitmap(): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                R.drawable.custtexture
-            )
-        )
+    fun getPolylineTextureBitmap(): BitmapDescriptor? {
+        val result = kotlin.runCatching {
+            val assetsStream = SDKUtils.getApplicationContext().assets.open("custtexture.png")
+            val textureBitmap = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(assetsStream))
+            assetsStream.close()
+            textureBitmap
+        }
+        return result.getOrNull()
     }
 
     fun getPointOverLayMarker(): BitmapDescriptor {

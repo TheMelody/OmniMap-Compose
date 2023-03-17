@@ -42,7 +42,6 @@ import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType
 import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.MapApplier
 import com.melody.map.baidu_compose.MapNode
-import com.melody.map.baidu_compose.adapter.ComposeInfoWindowAdapter
 import com.baidu.mapapi.animation.Animation
 import com.melody.map.baidu_compose.model.BDMapComposable
 
@@ -112,7 +111,7 @@ class MarkerState(
         markerNode?.let { node ->
             if(node.infoWindow != null) {
                 node.marker.showInfoWindow(node.mapApplier.getInfoWindow(node.marker,node))
-            } else if(node.infoContent != null) {
+            } else {
                 node.marker.showInfoWindow(node.mapApplier.getInfoContents(node.marker,node))
             }
         }
@@ -189,10 +188,12 @@ fun rememberMarkerState(
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
- * @param bundle Marker覆盖物的额外信息
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
+ * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
- * @param onClick 标注点击事件回调
+ * @param onClick 标注点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  */
 @Composable
 @BDMapComposable
@@ -205,7 +206,9 @@ fun Marker(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    bundle: Bundle? = null,
+    tag: Bundle? = null,
+    title: String? = null,
+    snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
     visible: Boolean = true,
@@ -217,14 +220,16 @@ fun Marker(
         alpha = alpha,
         anchor = anchor,
         draggable = draggable,
-        infoWindowYOffset = 0,
+        infoWindowYOffset = -52,
         isClickable = isClickable,
         animation = animation,
         isPerspective = isPerspective,
         icon = icon,
         rotation = rotation,
         isFlat = isFlat,
-        bundle = bundle,
+        tag = tag,
+        title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
@@ -247,11 +252,13 @@ fun Marker(
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
- * @param bundle Marker覆盖物的额外信息
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
+ * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
- * @param onClick 标注点击事件回调
- * @param content 【可选】，用于自定义整个信息窗口，【里面动态的内容，通过extraInfo的方式获取】
+ * @param onClick 标注点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
+ * @param content 用于自定义整个信息窗口，【里面动态的内容，通过extraInfo的方式获取】
  */
 @Composable
 @BDMapComposable
@@ -265,13 +272,15 @@ fun MarkerInfoWindow(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    bundle: Bundle? = null,
+    tag: Bundle? = null,
+    title: String? = null,
+    snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
     visible: Boolean = true,
     zIndex: Int = 0,
     onClick: (Marker) -> Boolean = { false },
-    content: (@Composable (Marker) -> Unit)? = null
+    content: @Composable (Marker) -> Unit
 ) {
     MarkerImpl(
         state = state,
@@ -285,7 +294,9 @@ fun MarkerInfoWindow(
         icon = icon,
         isFlat = isFlat,
         rotation = rotation,
-        bundle = bundle,
+        tag = tag,
+        title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
@@ -308,11 +319,13 @@ fun MarkerInfoWindow(
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
- * @param bundle Marker覆盖物的额外信息
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
+ * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
- * @param onClick 标注点击事件回调
- * @param content (可选)，用于自定义信息窗口的内容，【里面动态的内容，通过extraInfo的方式获取】
+ * @param onClick 标注点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
+ * @param content 用于自定义信息窗口的内容，【里面动态的内容，通过extraInfo的方式获取】
 */
 @Composable
 @BDMapComposable
@@ -327,12 +340,14 @@ fun MarkerInfoWindowContent(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    bundle: Bundle? = null,
+    tag: Bundle? = null,
+    title: String? = null,
+    snippet: String? = null,
     rotation: Float = 0.0f,
     visible: Boolean = true,
     zIndex: Int = 0,
     onClick: (Marker) -> Boolean = { false },
-    content: (@Composable (Marker) -> Unit)? = null
+    content: @Composable (Marker) -> Unit
 ) {
     MarkerImpl(
         state = state,
@@ -344,7 +359,9 @@ fun MarkerInfoWindowContent(
         infoWindowYOffset = infoWindowYOffset,
         isFlat = isFlat,
         icon = icon,
-        bundle = bundle,
+        tag = tag,
+        title = title,
+        snippet = snippet,
         rotation = rotation,
         animation = animation,
         visible = visible,
@@ -369,10 +386,12 @@ fun MarkerInfoWindowContent(
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
- * @param bundle Marker覆盖物的额外信息
+ * @param tag Marker覆盖物的附加信息对象
+ * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
+ * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
- * @param onClick 标注点击事件回调
+ * @param onClick 标注点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  * @param infoWindow 【可选】，用于自定义整个信息窗口。如果此值为非空，则[infoContent]中的值将被忽略。
  * @param infoContent 【可选】，用于自定义信息窗口的内容。如果此值为非 null，则 [infoWindow] 必须为 null。
  */
@@ -390,7 +409,9 @@ private fun MarkerImpl(
     icon: BitmapDescriptor,
     animation: MarkerCustomAnimation?,
     rotation: Float,
-    bundle: Bundle?,
+    tag: Bundle?,
+    title: String?,
+    snippet: String?,
     visible: Boolean,
     zIndex: Int,
     onClick: (Marker) -> Boolean,
@@ -403,6 +424,12 @@ private fun MarkerImpl(
         factory = {
             val marker = mapApplier?.map?.addOverlay(
                 MarkerOptions().apply {
+                    // 保证和国内其他地图平台一致的传参体验
+                    val bundle = Bundle().apply {
+                        tag?.let { putBundle("tag",it) }
+                        title?.let { putString("title", it) }
+                        snippet?.let { putString("snippet", it) }
+                    }
                     alpha(alpha)
                     anchor(anchor.x, anchor.y)
                     draggable(draggable)
@@ -412,9 +439,7 @@ private fun MarkerImpl(
                     perspective(isPerspective)
                     position(state.position)
                     animateType(animateType)
-                    bundle?.let {
-                        extraInfo(it.apply { putInt(ComposeInfoWindowAdapter.KEY_INFO_WINDOW_Y_OFFSET, infoWindowYOffset) })
-                    }
+                    extraInfo(bundle.apply { putInt("infoWindowYOffset", infoWindowYOffset) })
                     visible(visible)
                     zIndex(zIndex)
                 }
@@ -445,11 +470,24 @@ private fun MarkerImpl(
             set(isFlat) { this.marker.isFlat = it }
             set(animation) { this.marker.customAnimation(it) }
             set(state.position) { this.marker.position = it }
-            set(bundle) {
-                if(null != it) {
-                    this.marker.extraInfo = it.apply {
-                        putInt(ComposeInfoWindowAdapter.KEY_INFO_WINDOW_Y_OFFSET, infoWindowYOffset)
-                    }
+            set(tag) {
+                this.marker.extraInfo = this.marker.extraInfo?.apply {
+                    putBundle("tag", it)
+                }
+            }
+            set(title) {
+                this.marker.extraInfo = this.marker.extraInfo?.apply {
+                    putString("title", it)
+                }
+            }
+            set(snippet) {
+                this.marker.extraInfo = this.marker.extraInfo?.apply {
+                    putString("snippet", it)
+                }
+            }
+            set(infoWindowYOffset) {
+                this.marker.extraInfo = this.marker.extraInfo?.apply {
+                    putInt("infoWindowYOffset", it)
                 }
             }
             set(visible) { this.marker.isVisible = it }

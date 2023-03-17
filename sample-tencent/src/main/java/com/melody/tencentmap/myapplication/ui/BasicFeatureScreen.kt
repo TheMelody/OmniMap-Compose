@@ -113,7 +113,7 @@ internal fun BasicFeatureScreen() {
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
                             "显示室内地图开关" -> mapProperties.isIndoorEnabled
                             "显示手绘图" -> mapProperties.isHandDrawMapEnable
-                            "设置地图显示范围" -> if(mapProperties.mapShowLatLngBounds == null) null else "腾讯总部大楼"
+                            "设置地图显示范围" -> if(mapProperties.restrictWidthBounds == null) "" else "腾讯总部大楼"
                             "地图Logo缩放" -> uiSettings.logoScale
                             "旋转手势开关" -> uiSettings.isRotateGesturesEnabled
                             "拖拽手势开关" -> uiSettings.isScrollGesturesEnabled
@@ -166,18 +166,18 @@ internal fun BasicFeatureScreen() {
                             }
                         }
                         "设置地图显示范围"-> {
-                            if(mapProperties.mapShowLatLngBounds == null) {
-                                // 设置地图只显示腾讯总部大楼这个区域的地图范围
-                                mapProperties = mapProperties.copy(
-                                    // 这里不能用LatLngBounds构造函数，否则无法构建显示范围，请看源码
-                                    mapShowLatLngBounds = LatLngBounds.builder()
-                                        .include(LatLng(40.042893, 116.269673))
-                                        .include(LatLng(40.038951, 116.275241))
-                                        .build()
-                                )
-                            } else {
-                                mapProperties = mapProperties.copy(mapShowLatLngBounds = null)
-                            }
+                            // 设置地图只显示腾讯总部大楼这个区域的地图范围
+                            mapProperties = mapProperties.copy(
+                                // 这里不能用LatLngBounds构造函数，否则无法构建显示范围，请看源码
+                                restrictWidthBounds = LatLngBounds.builder()
+                                    .include(LatLng(40.042893, 116.269673))
+                                    .include(LatLng(40.038951, 116.275241))
+                                    .build(),
+                                restrictHeightBounds = LatLngBounds.builder()
+                                    .include(LatLng(40.042893, 116.269673))
+                                    .include(LatLng(40.038951, 116.275241))
+                                    .build()
+                            )
                         }
                         "地图Logo缩放"-> {
                             uiSettings = uiSettings.copy(logoScale = if(uiSettings.logoScale == 0.7F) 1.3F else 0.7F)

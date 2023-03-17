@@ -44,8 +44,8 @@ class DrivingRouteDataState(
     endMarkerIcon: BitmapDescriptor?,
     startGuideIcon: BitmapDescriptor?,
     endGuideIcon: BitmapDescriptor?,
-    val driveLineSelectedTexture: BitmapDescriptor,
-    val driveLineUnSelectedTexture: BitmapDescriptor,
+    val driveLineSelectedTexture: BitmapDescriptor?,
+    val driveLineUnSelectedTexture: BitmapDescriptor?,
     val throughIcon: BitmapDescriptor?,
     val throughPointList: List<LatLonPoint>,
     val drivePathV2List: List<DrivePathV2>

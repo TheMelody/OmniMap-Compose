@@ -42,6 +42,8 @@ import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.tencent.tencentmap.mapsdk.maps.LocationSource
 import com.tencent.tencentmap.mapsdk.maps.MapView
 import com.tencent.tencentmap.mapsdk.maps.TencentMapOptions
+import com.tencent.tencentmap.mapsdk.maps.model.LatLng
+import com.tencent.tencentmap.mapsdk.maps.model.MapPoi
 import kotlinx.coroutines.awaitCancellation
 
 /**
@@ -54,6 +56,9 @@ import kotlinx.coroutines.awaitCancellation
  * @param uiSettings 地图SDK UI配置[MapUiSettings]
  * @param locationSource 地图定位蓝点功能必传[LocationSource]
  * @param onMapLoaded 地图加载完成的回调
+ * @param onMapClick 地图单击事件回调，可在这里处理，其他覆盖物不消费拦截的事件
+ * @param onMapLongClick 地图长按事件回调
+ * @param onMapPOIClick 地图内Poi单击事件回调
  * @param content 这里面放置-地图覆盖物
  *
  * @author 被风吹过的夏天
@@ -70,6 +75,9 @@ fun TXMap(
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: LocationSource? = null,
     onMapLoaded: () -> Unit = {},
+    onMapClick: (LatLng?) -> Unit = {},
+    onMapLongClick: (LatLng?) -> Unit = {},
+    onMapPOIClick: (MapPoi?) -> Unit = {},
     content: (@Composable @TXMapComposable () -> Unit)? = null
 ) {
     if (LocalInspectionMode.current) {
@@ -83,6 +91,9 @@ fun TXMap(
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
+        it.onMapClick = onMapClick
+        it.onMapLongClick = onMapLongClick
+        it.onMapPOIClick = onMapPOIClick
     }
 
     val currentLocationSource by rememberUpdatedState(locationSource)

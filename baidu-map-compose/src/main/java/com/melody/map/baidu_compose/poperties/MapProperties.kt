@@ -34,26 +34,30 @@ val DefaultMapProperties = MapProperties()
  * 可在地图上修改属性的数据类
  * @param language 设置地图底图语言
  * @param isShowBuildings  是否显示3D楼块效果
+ * @param overlookEnable 否启用地图俯视功能（3D）,默认开启。如果启用，则用户可使用双指 向下或向上滑动到俯视图
  * @param isShowMapLabels  是否显示底图标注
+ * @param isShowMapIndoorLabels  设置室内图标注是否显示
  * @param isIndoorEnabled  是否显示室内地图，默认室内图不显示 室内图只有在缩放级别【**17, 22**】范围才生效，但是只有在18级之上（包含18级）才会有楼层边条显示
  * @param isMyLocationEnabled 设置是否打开定位图层（myLocationOverlay）。
  * @param isTrafficEnabled 是否打开交通路况图层
  * @param myLocationStyle 设置定位图层配置信息，只有先允许定位图层[isMyLocationEnabled]后,设置定位图层配置信息才会生效
  * @param maxZoomPreference 设置地图最大缩放级别，缩放级别范围为:【**4, 21**】
  * @param minZoomPreference 设置最小缩放级别，缩放级别范围为:【**4, 21**】
- * @param mapShowLatLngBounds 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域
+ * @param mapShowLatLngBounds 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域,该方法执行完成之后，不可再调用[setMapStatus(MapStatusUpdate)]，否则【**可能会**造成可移动区域设置**不生效**】，方法可以放在[setMapStatus(MapStatusUpdate)]方法之前执行。
  * @param mapType 设置地图模式，默认为：[MapType.NORMAL]
  */
 class MapProperties(
     val language: MapLanguage = MapLanguage.CHINESE,
     val isShowBuildings: Boolean = false,
     val isShowMapLabels: Boolean = true,
+    val isShowMapIndoorLabels: Boolean = true,
+    val overlookEnable: Boolean = true,
     val isIndoorEnabled: Boolean = false,
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
     val myLocationStyle: MyLocationConfiguration? = null,
     val maxZoomPreference: Float = 21.0F,
-    val minZoomPreference: Float = 0F,
+    val minZoomPreference: Float = 4F,
     val mapShowLatLngBounds: LatLngBounds? = null,
     val mapType: MapType = MapType.NORMAL,
 ) {
@@ -62,6 +66,8 @@ class MapProperties(
         language == other.language &&
         isShowBuildings == other.isShowBuildings &&
         isShowMapLabels == other.isShowMapLabels &&
+        isShowMapIndoorLabels == other.isShowMapIndoorLabels &&
+        overlookEnable == other.overlookEnable &&
         isIndoorEnabled == other.isIndoorEnabled &&
         isMyLocationEnabled == other.isMyLocationEnabled &&
         isTrafficEnabled == other.isTrafficEnabled &&
@@ -75,6 +81,8 @@ class MapProperties(
         language,
         isShowBuildings,
         isShowMapLabels,
+        isShowMapIndoorLabels,
+        overlookEnable,
         isIndoorEnabled,
         isMyLocationEnabled,
         isTrafficEnabled,
@@ -89,6 +97,8 @@ class MapProperties(
         language: MapLanguage = this.language,
         isShowBuildings: Boolean = this.isShowBuildings,
         isShowMapLabels: Boolean = this.isShowMapLabels,
+        isShowMapIndoorLabels: Boolean = this.isShowMapIndoorLabels,
+        overlookEnable: Boolean = this.overlookEnable,
         isIndoorEnabled: Boolean = this.isIndoorEnabled,
         isMyLocationEnabled: Boolean = this.isMyLocationEnabled,
         isTrafficEnabled: Boolean = this.isTrafficEnabled,
@@ -101,6 +111,8 @@ class MapProperties(
         language = language,
         isShowBuildings = isShowBuildings,
         isShowMapLabels = isShowMapLabels,
+        isShowMapIndoorLabels = isShowMapIndoorLabels,
+        overlookEnable = overlookEnable,
         isIndoorEnabled = isIndoorEnabled,
         isMyLocationEnabled = isMyLocationEnabled,
         isTrafficEnabled = isTrafficEnabled,
@@ -115,6 +127,8 @@ class MapProperties(
         return "MapProperties(isShowBuildings=$isShowBuildings, " +
                 "language=$language, " +
                 "isShowMapLabels=$isShowMapLabels, " +
+                "isShowMapIndoorLabels=$isShowMapIndoorLabels, " +
+                "overlookEnable=$overlookEnable, " +
                 "isIndoorEnabled=$isIndoorEnabled, " +
                 "isMyLocationEnabled=$isMyLocationEnabled, " +
                 "isTrafficEnabled=$isTrafficEnabled, " +

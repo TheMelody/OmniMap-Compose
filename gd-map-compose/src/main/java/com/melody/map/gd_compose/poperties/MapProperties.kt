@@ -52,8 +52,8 @@ class MapProperties(
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
     val myLocationStyle: MyLocationStyle? = null,
-    val maxZoomPreference: Float = 21.0F,
-    val minZoomPreference: Float = 0F,
+    val maxZoomPreference: Float = 20.0F,
+    val minZoomPreference: Float = 3F,
     val mapShowLatLngBounds: LatLngBounds? = null,
     val mapType: MapType = MapType.NORMAL,
 ) {

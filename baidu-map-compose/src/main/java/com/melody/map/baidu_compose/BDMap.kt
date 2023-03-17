@@ -23,6 +23,7 @@
 package com.melody.map.baidu_compose
 
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,8 +33,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.baidu.mapapi.map.BaiduMapOptions
+import com.baidu.mapapi.map.MapPoi
 import com.baidu.mapapi.map.MapView
 import com.baidu.mapapi.map.MyLocationData
+import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.extensions.awaitMap
 import com.melody.map.baidu_compose.model.BDMapComposable
 import com.melody.map.baidu_compose.model.MapClickListeners
@@ -55,6 +58,10 @@ import kotlinx.coroutines.awaitCancellation
  * @param uiSettings 地图SDK UI配置[MapUiSettings]
  * @param locationSource 设置定位数据, 只有先允许定位图层后设置数据才会生效，参见: [com.melody.map.baidu_compose.poperties.MapProperties.isMyLocationEnabled]
  * @param onMapLoaded 地图加载完成的回调
+ * @param onMapClick 地图单击事件回调，可在这里处理，其他覆盖物不消费拦截的事件
+ * @param onMapLongClick 地图长按事件回调
+ * @param onMapPOIClick 地图内Poi单击事件回调
+ * @param onOnMapTouchEvent 触摸地图的回调
  * @param content 这里面放置-地图覆盖物
  *
  * @author 被风吹过的夏天
@@ -71,6 +78,10 @@ fun BDMap(
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: MyLocationData? = null,
     onMapLoaded: () -> Unit = {},
+    onMapClick: (LatLng?) -> Unit = {},
+    onMapLongClick: (LatLng?) -> Unit = {},
+    onMapPOIClick: (MapPoi?) -> Unit = {},
+    onOnMapTouchEvent: (MotionEvent?) -> Unit = {},
     content: (@Composable @BDMapComposable () -> Unit)? = null
 ) {
     if (LocalInspectionMode.current) {
@@ -84,6 +95,10 @@ fun BDMap(
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
+        it.onMapClick = onMapClick
+        it.onMapLongClick = onMapLongClick
+        it.onMapPOIClick = onMapPOIClick
+        it.onOnMapTouchEvent = onOnMapTouchEvent
     }
 
     val currentLocationSource by rememberUpdatedState(locationSource)
