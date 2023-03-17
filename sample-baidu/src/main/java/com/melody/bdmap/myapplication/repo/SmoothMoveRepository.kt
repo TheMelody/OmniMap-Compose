@@ -27,12 +27,10 @@ import com.baidu.mapapi.map.BitmapDescriptor
 import com.baidu.mapapi.map.BitmapDescriptorFactory
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.model.LatLngBounds
+import com.melody.bdmap.myapplication.utils.PathSmoothTool
 import com.melody.map.baidu_compose.poperties.MapUiSettings
-import com.melody.map.baidu_compose.utils.BDSmoothMoveUtils
-import com.melody.map.baidu_compose.utils.PathSmoothTool
 import com.melody.sample.common.utils.SDKUtils
 import com.melody.sample.common.utils.rotate
-import kotlinx.coroutines.delay
 
 /**
  * SmoothMoveRepository

@@ -76,5 +76,7 @@ dependencies {
     implementation project(path: ':sample-common')
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':tencent-map-compose')
+    // 定位SDK
+    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.0'
 
 }

@@ -4,8 +4,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.poperties.MapUiSettings
-import com.melody.map.tencent_compose.utils.PathSmoothTool
 import com.melody.sample.common.utils.SDKUtils
+import com.melody.tencentmap.myapplication.utils.PathSmoothTool
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng

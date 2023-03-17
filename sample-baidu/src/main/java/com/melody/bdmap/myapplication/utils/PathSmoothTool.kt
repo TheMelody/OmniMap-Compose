@@ -20,11 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.map.tencent_compose.utils
+package com.melody.bdmap.myapplication.utils
 
-import com.tencent.map.geolocation.TencentLocationUtils
-import com.tencent.tencentmap.mapsdk.maps.model.LatLng
-
+import com.baidu.mapapi.model.LatLng
+import com.baidu.mapapi.utils.DistanceUtil
 
 /**
  * 轨迹平滑处理。
@@ -117,31 +116,31 @@ class PathSmoothTool {
 
     /**
      * 单点滤波
-     * @param lastLocation 上次定位点坐标
-     * @param curLocation 本次定位点坐标
+     * @param lastLoc 上次定位点坐标
+     * @param curLoc 本次定位点坐标
      * @param intensity 滤波强度（1—5）
      * @return 滤波后本次定位点坐标值
      */
-    private fun kalmanFilterPoint(lastLocation: LatLng?, curLocation: LatLng, intensity: Int): LatLng? {
-        var curLoc: LatLng? = curLocation
-        var newIntensity = intensity
+    private fun kalmanFilterPoint(lastLoc: LatLng?, curLoc: LatLng, intensity: Int): LatLng? {
+        var curLoc: LatLng? = curLoc
+        var intensity = intensity
         if (pdelt_x == 0.0 || pdelt_y == 0.0) {
             initial()
         }
         var kalmanLatlng: LatLng? = null
-        if (lastLocation == null || curLoc == null) {
-            return null
+        if (lastLoc == null || curLoc == null) {
+            return kalmanLatlng
         }
-        if (newIntensity < 1) {
-            newIntensity = 1
-        } else if (newIntensity > 5) {
-            newIntensity = 5
+        if (intensity < 1) {
+            intensity = 1
+        } else if (intensity > 5) {
+            intensity = 5
         }
-        for (j in 0 until newIntensity) {
+        for (j in 0 until intensity) {
             kalmanLatlng = kalmanFilter(
-                lastLocation.longitude,
+                lastLoc.longitude,
                 curLoc!!.longitude,
-                lastLocation.latitude,
+                lastLoc.latitude,
                 curLoc.latitude
             )
             curLoc = kalmanLatlng
@@ -185,8 +184,8 @@ class PathSmoothTool {
     private fun initial() {
         pdelt_x = 0.001
         pdelt_y = 0.001
-        // mdelt_x = 0;
-        //mdelt_y = 0;
+        //        mdelt_x = 0;
+//        mdelt_y = 0;
         mdelt_x = 5.698402909980532E-4
         mdelt_y = 5.698402909980532E-4
     }
@@ -306,8 +305,7 @@ class PathSmoothTool {
                 xx = lineBegin.longitude + param * C
                 yy = lineBegin.latitude + param * D
             }
-            // 两个点以经纬度的形式计算距离
-            return TencentLocationUtils.distanceBetween(p.latitude,p.longitude,yy,xx)
+            return DistanceUtil.getDistance(p, LatLng(yy, xx))
         }
     }
 }

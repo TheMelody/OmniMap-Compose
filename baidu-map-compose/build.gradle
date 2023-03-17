@@ -47,10 +47,4 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     // 地图组件
     api 'com.baidu.lbsyun:BaiduMapSDK_Map:7.5.4'
-    // 检索组件
-    api 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.4'
-    // 工具组件
-    api 'com.baidu.lbsyun:BaiduMapSDK_Util:7.5.4'
-    // 基础库
-    api 'com.baidu.lbsyun:base:7.5.4'
 }
