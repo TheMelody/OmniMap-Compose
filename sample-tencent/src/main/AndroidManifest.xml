@@ -32,6 +32,12 @@
             android:name="TencentMapSDK"
             android:value="2QIBZ-GE264-D6DUI-XYV6Q-ETIAS-SJF3L"/>
 
+        <!--腾讯地图的后台定位service-->
+        <service
+            android:name="com.tencent.map.geolocation.s"
+            android:foregroundServiceType="location"/>
+
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

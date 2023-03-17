@@ -20,35 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication
+package com.melody.bdmap.myapplication.contract
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
-import com.melody.bdmap.myapplication.ui.BM3DPrismScreen
+import com.baidu.mapapi.model.LatLng
+import com.melody.bdmap.myapplication.model.BM3DPrismDataModel
+import com.melody.map.baidu_compose.poperties.MapProperties
+import com.melody.map.baidu_compose.poperties.MapUiSettings
+import com.melody.sample.common.state.IUiEffect
+import com.melody.sample.common.state.IUiEvent
+import com.melody.sample.common.state.IUiState
 
 /**
- * BM3DPrismActivity
+ * BM3DPrismContract
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 14:40
+ * created 2023/03/17 16:53
  */
-class BM3DPrismActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class BM3DPrismContract {
+    sealed class Event : IUiEvent
 
-        setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background
-            ) {
-                BM3DPrismScreen()
-            }
-        }
+    data class State(
+        val mapUiSettings: MapUiSettings,
+        val mapProperties: MapProperties,
+        val searchLatLng: LatLng,
+        val bM3DPrisms: List<BM3DPrismDataModel>?
+    ) : IUiState
+
+    sealed class Effect : IUiEffect {
+        internal data class Toast(val msg: String?) : Effect()
     }
 }

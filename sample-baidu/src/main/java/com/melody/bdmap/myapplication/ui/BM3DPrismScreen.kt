@@ -25,36 +25,65 @@ package com.melody.bdmap.myapplication.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.melody.bdmap.myapplication.viewmodel.BM3DModelViewModel
+import com.baidu.mapapi.map.MapStatus
+import com.baidu.mapapi.map.MapStatusUpdateFactory
+import com.melody.bdmap.myapplication.contract.BM3DPrismContract
+import com.melody.bdmap.myapplication.viewmodel.BM3DPrismViewModel
 import com.melody.map.baidu_compose.BDMap
-import com.melody.map.baidu_compose.overlay.BM3DModelOverlay
+import com.melody.map.baidu_compose.overlay.BM3DPrismOverlay
+import com.melody.map.baidu_compose.position.rememberCameraPositionState
+import com.melody.sample.common.utils.showToast
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 /**
- * BM3DModelScreen
+ * BM3DPrismScreen
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 15:36
+ * created 2023/03/17 16:51
  */
 @Composable
-internal fun BM3DModelScreen() {
-    val viewModel: BM3DModelViewModel = viewModel()
-    val currentState by viewModel.uiState.collectAsState()
+internal fun BM3DPrismScreen() {
+    val viewModel: BM3DPrismViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
+    val cameraPositionState = rememberCameraPositionState()
+
+    LaunchedEffect(Unit) {
+        cameraPositionState.animate(
+            MapStatusUpdateFactory.newMapStatus(
+                MapStatus.Builder().target(uiState.searchLatLng).overlook(-30f).zoom(12F).build()
+            )
+        )
+    }
+
+    LaunchedEffect(viewModel.effect) {
+        viewModel.effect.onEach {
+            if(it is BM3DPrismContract.Effect.Toast) {
+                showToast(it.msg)
+            }
+        }.collect()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         BDMap(
             modifier = Modifier.matchParentSize(),
-            uiSettings = currentState.mapUiSettings
+            uiSettings = uiState.mapUiSettings,
+            properties = uiState.mapProperties,
+            cameraPositionState = cameraPositionState
         ) {
-            currentState.bM3DModel?.let {
-                BM3DModelOverlay(
-                    modelPath = it.modelPath,
-                    modelName = it.modelName,
-                    position = it.position,
-                    scale = it.scale
+            uiState.bM3DPrisms?.forEach {
+                BM3DPrismOverlay(
+                    height = 0F,
+                    points = it.points?: emptyList(),
+                    topFaceColor = it.topFaceColor,
+                    sideFaceColor = it.sideFaceColor,
+                    buildingInfo = it.buildingInfo
                 )
             }
         }

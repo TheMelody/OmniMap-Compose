@@ -51,13 +51,13 @@ internal class BM3DModelNode(
  */
 @Composable
 @BDMapComposable
-fun BM3DModel(
-    scale: Float = 1.0f,
+fun BM3DModelOverlay(
     modelPath: String,
     modelName: String,
     position: LatLng,
-    isZoomFixed: Boolean = false,
-    visible: Boolean = true
+    scale: Float = 1.0F,
+    visible: Boolean = true,
+    isZoomFixed: Boolean = false
 ) {
     val mapApplier = currentComposer.applier as? MapApplier
     ComposeNode<BM3DModelNode, MapApplier>(

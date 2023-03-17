@@ -2,12 +2,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.melody.map.tencent_compose">
 
-    <application>
-
-        <!--腾讯地图的后台定位service-->
-        <service
-            android:name="com.tencent.map.geolocation.s"
-            android:foregroundServiceType="location"/>
-
-    </application>
 </manifest>
