@@ -42,6 +42,8 @@ class DrivingRouteDataState(
     polylineBorderWidth: Float,
     latLngBounds: LatLngBounds,
     polylineAnim: Animation?,
+    val isAnimationStart: Boolean,
+    val isAnimationEnd: Boolean,
     val points: List<List<LatLng>>
 ): BaseRouteDataState(
     startPoint = startPoint,
@@ -50,5 +52,27 @@ class DrivingRouteDataState(
     polylineBorderWidth = polylineBorderWidth,
     polylineAnim = polylineAnim,
     latLngBounds = latLngBounds
-)
+) {
+    fun copy(
+        polylineWidth:Float = this.polylineWidth,
+        polylineBorderWidth:Float = this.polylineBorderWidth,
+        startPoint: LatLng = this.startPoint,
+        endPoint: LatLng = this.endPoint,
+        latLngBounds: LatLngBounds = this.latLngBounds,
+        polylineAnim:Animation? = this.polylineAnim,
+        points: List<List<LatLng>> = this.points,
+        isAnimationStart: Boolean = this.isAnimationStart,
+        isAnimationEnd: Boolean = this.isAnimationEnd
+    ):DrivingRouteDataState = DrivingRouteDataState(
+        polylineWidth = polylineWidth,
+        polylineBorderWidth = polylineBorderWidth,
+        startPoint = startPoint,
+        endPoint = endPoint,
+        latLngBounds = latLngBounds,
+        polylineAnim = polylineAnim,
+        points = points,
+        isAnimationStart = isAnimationStart,
+        isAnimationEnd = isAnimationEnd
+    )
+}
 

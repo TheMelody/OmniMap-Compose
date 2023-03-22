@@ -47,8 +47,6 @@ import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
 @TXMapComposable
 @Composable
 internal fun DrivingRouteOverlayContent(dataState: DrivingRouteDataState) {
-    var visibleStart by rememberSaveable { mutableStateOf(false) }
-    var visibleEnd by rememberSaveable { mutableStateOf(false) }
     var selectedIndex by rememberSaveable { mutableStateOf(0) }
 
     dataState.points.forEachIndexed { index, pointList ->
@@ -64,39 +62,32 @@ internal fun DrivingRouteOverlayContent(dataState: DrivingRouteDataState) {
             customTexture = PolylineCustomTexture.create(arrowSpacing = 80, arrowTexture = BitmapDescriptorFactory.fromResource(
                 R.drawable.color_arrow_texture
             )),
-            onAnimationStart = {
-                visibleStart = true
-                visibleEnd = false
-            },
-            onAnimationEnd = {
-                visibleEnd = true
-            },
             onClick = {
                 selectedIndex = index
             }
         )
     }
     Marker(
-        visible = visibleStart,
+        visible = dataState.isAnimationStart,
         anchor = Offset(0.5f,0.5f),
         icon = BitmapDescriptorFactory.fromResource(com.melody.ui.components.R.drawable.ic_map_start_guide_icon),
         state = rememberMarkerState(position = dataState.startPoint)
     )
     Marker(
-        visible = visibleEnd,
+        visible = dataState.isAnimationEnd,
         anchor = Offset(0.5f,0.5f),
         icon = BitmapDescriptorFactory.fromResource(com.melody.ui.components.R.drawable.ic_map_end_guide_icon),
         state = rememberMarkerState(position = dataState.endPoint)
     )
     Marker(
-        visible = visibleStart,
+        visible = dataState.isAnimationStart,
         anchor = Offset(0.5F,1F),
         zIndex = 1F,
         icon = BitmapDescriptorFactory.fromResource(com.melody.ui.components.R.drawable.bus_start_icon),
         state = rememberMarkerState(position = dataState.startPoint)
     )
     Marker(
-        visible = visibleEnd,
+        visible = dataState.isAnimationEnd,
         anchor = Offset(0.5F,1F),
         zIndex = 1F,
         icon = BitmapDescriptorFactory.fromResource(com.melody.ui.components.R.drawable.bus_end_icon),

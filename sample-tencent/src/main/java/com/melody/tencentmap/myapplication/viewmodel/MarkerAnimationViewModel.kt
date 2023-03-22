@@ -48,13 +48,17 @@ class MarkerAnimationViewModel :
 
     override fun handleEvents(event: MarkerAnimationContract.Event) {
         if(event is MarkerAnimationContract.Event.StartMarkerAnimation) {
+            val animation = MarkerAnimationRepository.prepareMarkerAnimation(
+                LatLng(
+                    currentState.markerDefaultLocation.latitude + 0.05,
+                    currentState.markerDefaultLocation.longitude - 0.05
+                ),
+                onAnimationEnd = {
+                    setEvent(MarkerAnimationContract.Event.FinishMarkerAnimation)
+                }
+            )
             setState {
-                copy(markerAnimation =  MarkerAnimationRepository.prepareMarkerAnimation(
-                    LatLng(
-                        markerDefaultLocation.latitude + 0.05,
-                        markerDefaultLocation.longitude - 0.05
-                    )
-                ))
+                copy(markerAnimation =  animation)
             }
         } else if(event is MarkerAnimationContract.Event.FinishMarkerAnimation) {
             setState {
@@ -71,10 +75,6 @@ class MarkerAnimationViewModel :
 
     fun startMarkerAnimation() {
         setEvent(MarkerAnimationContract.Event.StartMarkerAnimation)
-    }
-
-    fun finishMarkerAnimation() {
-        setEvent(MarkerAnimationContract.Event.FinishMarkerAnimation)
     }
 
     fun handleMapLoaded() {

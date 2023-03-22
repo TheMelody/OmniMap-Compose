@@ -42,6 +42,7 @@ import com.tencent.lbssearch.`object`.result.DrivingResultObject
 import com.tencent.lbssearch.`object`.result.TransitResultObject
 import com.tencent.lbssearch.`object`.result.WalkingResultObject
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
+import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.LatLngBounds
@@ -77,7 +78,10 @@ object RoutePlanRepository {
     /**
      * 路径规划的线段动画
      */
-    private fun initPolylineAnimation(startLatLng: LatLng, totalDuration: Int): Animation {
+    private fun initPolylineAnimation(
+        startLatLng: LatLng,
+        totalDuration: Int
+    ): Animation {
         return EmergeAnimation(startLatLng).apply {
             duration = totalDuration.toLong()
         }
@@ -130,7 +134,9 @@ object RoutePlanRepository {
                             endPoint = toPoint,
                             latLngBounds = convertLatLngBounds(points[0]),
                             polylineAnim = initPolylineAnimation(fromPoint,1000),
-                            points = points
+                            points = points,
+                            isAnimationStart = false,
+                            isAnimationEnd = false
                         )
                     ))
                 }

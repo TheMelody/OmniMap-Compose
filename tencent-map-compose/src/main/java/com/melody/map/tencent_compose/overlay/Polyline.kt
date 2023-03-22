@@ -25,8 +25,6 @@ package com.melody.map.tencent_compose.overlay
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.melody.map.tencent_compose.MapApplier
@@ -34,7 +32,6 @@ import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.tencent.tencentmap.mapsdk.maps.model.AlphaAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.Animation
-import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.EmergeAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -158,8 +155,6 @@ class PolylineDynamicRoadName private constructor(
  * @param width 线段宽度
  * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
- * @param onAnimationStart 线段动画开始的回调
- * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
@@ -182,8 +177,6 @@ fun Polyline(
     width: Float = 10F,
     borderWidth: Float = 0F,
     zIndex: Float = 0F,
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onClick: (Polyline) -> Unit = {}
 ) {
     PolylineImpl(
@@ -206,8 +199,6 @@ fun Polyline(
         width = width,
         borderWidth = borderWidth,
         zIndex = zIndex,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         onClick = onClick
     )
 }
@@ -233,8 +224,6 @@ fun Polyline(
  * @param width 线段宽度
  * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
- * @param onAnimationStart 线段动画开始的回调
- * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
@@ -255,8 +244,6 @@ fun PolylineRainbow(
     width: Float = 10F,
     borderWidth: Float = 0F,
     zIndex: Float = 0F,
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onClick: (Polyline) -> Unit = {}
 ) {
     PolylineImpl(
@@ -279,8 +266,6 @@ fun PolylineRainbow(
         width = width,
         borderWidth = borderWidth,
         zIndex = zIndex,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         onClick = onClick
     )
 }
@@ -306,8 +291,6 @@ fun PolylineRainbow(
  * @param width 线段宽度
  * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
- * @param onAnimationStart 线段动画开始的回调
- * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
@@ -329,8 +312,6 @@ fun PolylineCustomTexture(
     width: Float = 10F,
     borderWidth: Float = 0F,
     zIndex: Float = 0F,
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onClick: (Polyline) -> Unit = {}
 ) {
     PolylineImpl(
@@ -353,8 +334,6 @@ fun PolylineCustomTexture(
         width = width,
         borderWidth = borderWidth,
         zIndex = zIndex,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         onClick = onClick
     )
 }
@@ -384,8 +363,6 @@ fun PolylineCustomTexture(
  * @param width 线段宽度
  * @param borderWidth 线段边框的宽度，默认为0
  * @param zIndex 显示层级
- * @param onAnimationStart 线段动画开始的回调
- * @param onAnimationEnd 线段动画完成的回调
  * @param onClick polyline点击事件回调
  */
 @Composable
@@ -410,15 +387,11 @@ private fun PolylineImpl(
     width: Float,
     borderWidth: Float,
     zIndex: Float,
-    onAnimationStart: () -> Unit,
-    onAnimationEnd: () -> Unit,
     onClick: (Polyline) -> Unit
 ) {
     if(null != animation && !(animation is AlphaAnimation || animation is EmergeAnimation)) {
         error("animation must be either AlphaAnimation or EmergeAnimation")
     }
-    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
-    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolylineNode, MapApplier>(
         factory = {
@@ -476,21 +449,7 @@ private fun PolylineImpl(
             set(customTexture) { this.polyline.customTexture(it) }
             set(visible) { this.polyline.isVisible = it }
             set(isClickable) { this.polyline.isClickable = it }
-            set(animation) {
-                if(null != it) {
-                    it.animationListener = object : AnimationListener{
-                        override fun onAnimationStart() {
-                            currentOnAnimationStart.invoke()
-                        }
-                        override fun onAnimationEnd() {
-                            currentOnAnimationEnd.invoke()
-                        }
-                    }
-                    this.polyline.startAnimation(it)
-                } else {
-                    this.polyline.setAnimation(null)
-                }
-            }
+            set(animation) { this.polyline.startAnimation(it) }
             set(width) { this.polyline.width = it }
             set(zIndex) { this.polyline.setZIndex(it) }
         }

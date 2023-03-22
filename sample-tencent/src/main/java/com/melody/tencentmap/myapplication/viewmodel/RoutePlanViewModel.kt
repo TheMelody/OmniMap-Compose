@@ -24,7 +24,9 @@ package com.melody.tencentmap.myapplication.viewmodel
 
 import com.melody.sample.common.base.BaseViewModel
 import com.melody.tencentmap.myapplication.contract.RoutePlanContract
+import com.melody.tencentmap.myapplication.model.DrivingRouteDataState
 import com.melody.tencentmap.myapplication.repo.RoutePlanRepository
+import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 
@@ -36,7 +38,8 @@ import kotlinx.coroutines.Dispatchers
  * created 2023/02/17 16:42
  */
 class RoutePlanViewModel :
-    BaseViewModel<RoutePlanContract.Event, RoutePlanContract.State, RoutePlanContract.Effect>(){
+    BaseViewModel<RoutePlanContract.Event, RoutePlanContract.State, RoutePlanContract.Effect>(),
+    AnimationListener {
 
     override fun createInitialState(): RoutePlanContract.State {
         return RoutePlanContract.State(
@@ -66,7 +69,13 @@ class RoutePlanViewModel :
                     }
                     setState { copy(isLoading = false) }
                     if(drivingRoutePlanResult.isSuccess) {
-                        setState { copy(routePlanDataState = drivingRoutePlanResult.getOrNull()) }
+                        setState {
+                            copy(
+                                routePlanDataState = drivingRoutePlanResult.getOrNull()?.apply {
+                                    polylineAnim?.animationListener = this@RoutePlanViewModel
+                                }
+                            )
+                        }
                     }else{
                         setEffect { RoutePlanContract.Effect.Toast(drivingRoutePlanResult.exceptionOrNull()?.message) }
                     }
@@ -81,5 +90,23 @@ class RoutePlanViewModel :
 
     fun switchRoadTraffic() {
         setEvent(RoutePlanContract.Event.RoadTrafficClick)
+    }
+
+    override fun onAnimationStart() {
+        val dataState = currentState.routePlanDataState
+        if(dataState is DrivingRouteDataState) {
+            setState {
+                copy(routePlanDataState = dataState.copy(isAnimationStart = true))
+            }
+        }
+    }
+
+    override fun onAnimationEnd() {
+        val dataState = currentState.routePlanDataState
+        if(dataState is DrivingRouteDataState) {
+            setState {
+                copy(routePlanDataState = dataState.copy(isAnimationEnd = true))
+            }
+        }
     }
 }

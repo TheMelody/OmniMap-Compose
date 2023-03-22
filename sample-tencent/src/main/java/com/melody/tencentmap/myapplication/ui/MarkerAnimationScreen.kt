@@ -80,7 +80,6 @@ internal fun MarkerAnimationScreen() {
                         text = "点击Marker查看动画"
                     )
                 },
-                onAnimationEnd = viewModel::finishMarkerAnimation,
                 onClick = {
                     viewModel.startMarkerAnimation()
                     true

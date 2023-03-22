@@ -30,7 +30,6 @@ import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,7 +37,6 @@ import androidx.compose.ui.geometry.Offset
 import com.melody.map.tencent_compose.MapApplier
 import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
-import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BaseAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -178,8 +176,6 @@ fun Marker(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
 ) {
     MarkerImpl(
@@ -198,8 +194,6 @@ fun Marker(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = null,
@@ -248,8 +242,6 @@ fun MarkerInfoWindow(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -269,8 +261,6 @@ fun MarkerInfoWindow(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
         infoWindow = content,
@@ -319,8 +309,6 @@ fun MarkerInfoWindowContent(
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -340,8 +328,6 @@ fun MarkerInfoWindowContent(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = content,
@@ -391,14 +377,10 @@ private fun MarkerImpl(
     zIndex: Float,
     animation: BaseAnimation?,
     onClick: (Marker) -> Boolean,
-    onAnimationStart: () -> Unit,
-    onAnimationEnd: () -> Unit,
     onInfoWindowClick: (Marker) -> Unit = {},
     infoWindow: (@Composable (Marker) -> Unit)?,
     infoContent: (@Composable (Marker) -> Unit)?,
 ) {
-    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
-    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as? MapApplier
     val compositionContext = rememberCompositionContext()
     ComposeNode<MarkerNode, MapApplier>(
@@ -463,21 +445,7 @@ private fun MarkerImpl(
             }
             set(visible) { this.marker.isVisible = it }
             set(zIndex) { this.marker.setZIndex(it) }
-            set(animation) {
-                if(null != it) {
-                    it.animationListener = object :AnimationListener{
-                        override fun onAnimationStart() {
-                            currentOnAnimationStart.invoke()
-                        }
-                        override fun onAnimationEnd() {
-                            currentOnAnimationEnd.invoke()
-                        }
-                    }
-                    marker.startAnimation(it)
-                } else {
-                    marker.setAnimation(null)
-                }
-            }
+            set(animation) { marker.startAnimation(it) }
         }
     )
 }
