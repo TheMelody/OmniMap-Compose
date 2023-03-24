@@ -107,13 +107,12 @@ object LocationTrackingRepository {
         }
     }
 
-    fun bDLocation2MyLocation(bdLocation: BDLocation): MyLocationData {
+    fun bDLocation2MyLocation(bdLocation: BDLocation, degree: Float): MyLocationData {
         return MyLocationData.Builder()
             .accuracy(bdLocation.radius)// 设置定位数据的精度信息，单位：米
-            .direction(bdLocation.direction) // 此处设置开发者获取到的方向信息，顺时针0-360
+            .direction(degree) //bdLocation.direction) // 此处设置开发者获取到的方向信息，顺时针0-360
             .latitude(bdLocation.latitude)
             .longitude(bdLocation.longitude)
             .build()
     }
-
 }

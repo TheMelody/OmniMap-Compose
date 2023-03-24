@@ -24,7 +24,6 @@ package com.melody.bdmap.myapplication.viewmodel
 
 import android.content.Intent
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import com.baidu.location.BDAbstractLocationListener
@@ -35,6 +34,8 @@ import com.melody.bdmap.myapplication.contract.LocationTrackingContract
 import com.melody.bdmap.myapplication.repo.LocationTrackingRepository
 import com.melody.bdmap.myapplication.utils.BDMapUtils
 import com.melody.sample.common.base.BaseViewModel
+import com.melody.sample.common.model.ISensorDegreeListener
+import com.melody.sample.common.utils.SensorEventHelper
 import com.melody.sample.common.utils.openAppPermissionSettingPage
 import com.melody.sample.common.utils.safeLaunch
 import kotlinx.coroutines.Dispatchers
@@ -47,10 +48,11 @@ import kotlinx.coroutines.Dispatchers
  * created 2022/10/10 17:40
  */
 class LocationTrackingViewModel :
-    BaseViewModel<LocationTrackingContract.Event, LocationTrackingContract.State, LocationTrackingContract.Effect>() {
+    BaseViewModel<LocationTrackingContract.Event, LocationTrackingContract.State, LocationTrackingContract.Effect>(),
+    ISensorDegreeListener {
 
     private var mLocClient: LocationClient? = null
-    private val lock = Any()
+    private val sensorEventHelper = SensorEventHelper()
 
     override fun createInitialState(): LocationTrackingContract.State {
         return LocationTrackingContract.State(
@@ -58,6 +60,7 @@ class LocationTrackingViewModel :
             mapUiSettings = LocationTrackingRepository.initMapUiSettings(),
             isForceLocation = true,
             isShowOpenGPSDialog = false,
+            sensorDegree = 0F,
             grantLocationPermission = false,
             locationLatLng = null,
             locationSource = null,
@@ -74,6 +77,10 @@ class LocationTrackingViewModel :
                 setState { copy(isShowOpenGPSDialog = false) }
             }
         }
+    }
+
+    init {
+        sensorEventHelper.registerSensorListener(this)
     }
 
     /**
@@ -117,16 +124,13 @@ class LocationTrackingViewModel :
     }
 
     fun startMapLocation() {
-        synchronized(lock) {
-            setState { copy(isForceLocation = true) }
-            if(null == mLocClient) {
-                mLocClient = LocationTrackingRepository.initLocationClient()
-                mLocClient?.registerLocationListener(mLocationListener)
-                mLocClient?.start()
-                //mLocClient?.requestLocation()
-            } else {
-                mLocClient?.restart()
-            }
+        setState { copy(isForceLocation = true) }
+        if(null == mLocClient) {
+            mLocClient = LocationTrackingRepository.initLocationClient()
+            mLocClient?.registerLocationListener(mLocationListener)
+            mLocClient?.start()
+        } else {
+            mLocClient?.restart()
         }
     }
 
@@ -140,7 +144,10 @@ class LocationTrackingViewModel :
                 val checkErrorMsg = BDMapUtils.locationErrorMessage(bdLocation.locType)
                 if(checkErrorMsg == null) {
                     // 设置定位数据
-                    val locationData = LocationTrackingRepository.bDLocation2MyLocation(bdLocation)
+                    val locationData = LocationTrackingRepository.bDLocation2MyLocation(
+                        bdLocation,
+                        currentState.sensorDegree
+                    )
                     setState {
                         copy(
                             locationSource = locationData,
@@ -157,9 +164,14 @@ class LocationTrackingViewModel :
     }
 
     override fun onCleared() {
+        sensorEventHelper.unRegisterSensorListener()
         mLocClient?.unRegisterLocationListener(mLocationListener)
         mLocClient?.stop()
         mLocClient = null
         super.onCleared()
+    }
+
+    override fun onSensorDegree(degree: Float) {
+        setState { copy(sensorDegree = 360 - degree) }
     }
 }

@@ -55,6 +55,7 @@ class LocationTrackingContract {
         val grantLocationPermission:Boolean,
         // 当前位置的经纬度
         val locationLatLng: LatLng?,
+        val sensorDegree: Float,
         val locationSource: MyLocationData?,
         val mapProperties: MapProperties,
         val mapUiSettings: MapUiSettings
