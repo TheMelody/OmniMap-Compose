@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,22 +50,17 @@ import kotlinx.coroutines.flow.onEach
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/12 14:15
+ * created 2023/03/20 16:35
  */
 @Composable
 internal fun SmoothMoveScreen() {
     val viewModel: SmoothMoveViewModel = viewModel()
     val currentState by viewModel.uiState.collectAsState()
     val cameraPositionState = rememberCameraPositionState()
-    val carMarkState = rememberMarkerState()
     LaunchedEffect(currentState.bounds,currentState.isMapLoaded) {
         if(!currentState.isMapLoaded || currentState.bounds == null) return@LaunchedEffect
         // 移动并设置边距
         cameraPositionState.animate(MapStatusUpdateFactory.newLatLngBounds(currentState.bounds,200,100,200,100))
-    }
-
-    LaunchedEffect(currentState.trackMarkerPosition) {
-        carMarkState.position = currentState.trackMarkerPosition
     }
 
     LaunchedEffect(viewModel.effect) {
@@ -94,8 +89,10 @@ internal fun SmoothMoveScreen() {
             currentState.movingTrackMarker?.let {
                 Marker(
                     icon = it,
+                    state = rememberMarkerState(position = currentState.trackPoints[0]),
+                    animation = currentState.trackMarkerAnim,
+                    runAnimation = currentState.showStopLabel,
                     anchor = Offset(0.5F,0.5F),
-                    state = carMarkState,
                     rotation = currentState.trackMarkerRotate
                 )
             }
@@ -106,7 +103,7 @@ internal fun SmoothMoveScreen() {
                 .background(Color.Black.copy(alpha = 0.3F))){
                 MapMenuButton(
                     modifier = Modifier.align(Alignment.Center),
-                    text = if (currentState.showPauseLabel) "暂停" else "开始",
+                    text = if (currentState.showStopLabel) "结束" else "开始",
                     onClick = viewModel::toggle
                 )
             }

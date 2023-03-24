@@ -34,6 +34,7 @@ import com.baidu.mapapi.map.BaiduMap
 import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener
 import com.baidu.mapapi.map.MapPoi
 import com.baidu.mapapi.map.MapStatus
+import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.MyLocationData
 import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.model.BDCameraPosition
@@ -45,9 +46,9 @@ import com.melody.map.baidu_compose.position.CameraPositionState
 internal class MapPropertiesNode(
     val map: BaiduMap,
     var clickListeners: MapClickListeners,
-    cameraPositionState: CameraPositionState,
     var density: Density,
     var layoutDirection: LayoutDirection,
+    cameraPositionState: CameraPositionState
 ) : MapNode {
 
     init {
@@ -123,8 +124,9 @@ internal inline fun MapUpdater(
     mapProperties: MapProperties,
     cameraPositionState: CameraPositionState
 ) {
-    val map = (currentComposer.applier as MapApplier).map
-    val mapView = (currentComposer.applier as MapApplier).mapView
+    val mapApplier = currentComposer.applier as MapApplier
+    val map = mapApplier.map
+    val mapView = mapApplier.mapView
     val density = LocalDensity.current
     val layoutDirection = LocalLayoutDirection.current
     ComposeNode<MapPropertiesNode, MapApplier>(
@@ -152,7 +154,11 @@ internal inline fun MapUpdater(
         // 修改定位蓝点样式
         set(mapProperties.myLocationStyle) { map.setMyLocationConfiguration(it) }
         // 是否显示3D楼块,默认显示
-        set(mapProperties.isShowBuildings) { map.isBuildingsEnabled = it }
+        set(mapProperties.isShowBuildings) {
+            map.isBuildingsEnabled = it
+            // 设置setBuildingsEnabled之后【必须更新下地图】
+            map.setMapStatus(MapStatusUpdateFactory.newMapStatus(map.mapStatus))
+        }
         // 是否显示底图标注,默认显示
         set(mapProperties.isShowMapLabels) { map.showMapPoi(it) }
         // 设置室内图标注是否显示,默认显示
@@ -169,7 +175,7 @@ internal inline fun MapUpdater(
         set(mapUiSettings.isCompassEnabled) { map.uiSettings.isCompassEnabled = it }
         // 旋转手势是否可用
         set(mapUiSettings.isRotateGesturesEnabled) { map.uiSettings.isRotateGesturesEnabled = it }
-        // 倾斜手势是否可用
+        // 倾斜手势(同地图俯视（3D）)是否可用
         set(mapUiSettings.isTiltGesturesEnabled) { map.uiSettings.isOverlookingGesturesEnabled = it }
         // 拖拽手势是否可用
         set(mapUiSettings.isScrollGesturesEnabled) { map.uiSettings.isScrollGesturesEnabled = it }
@@ -189,6 +195,8 @@ internal inline fun MapUpdater(
         set(mapProperties.mapType) { map.mapType = it.value }
         // 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域
         set(mapProperties.mapShowLatLngBounds) { map.setMapStatusLimits(it) }
+        // 设置地图是否允许多InfoWindow模式，默认是false(只允许显示一个InfoWindow)
+        set(mapProperties.enableMultipleInfoWindow) { mapApplier.enableMultipleInfoWindow(it) }
 
         update(cameraPositionState) { this.cameraPositionState = it }
         update(clickListeners) { this.clickListeners = it }

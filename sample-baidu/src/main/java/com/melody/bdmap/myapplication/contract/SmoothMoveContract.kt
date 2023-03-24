@@ -25,6 +25,7 @@ package com.melody.bdmap.myapplication.contract
 import com.baidu.mapapi.map.BitmapDescriptor
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.model.LatLngBounds
+import com.melody.map.baidu_compose.overlay.MarkerCustomAnimation
 import com.melody.map.baidu_compose.poperties.MapUiSettings
 import com.melody.sample.common.state.IUiEffect
 import com.melody.sample.common.state.IUiEvent
@@ -40,20 +41,18 @@ import com.melody.sample.common.state.IUiState
 class SmoothMoveContract {
     sealed class Event : IUiEvent {
         object PlayPauseEvent: Event()
-        object RestartSmoothMoveEvent: Event()
     }
 
     data class State (
-        val showPauseLabel: Boolean,
+        val showStopLabel: Boolean,
         val needRestart: Boolean,
         val isMapLoaded: Boolean,
         val trackPoints: List<LatLng>,
         val bounds: LatLngBounds?,
-        val timeInterval: Long,
         val uiSettings: MapUiSettings,
         val bitmapTexture: BitmapDescriptor?,
         val movingTrackMarker: BitmapDescriptor?,
-        val trackMarkerPosition: LatLng,
+        val trackMarkerAnim: MarkerCustomAnimation?,
         val trackMarkerRotate: Float
     ) : IUiState
 

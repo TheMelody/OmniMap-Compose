@@ -74,6 +74,7 @@ internal fun MarkerAnimationScreen() {
             MarkerInfoWindowContent(
                 state = markerState,
                 animation = uiState.markerAnimation,
+                runAnimation = uiState.runAnimation,
                 content = {
                     Text(
                         modifier = Modifier.padding(4.dp),

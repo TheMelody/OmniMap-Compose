@@ -24,14 +24,20 @@ package com.melody.map.baidu_compose
 
 import androidx.compose.runtime.*
 import com.baidu.mapapi.map.BaiduMap
-import com.baidu.mapapi.map.InfoWindow
 import com.baidu.mapapi.map.MapView
 import com.baidu.mapapi.map.Marker
+import com.baidu.mapapi.map.MultiPointItem
 import com.baidu.mapapi.map.Polyline
 import com.melody.map.baidu_compose.adapter.ComposeInfoWindowAdapter
+import com.melody.map.baidu_compose.extensions.getSnippetExt
+import com.melody.map.baidu_compose.extensions.getTag
+import com.melody.map.baidu_compose.extensions.getTitleExt
+import com.melody.map.baidu_compose.overlay.ClusterOverlayNode
 import com.melody.map.baidu_compose.overlay.DragState
 import com.melody.map.baidu_compose.overlay.MarkerNode
+import com.melody.map.baidu_compose.overlay.MultiPointOverlayNode
 import com.melody.map.baidu_compose.overlay.PolylineNode
+import com.melody.map.baidu_compose.utils.clustering.ClusterItem
 import com.melody.map.baidu_compose.utils.fastFirstOrNull
 
 internal interface MapNode {
@@ -46,8 +52,8 @@ internal class MapApplier(
     val map: BaiduMap,
     val mapView: MapView,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
-
     private val decorations = mutableListOf<MapNode>()
+    private var enableMultipleInfoWindow: Boolean = false
     private val infoWindowAdapter = ComposeInfoWindowAdapter(mapView)
 
     init {
@@ -80,27 +86,82 @@ internal class MapApplier(
         decorations.remove(index, count)
     }
 
-    internal fun getInfoContents(marker: Marker, markerNode: MarkerNode): InfoWindow {
-        return infoWindowAdapter.getInfoContents(marker, markerNode)
+    internal fun enableMultipleInfoWindow(enable: Boolean) {
+        this.enableMultipleInfoWindow = enable
     }
 
-    internal fun getInfoWindow(marker: Marker, markerNode: MarkerNode): InfoWindow {
-        return infoWindowAdapter.getInfoWindow(marker, markerNode)
+    /**
+     * 隐藏InfoWindow
+     * @param fromClusterOverlay 是不是聚合点的Marker隐藏
+     * @param marker Marker覆盖物
+     */
+    internal fun hideInfoWindow(fromClusterOverlay:Boolean = false, marker: Marker?) {
+        if (this.enableMultipleInfoWindow) { // 多窗口模式
+            // 只隐藏单个
+            marker?.hideInfoWindow()
+        } else {
+            if(!fromClusterOverlay) {
+                map.hideInfoWindow()
+            } else {
+                // 点聚合，只显示1个InfoWindow场景，处理缩放场景，需要同步随对应的Marker消失再去隐藏InfoWindow
+                val infoWindowLatLng = map.allInfoWindows.getOrNull(0)?.position
+                if (infoWindowLatLng != null
+                    && (infoWindowLatLng.latitude == marker?.position?.latitude
+                       && infoWindowLatLng.longitude == marker.position?.longitude)
+                ) {
+                    map.hideInfoWindow()
+                }
+            }
+        }
+    }
+
+    /**
+     * MarkerNode节点点击触发的InfoWindow显示
+     */
+    internal fun showInfoWindow(markerNode: MarkerNode?){
+        val marker = markerNode?.marker ?: return
+        if (markerNode.infoWindow != null) {
+            val infoWindow = infoWindowAdapter.getInfoWindow(markerNode)
+            if (this.enableMultipleInfoWindow) {
+                marker.showInfoWindow(infoWindow)
+            } else {
+                // 使用BaiduMap会先隐藏其他已添加的InfoWindow, 再添加新的InfoWindow
+                map.showInfoWindow(infoWindow)
+            }
+        } else {
+            if (markerNode.infoContent != null
+                || (marker.getTitleExt() != null || marker.getSnippetExt() != null || marker.getTag() != null)
+            ) {
+                val infoContents = infoWindowAdapter.getInfoContents(markerNode)
+                if (this.enableMultipleInfoWindow) {
+                    marker.showInfoWindow(infoContents)
+                } else {
+                    map.showInfoWindow(infoContents)
+                }
+            }
+        }
+    }
+
+    /**
+     * 聚合点的Marker点击显示InfoWindow
+     */
+    internal fun showInfoWindow(marker: Marker, clusterItem: ClusterItem?, clusterNode: ClusterOverlayNode?){
+        if (clusterNode == null || clusterItem == null) return
+        val infoWindow = infoWindowAdapter.getInfoWindow(clusterItem,clusterNode)
+        if (this.enableMultipleInfoWindow) {
+            marker.showInfoWindow(infoWindow)
+        } else {
+            // 使用BaiduMap会先隐藏其他已添加的InfoWindow, 再添加新的InfoWindow
+            map.showInfoWindow(infoWindow)
+        }
     }
 
     private fun attachClickListeners() {
-        // 设置Marker的点击事件，return true拦截
+        // Marker的点击事件
         map.setOnMarkerClickListener { marker ->
             val markerNode = decorations.nodeForMarker(marker)
-            val flag = markerNode?.onMarkerClick?.invoke(marker) ?: false
-            if(null != markerNode) {
-                if (markerNode.infoWindow != null) {
-                    map.showInfoWindow(getInfoWindow(marker,markerNode))
-                } else {
-                    map.showInfoWindow(getInfoContents(marker,markerNode))
-                }
-            }
-            flag
+            showInfoWindow(markerNode)
+            markerNode?.onMarkerClick?.invoke(marker) ?: false
         }
         // Polyline的点击事件
         map.setOnPolylineClickListener {
@@ -114,14 +175,12 @@ internal class MapApplier(
                     this?.markerState?.dragState = DragState.DRAG
                 }
             }
-
             override fun onMarkerDragEnd(marker: Marker) {
                 with(decorations.nodeForMarker(marker)) {
                     this?.markerState?.position = marker.position
                     this?.markerState?.dragState = DragState.END
                 }
             }
-
             override fun onMarkerDragStart(marker: Marker) {
                 with(decorations.nodeForMarker(marker)) {
                     this?.markerState?.position = marker.position
@@ -129,16 +188,15 @@ internal class MapApplier(
                 }
             }
         })
-        /*
         // MultiPointOverlay的点击事件
-        map.setOnMultiPointClickListener { multiPointItem ->
+        map.setOnMultiPointClickListener { _, multiPointItem ->
             val node = decorations.nodeForMultiPoint(multiPointItem)
             if(null != node) {
                 node.onPointItemClick.invoke(multiPointItem)
                 return@setOnMultiPointClickListener true
             }
             return@setOnMultiPointClickListener false
-        }*/
+        }
     }
 }
 /**
@@ -152,3 +210,10 @@ private fun MutableList<MapNode>.nodeForMarker(marker: Marker): MarkerNode? =
  */
 private fun MutableList<MapNode>.nodeForPolyline(polyline: Polyline): PolylineNode? =
     fastFirstOrNull { it is PolylineNode && it.polyline == polyline } as? PolylineNode
+
+/**
+ * MultiPointOverlay
+ */
+private fun MutableList<MapNode>.nodeForMultiPoint(multiPointItem: MultiPointItem): MultiPointOverlayNode? =
+    fastFirstOrNull { it is MultiPointOverlayNode && null != it.multiPointOverlay.multiPointItems.fastFirstOrNull { child -> child == multiPointItem } } as? MultiPointOverlayNode
+

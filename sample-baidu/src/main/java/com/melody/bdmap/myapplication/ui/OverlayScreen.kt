@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.baidu.mapapi.map.BitmapDescriptor
 import com.baidu.mapapi.map.BitmapDescriptorFactory
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.TileProvider
@@ -64,6 +65,8 @@ import com.melody.map.baidu_compose.overlay.Marker
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindow
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindowContent
 import com.melody.map.baidu_compose.overlay.Polygon
+import com.melody.map.baidu_compose.overlay.Polyline
+import com.melody.map.baidu_compose.overlay.PolylineCustomTexture
 import com.melody.map.baidu_compose.overlay.PolylineRainbow
 import com.melody.map.baidu_compose.overlay.TextOverlay
 import com.melody.map.baidu_compose.overlay.TileOverlay
@@ -124,7 +127,9 @@ internal fun OverlayScreen() {
                 state = rememberMarkerState(position = currentState.lvbuCenter),
                 snippet = "头戴三叉束发紫金冠体挂西川红棉百花袍身披兽面吞头连环铠腰系勒甲玲珑狮蛮带手持方天画戟坐下嘶风赤兔马之吕小布是也。"
             ) {
-                FlowRow(modifier = Modifier.width(120.dp).wrapContentHeight()) {
+                FlowRow(modifier = Modifier
+                    .width(120.dp)
+                    .wrapContentHeight()) {
                     Text(it.getSnippetExt() ?: "", color = Color.Red)
                     Image(
                         modifier = Modifier.size(16.dp),
@@ -156,10 +161,10 @@ internal fun OverlayScreen() {
                 fillColor = Color(0X4DDAD589),
                 strokeWidth = 5,
                 isDottedStroke = true,
+                // 阅读到此处的同学，自行尝试holeOption效果哦
                 //holeOption = currentState.polygonHoleOption
             )
 
-            //TODO:纹理线段，有间隔问题，polyline点击没有回调没有解决
             PolylineRainbow(
                 useGradient = true,
                 rainbow = PolylineRainbow.create(colors = currentState.polylineColorList, points = currentState.polylineList),
@@ -170,6 +175,35 @@ internal fun OverlayScreen() {
                     true
                 }
             )
+
+            /*val points: MutableList<LatLng> = ArrayList()
+            points.add(LatLng(39.865, 116.444))
+            points.add(LatLng(39.825, 116.494))
+            points.add(LatLng(39.855, 116.534))
+            points.add(LatLng(39.805, 116.594))
+
+            val textureList: MutableList<BitmapDescriptor> = ArrayList()
+            // 保证线段纹理图片的大小 16*64px，每个图片大小一致，否则会出现有空格，还有【只能放在assets目录】，否则也可能会有空格
+            textureList.add(BitmapDescriptorFactory.fromAsset("ic_map_route_status_deepred_selected.png"))
+            textureList.add(BitmapDescriptorFactory.fromAsset("ic_map_route_status_red_selected.png"))
+            textureList.add(BitmapDescriptorFactory.fromAsset("ic_map_route_status_yellow_selected.png"))
+
+            val indexList: MutableList<Int> = ArrayList()
+            indexList.add(0)
+            indexList.add(1)
+            indexList.add(2)
+            PolylineCustomTexture(
+                width = 20,
+                customTexture = PolylineCustomTexture.create(
+                    points = points,
+                    textureList = textureList,
+                    indexList = indexList
+                ),
+                onClick = {
+                    showToast("你大爷,始终是你大爷")
+                    false
+                }
+            )*/
 
             Arc(
                 startPoint = currentState.arcStartPoint,

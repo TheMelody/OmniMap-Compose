@@ -211,7 +211,6 @@ object SmoothMoveRepository {
         }
         val pathSmoothTool = PathSmoothTool()
         pathSmoothTool.intensity = 4
-        // 使轨迹更加平滑
         return pathSmoothTool.pathOptimize(points)
     }
 

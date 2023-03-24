@@ -16,7 +16,7 @@ import com.baidu.mapapi.common.BaiduMapSDKException
 object BDMapUtils {
 
     fun updateMapViewPrivacy(context: Context) {
-        SDKInitializer.setAgreePrivacy(context, false)
+        SDKInitializer.setAgreePrivacy(context, true)
         LocationClient.setAgreePrivacy(true)
     }
 

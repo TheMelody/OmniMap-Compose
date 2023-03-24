@@ -30,21 +30,22 @@ import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.melody.map.tencent_compose.MapApplier
 import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.adapter.ClusterInfoWindowAdapter
+import com.melody.map.tencent_compose.model.TXClusterItem
 import com.melody.map.tencent_compose.render.CustomClusterRenderer
 import com.melody.map.tencent_compose.model.TXMapComposable
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.Cluster
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterItem
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterManager
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.algo.Algorithm
+import com.tencent.tencentmap.mapsdk.vector.utils.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.view.DefaultClusterRenderer
 
 internal class ClusterOverlayNode(
-    val defaultClusterRenderer: DefaultClusterRenderer<ClusterItem>?,
-    val clusterManager: ClusterManager<ClusterItem>
+    val defaultClusterRenderer: DefaultClusterRenderer<TXClusterItem>?,
+    val clusterManager: ClusterManager<TXClusterItem>
 ) : MapNode {
     override fun onRemoved() {
         clusterManager.cancel()
@@ -53,36 +54,26 @@ internal class ClusterOverlayNode(
 
 /**
  * 点聚合效果ClusterOverlay
- * @param minClusterSize 设置最小聚合数量，默认为4，这里设置为1，即有1个以上不包括1个marker才会聚合
+ * @param minClusterSize 设置最小聚合数量，默认为1，即有1个以上不包括1个marker才会聚合
+ * @param maxDistanceAtZoom 设置点聚合生效距离，以dp为单位，默认为35dp
  * @param buckets 定义聚合的分段，默认配置：当超过5个不足10个的时候，显示5+，其他分段同理
- * @param algorithm 默认为聚合策略[com.tencent.tencentmap.mapsdk.vector.utils.clustering.algo.NonHierarchicalDistanceBasedAlgorithm]，调用时不必添加，如果需要其他聚合策略，可修改，可参考如下代码：
-```kt
-    // 默认聚合策略，调用时不必添加，如果需要其他聚合策略可以按以下代码修改
-    val ndba = NonHierarchicalDistanceBasedAlgorithm<ClusterItem>(context)
-    // 设置点聚合生效距离，以dp为单位
-    ndba.setMaxDistanceAtZoom(35)
-    // 设置策略
-    mClusterManager.setAlgorithm(ndba)
-```
  * @param clusterItems 全部的聚合点
  * @param clusterColor 聚合点圆的颜色，圆圈边缘半透明浅白色无法修改
- * @param clusterItemIcon 单个Marker图标
- * @param onClusterItemClick 设置在点击【单个聚合点Marker】项时调用的回调，传：**NULL**，**不会弹出InfoWindow**
- * @param onClustersClick 设置点击【聚合点】时调用的回调，传：**NULL**，**不会弹出InfoWindow**
+ * @param onClusterItemClick 设置在点击【单个聚合点Marker】项时调用的回调
+ * @param onClusterItemInfoWindow 传NULL，点击的【单个聚合点Marker】不会弹出来InfoWindow
  */
 @Composable
 @TXMapComposable
 fun ClusterOverlay(
     minClusterSize: Int = 1,
+    maxDistanceAtZoom: Dp = 35.dp,
     buckets: IntArray = intArrayOf(5, 10, 20, 50),
-    algorithm: Algorithm<ClusterItem>? = null,
-    clusterItems: List<ClusterItem>,
+    clusterItems: List<TXClusterItem>,
     clusterColor: Color? = null,
-    clusterItemIcon: BitmapDescriptor? = null,
-    onClusterItemClick: (ClusterItem?) -> Unit = {},
-    onClustersClick: (Cluster<ClusterItem>?) -> Unit = {},
-    onClusterItemInfoWindow: (@Composable (ClusterItem) -> Unit)? = null,
-    onClustersInfoWindow: (@Composable (Cluster<ClusterItem>?) -> Unit)? = null
+    onClusterItemClick: (TXClusterItem?) -> Boolean = { false },
+    onClustersClick: (Cluster<TXClusterItem>?) -> Boolean = { false },
+    onClusterItemInfoWindow: (@Composable (TXClusterItem) -> Unit)? = null,
+    /*onClustersInfoWindow: (@Composable (Cluster<ClusterItem>?) -> Unit)? = null*/
 ) {
     val currentOnClustersClick by rememberUpdatedState(newValue = onClustersClick)
     val currentOnClusterItemClick by rememberUpdatedState(newValue = onClusterItemClick)
@@ -92,32 +83,34 @@ fun ClusterOverlay(
     ComposeNode<ClusterOverlayNode, MapApplier>(
         factory = {
             val tMap = mapApplier?.map?: error("Error adding ClusterOverlay")
-            val clusterManager = ClusterManager<ClusterItem>(context,tMap)
+            val clusterManager = ClusterManager<TXClusterItem>(context,tMap)
             val renderer = CustomClusterRenderer(
                 context = context,
                 tencentMap = tMap,
                 clusterColor = clusterColor,
-                clusterItemIcon = clusterItemIcon,
                 clusterManager = clusterManager
             )
+            // 设置最小聚合数量
             renderer.minClusterSize = minClusterSize
             // 定义聚合的分段
             renderer.buckets = buckets
-            // 设置策略
-            algorithm?.let { clusterManager.setAlgorithm(it)  }
             // 设置聚合渲染器
             clusterManager.renderer = renderer
+            val algorithm = NonHierarchicalDistanceBasedAlgorithm<TXClusterItem>(context)
+            // 设置点聚合生效距离，以dp为单位
+            algorithm.maxDistanceAtZoom = maxDistanceAtZoom.value.toInt()
+            // 设置策略
+            clusterManager.algorithm = algorithm
             // 多聚合点,点击事件回调
             clusterManager.setOnClusterClickListener { cluster ->
                 currentOnClustersClick.invoke(cluster)
-                false
             }
             // 单个聚合点Marker点击的事件回调
             clusterManager.setOnClusterItemClickListener { item ->
                 currentOnClusterItemClick.invoke(item)
-                false
             }
-            onClustersInfoWindow?.let {
+            // 暂不提供，有这种产品需求的App？保持和其他地图对外提供类似的调用
+            /*onClustersInfoWindow?.let {
                 // 多聚合点弹出来的InfoWindow
                 clusterManager.setClusterInfoWindowAdapter(
                     ClusterInfoWindowAdapter(
@@ -126,7 +119,7 @@ fun ClusterOverlay(
                         clusterInfoWindow = onClustersInfoWindow
                     )
                 )
-            }
+            }*/
             onClusterItemInfoWindow?.let {
                 // 单个聚合点Marker弹出来的InfoWindow
                 clusterManager.setClusterItemInfoWindowAdapter(
@@ -142,7 +135,7 @@ fun ClusterOverlay(
             // 设置单个聚合点Marker的点击事件
             tMap.setOnMarkerClickListener(clusterManager)
 
-            if(onClusterItemInfoWindow != null || onClustersInfoWindow != null) {
+            if(onClusterItemInfoWindow != null /*|| onClustersInfoWindow != null*/) {
                 // 弹出的InfoWindow的点击事件
                 tMap.setOnInfoWindowClickListener(clusterManager)
                 // clusterManager托管InfoWindow

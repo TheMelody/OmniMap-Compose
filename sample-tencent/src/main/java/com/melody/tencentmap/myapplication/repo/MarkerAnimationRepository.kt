@@ -5,6 +5,8 @@ import com.melody.map.tencent_compose.poperties.MapUiSettings
 import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.TranslateAnimation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * MarkerAnimationRepository
@@ -22,20 +24,28 @@ object MarkerAnimationRepository {
         )
     }
 
-    fun prepareMarkerAnimation(
+    suspend fun prepareMarkerAnimation(
         latLng: LatLng,
-        onAnimationEnd: () -> Unit
-    ): TranslateAnimation {
-        return TranslateAnimation(latLng).apply {
-            duration = 2500
-            interpolator = AccelerateDecelerateInterpolator()
-            animationListener = object : AnimationListener {
-                override fun onAnimationStart() {
-                }
-                override fun onAnimationEnd() {
-                    onAnimationEnd.invoke()
+        onPlayAnimation: () -> Unit,
+        onAnimationFinish: () -> Unit,
+        block: (TranslateAnimation) -> Unit
+    ) {
+        block.invoke(
+            TranslateAnimation(latLng).apply {
+                duration = 2500
+                interpolator = AccelerateDecelerateInterpolator()
+                animationListener = object : AnimationListener {
+                    override fun onAnimationStart() {
+                    }
+
+                    override fun onAnimationEnd() {
+                        onAnimationFinish.invoke()
+                    }
                 }
             }
-        }
+        )
+        // 不要立马去操作动画播放
+        delay(100)
+        onPlayAnimation()
     }
 }

@@ -153,7 +153,8 @@ fun rememberMarkerState(
  * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  */
@@ -175,6 +176,7 @@ fun Marker(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation: Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
 ) {
@@ -195,6 +197,7 @@ fun Marker(
         zIndex = zIndex,
         onClick = onClick,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = null,
         infoWindow = null
@@ -218,7 +221,8 @@ fun Marker(
  * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param content 【可选】，用于自定义整个信息窗口，【里面动态的内容，建议通过title、snippet、tag的方式获取】
@@ -241,6 +245,7 @@ fun MarkerInfoWindow(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation: Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
@@ -262,6 +267,7 @@ fun MarkerInfoWindow(
         zIndex = zIndex,
         onClick = onClick,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoWindow = content,
         infoContent = null,
@@ -285,7 +291,8 @@ fun MarkerInfoWindow(
  * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param content (可选)，用于自定义信息窗口的内容，【里面动态的内容，建议通过title、snippet、tag的方式获取】
@@ -308,6 +315,7 @@ fun MarkerInfoWindowContent(
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation :Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
@@ -329,6 +337,7 @@ fun MarkerInfoWindowContent(
         zIndex = zIndex,
         onClick = onClick,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = content,
         infoWindow = null
@@ -353,6 +362,7 @@ fun MarkerInfoWindowContent(
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param infoWindow 【可选】，用于自定义整个信息窗口。如果此值为非空，则[infoContent]中的值将被忽略。
@@ -376,6 +386,7 @@ private fun MarkerImpl(
     visible: Boolean,
     zIndex: Float,
     animation: BaseAnimation?,
+    runAnimation :Boolean?,
     onClick: (Marker) -> Boolean,
     onInfoWindowClick: (Marker) -> Unit = {},
     infoWindow: (@Composable (Marker) -> Unit)?,
@@ -445,7 +456,18 @@ private fun MarkerImpl(
             }
             set(visible) { this.marker.isVisible = it }
             set(zIndex) { this.marker.setZIndex(it) }
-            set(animation) { marker.startAnimation(it) }
+            set(runAnimation) {
+                if(it == true) {
+                    if(!this.marker.startAnimation()) {
+                        this.marker.startAnimation(animation)
+                    }
+                } else if(it == false) {
+                    this.marker.setAnimation(null)
+                }
+            }
+            set(animation) {
+                this.marker.setAnimation(it)
+            }
         }
     )
 }

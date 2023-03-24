@@ -7,13 +7,13 @@ import kotlin.math.atan
 import kotlin.math.sqrt
 
 /**
- * BDSmoothMoveUtils
+ * BDTrackMoveUtils
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
  * created 2023/03/16 15:55
  */
-class BDSmoothMoveUtils {
+class BDTrackMoveUtils {
 
     companion object {
         private const val DISTANCE = 0.00002
@@ -25,19 +25,19 @@ class BDSmoothMoveUtils {
     /**
      * 开始移动的【开关标识】
      */
-    fun startSmoothMove() {
+    fun startMove() {
         this.isPause = false
     }
 
     /**
      * 暂停移动的【开关标识】
      */
-    fun pauseSmoothMove() {
+    fun pauseMove() {
         this.isPause = true
     }
 
     /**
-     * 从头开始移动，由于是在循环中进行位置更新，所以：【**暂停和恢复**】，请使用：[pauseSmoothMove]以及[startSmoothMove]
+     * 从头开始移动，由于是在循环中进行位置更新，所以：【**暂停和恢复**】，请使用：[pauseMove]以及[startMove]
      * @param timeInterval 移动的间隔时长
      * @param points 移动的路径顶点坐标
      * @param onPositionCallback 移动的位置坐标回调
@@ -127,7 +127,7 @@ class BDSmoothMoveUtils {
     /**
      * 根据两点算取图标转的角度
      */
-    private fun getAngle(
+    fun getAngle(
         fromPoint: LatLng,
         toPoint: LatLng
     ): Float {

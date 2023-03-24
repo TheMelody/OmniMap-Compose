@@ -338,6 +338,7 @@ internal class KernelClusterOverlay(
     /**
      * 处理market添加，更新等操作
      */
+    @Suppress("UNCHECKED_CAST")
     inner class MarkerHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(message: Message) {
             when (message.what) {
@@ -358,6 +359,7 @@ internal class KernelClusterOverlay(
     /**
      * 处理聚合点算法线程
      */
+    @Suppress("UNCHECKED_CAST")
     inner class SignClusterHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(message: Message) {
             when (message.what) {

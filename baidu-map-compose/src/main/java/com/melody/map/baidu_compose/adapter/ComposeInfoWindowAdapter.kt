@@ -35,17 +35,14 @@ import androidx.compose.runtime.CompositionContext
 import androidx.compose.ui.platform.ComposeView
 import com.baidu.mapapi.map.InfoWindow
 import com.baidu.mapapi.map.MapView
-import com.baidu.mapapi.map.Marker
 import com.melody.map.baidu_compose.R
 import com.melody.map.baidu_compose.extensions.getInfoWindowYOffset
 import com.melody.map.baidu_compose.extensions.getSnippetExt
 import com.melody.map.baidu_compose.extensions.getTitleExt
+import com.melody.map.baidu_compose.overlay.ClusterOverlayNode
 import com.melody.map.baidu_compose.overlay.MarkerNode
+import com.melody.map.baidu_compose.utils.clustering.ClusterItem
 
-/**
- * 百度地图【不支持多个InfoWindow同时显示】:
- * https://lbsyun.baidu.com/index.php?title=FAQ/Android/map
- */
 internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
 
     private val infoWindowView: ComposeView
@@ -59,33 +56,44 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
             )
         }
 
-    fun getInfoContents(marker: Marker, markerNode: MarkerNode): InfoWindow {
+    fun getInfoContents(markerNode: MarkerNode): InfoWindow {
         val infoContent = markerNode.infoContent
         val view = if(infoContent == null) { // infoContent为空，使用默认对外提供的内容样式
-            val title = marker.getTitleExt()
-            val snippet = marker.getSnippetExt()
+            val title = markerNode.marker.getTitleExt()
+            val snippet = markerNode.marker.getSnippetExt()
             getDefaultInfoContent(title, snippet)
         } else {
             infoWindowView.applyAndRemove(false, markerNode.compositionContext) {
-                infoContent(marker)
+                infoContent(markerNode.marker)
             }
         }
         return InfoWindow(
             view,
-            marker.position,
-            marker.getInfoWindowYOffset()
+            markerNode.marker.position,
+            markerNode.marker.getInfoWindowYOffset()
         )
     }
 
-    fun getInfoWindow(marker: Marker, markerNode: MarkerNode): InfoWindow {
+    fun getInfoWindow(markerNode: MarkerNode): InfoWindow {
         val infoWindow = markerNode.infoWindow!!
         val view = infoWindowView.applyAndRemove(true, markerNode.compositionContext) {
-            infoWindow(marker)
+            infoWindow(markerNode.marker)
         }
         return InfoWindow(
             view,
-            marker.position,
-            marker.getInfoWindowYOffset()
+            markerNode.marker.position,
+            markerNode.marker.getInfoWindowYOffset()
+        )
+    }
+
+    fun getInfoWindow(clusterItem: ClusterItem, clusterItemNode: ClusterOverlayNode): InfoWindow {
+        val view = infoWindowView.applyAndRemove(true, clusterItemNode.compositionContext) {
+            clusterItemNode.onClusterItemInfoWindow?.invoke(clusterItem)
+        }
+        return InfoWindow(
+            view,
+            clusterItem.getPosition(),
+            clusterItem.getInfoWindowYOffset()
         )
     }
 

@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import com.melody.bdmap.myapplication.ui.SmoothMoveScreen
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/12 14:15
+ * created 2023/03/20 16:35
  */
 class SmoothMoveActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

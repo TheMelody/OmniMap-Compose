@@ -33,10 +33,13 @@ object BM3DPrismRepository {
 
     suspend fun searchBuilding(latLng: LatLng): List<BM3DPrismDataModel> {
         return suspendCancellableCoroutine { coroutine->
+            val buildingSearchOption = BuildingSearchOption()
+            buildingSearchOption.latLng = latLng
             val buildingSearch = BuildingSearch.newInstance()
             buildingSearch.setOnGetBuildingSearchResultListener { result->
                 if (null == result || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                    coroutine.resumeWith(Result.failure(NullPointerException()))
+                    val resultMsg = result?.error?.let { "错误码:" + it.ordinal + ",错误描述:" + it.name } ?: ""
+                    coroutine.resumeWith(Result.failure(Exception(resultMsg)))
                 } else {
                     val list: MutableList<BM3DPrismDataModel> = mutableListOf()
                     result.buildingList.forEach{ buildingInfo ->
@@ -55,8 +58,6 @@ object BM3DPrismRepository {
                     coroutine.resumeWith(Result.success(list))
                 }
             }
-            val buildingSearchOption = BuildingSearchOption()
-            buildingSearchOption.latLng = latLng
             buildingSearch.requestBuilding(buildingSearchOption)
         }
     }

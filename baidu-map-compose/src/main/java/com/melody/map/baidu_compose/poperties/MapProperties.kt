@@ -34,9 +34,9 @@ val DefaultMapProperties = MapProperties()
  * 可在地图上修改属性的数据类
  * @param language 设置地图底图语言
  * @param isShowBuildings  是否显示3D楼块效果
- * @param overlookEnable 否启用地图俯视功能（3D）,默认开启。如果启用，则用户可使用双指 向下或向上滑动到俯视图
  * @param isShowMapLabels  是否显示底图标注
  * @param isShowMapIndoorLabels  设置室内图标注是否显示
+ * @param enableMultipleInfoWindow 多窗口模式默认是关闭的，是否启用可以在地图上显示多个Marker覆盖物上方的信息窗口
  * @param isIndoorEnabled  是否显示室内地图，默认室内图不显示 室内图只有在缩放级别【**17, 22**】范围才生效，但是只有在18级之上（包含18级）才会有楼层边条显示
  * @param isMyLocationEnabled 设置是否打开定位图层（myLocationOverlay）。
  * @param isTrafficEnabled 是否打开交通路况图层
@@ -51,7 +51,7 @@ class MapProperties(
     val isShowBuildings: Boolean = false,
     val isShowMapLabels: Boolean = true,
     val isShowMapIndoorLabels: Boolean = true,
-    val overlookEnable: Boolean = true,
+    val enableMultipleInfoWindow: Boolean = false,
     val isIndoorEnabled: Boolean = false,
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
@@ -66,8 +66,8 @@ class MapProperties(
         language == other.language &&
         isShowBuildings == other.isShowBuildings &&
         isShowMapLabels == other.isShowMapLabels &&
+        enableMultipleInfoWindow == other.enableMultipleInfoWindow &&
         isShowMapIndoorLabels == other.isShowMapIndoorLabels &&
-        overlookEnable == other.overlookEnable &&
         isIndoorEnabled == other.isIndoorEnabled &&
         isMyLocationEnabled == other.isMyLocationEnabled &&
         isTrafficEnabled == other.isTrafficEnabled &&
@@ -82,7 +82,7 @@ class MapProperties(
         isShowBuildings,
         isShowMapLabels,
         isShowMapIndoorLabels,
-        overlookEnable,
+        enableMultipleInfoWindow,
         isIndoorEnabled,
         isMyLocationEnabled,
         isTrafficEnabled,
@@ -97,8 +97,8 @@ class MapProperties(
         language: MapLanguage = this.language,
         isShowBuildings: Boolean = this.isShowBuildings,
         isShowMapLabels: Boolean = this.isShowMapLabels,
+        enableMultipleInfoWindow: Boolean = this.enableMultipleInfoWindow,
         isShowMapIndoorLabels: Boolean = this.isShowMapIndoorLabels,
-        overlookEnable: Boolean = this.overlookEnable,
         isIndoorEnabled: Boolean = this.isIndoorEnabled,
         isMyLocationEnabled: Boolean = this.isMyLocationEnabled,
         isTrafficEnabled: Boolean = this.isTrafficEnabled,
@@ -112,7 +112,7 @@ class MapProperties(
         isShowBuildings = isShowBuildings,
         isShowMapLabels = isShowMapLabels,
         isShowMapIndoorLabels = isShowMapIndoorLabels,
-        overlookEnable = overlookEnable,
+        enableMultipleInfoWindow = enableMultipleInfoWindow,
         isIndoorEnabled = isIndoorEnabled,
         isMyLocationEnabled = isMyLocationEnabled,
         isTrafficEnabled = isTrafficEnabled,
@@ -128,7 +128,7 @@ class MapProperties(
                 "language=$language, " +
                 "isShowMapLabels=$isShowMapLabels, " +
                 "isShowMapIndoorLabels=$isShowMapIndoorLabels, " +
-                "overlookEnable=$overlookEnable, " +
+                "enableMultipleInfoWindow=$enableMultipleInfoWindow, " +
                 "isIndoorEnabled=$isIndoorEnabled, " +
                 "isMyLocationEnabled=$isMyLocationEnabled, " +
                 "isTrafficEnabled=$isTrafficEnabled, " +

@@ -23,6 +23,7 @@
 package com.melody.map.baidu_compose.overlay
 
 import android.os.Bundle
+import android.animation.TypeEvaluator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.CompositionContext
@@ -108,20 +109,14 @@ class MarkerState(
      * 显示 Marker 覆盖物的信息窗口
      */
     fun showInfoWindow() {
-        markerNode?.let { node ->
-            if(node.infoWindow != null) {
-                node.marker.showInfoWindow(node.mapApplier.getInfoWindow(node.marker,node))
-            } else {
-                node.marker.showInfoWindow(node.mapApplier.getInfoContents(node.marker,node))
-            }
-        }
+        markerNode?.mapApplier?.showInfoWindow(markerNode)
     }
 
     /**
      * 隐藏Marker覆盖物的信息窗口。如果Marker本身是不可以见的，此方法将不起任何作用
      */
     fun hideInfoWindow() {
-        markerNode?.marker?.hideInfoWindow()
+        markerNode?.mapApplier?.hideInfoWindow(marker = markerNode?.marker)
     }
 
     companion object {
@@ -138,29 +133,43 @@ class MarkerState(
 /**
  * MarkerCustomAnimation
  * @param animateType 设置Marker动画类型，见[MarkerAnimateType]，默认无动画，**设置此参数，单独触发内置类型的动画**
- * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param animation 设置Marker动画类: [com.baidu.mapapi.animation.AlphaAnimation]、[com.baidu.mapapi.animation.AnimationSet]、[com.baidu.mapapi.animation.RotateAnimation]、[com.baidu.mapapi.animation.ScaleAnimation]、[com.baidu.mapapi.animation.SingleScaleAnimation]、[com.baidu.mapapi.animation.Transformation]
+ * @param typeEvaluator 【可选】动画估值器
  */
 class MarkerCustomAnimation private constructor(
     val animateType: MarkerAnimateType,
-    val animation: Animation?,
-    val runAnimation :Boolean?
+    val animation: Animation,
+    val typeEvaluator: TypeEvaluator<LatLng>?
 ) {
     companion object {
         /**
          * @param animType 设置Marker动画类型，见[MarkerAnimateType]，默认无动画，**设置此参数，单独触发内置类型的动画**
-         * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
          * @param animation 设置Marker动画类: [com.baidu.mapapi.animation.AlphaAnimation]、[com.baidu.mapapi.animation.AnimationSet]、[com.baidu.mapapi.animation.RotateAnimation]、[com.baidu.mapapi.animation.ScaleAnimation]、[com.baidu.mapapi.animation.SingleScaleAnimation]、[com.baidu.mapapi.animation.Transformation]
          */
         fun create(
             animType: MarkerAnimateType = MarkerAnimateType.none,
-            runAnimation: Boolean? = null,
-            animation: Animation? = null
+            animation: Animation
         ): MarkerCustomAnimation {
             return MarkerCustomAnimation(
                 animateType = animType,
                 animation = animation,
-                runAnimation = runAnimation
+                typeEvaluator = null
+            )
+        }
+        /**
+         * @param animType 设置Marker动画类型，见[MarkerAnimateType]，默认无动画，**设置此参数，单独触发内置类型的动画**
+         * @param animation 设置Marker动画类: [com.baidu.mapapi.animation.AlphaAnimation]、[com.baidu.mapapi.animation.AnimationSet]、[com.baidu.mapapi.animation.RotateAnimation]、[com.baidu.mapapi.animation.ScaleAnimation]、[com.baidu.mapapi.animation.SingleScaleAnimation]、[com.baidu.mapapi.animation.Transformation]
+         * @param typeEvaluator 动画估值器
+         */
+        fun create(
+            animType: MarkerAnimateType = MarkerAnimateType.none,
+            animation: Animation,
+            typeEvaluator: TypeEvaluator<LatLng>,
+        ): MarkerCustomAnimation {
+            return MarkerCustomAnimation(
+                animateType = animType,
+                animation = animation,
+                typeEvaluator = typeEvaluator
             )
         }
     }
@@ -187,6 +196,7 @@ fun rememberMarkerState(
  * @param isFlat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
@@ -206,6 +216,7 @@ fun Marker(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
+    runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
     snippet: String? = null,
@@ -223,6 +234,7 @@ fun Marker(
         infoWindowYOffset = -52,
         isClickable = isClickable,
         animation = animation,
+        runAnimation = runAnimation,
         isPerspective = isPerspective,
         icon = icon,
         rotation = rotation,
@@ -251,6 +263,7 @@ fun Marker(
  * @param isFlat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
@@ -272,6 +285,7 @@ fun MarkerInfoWindow(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
+    runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
     snippet: String? = null,
@@ -290,6 +304,7 @@ fun MarkerInfoWindow(
         isClickable = isClickable,
         isPerspective = isPerspective,
         animation = animation,
+        runAnimation = runAnimation,
         infoWindowYOffset = infoWindowYOffset,
         icon = icon,
         isFlat = isFlat,
@@ -318,6 +333,7 @@ fun MarkerInfoWindow(
  * @param isFlat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
@@ -340,6 +356,7 @@ fun MarkerInfoWindowContent(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
+    runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
     snippet: String? = null,
@@ -357,6 +374,7 @@ fun MarkerInfoWindowContent(
         isClickable = isClickable,
         isPerspective = isPerspective,
         infoWindowYOffset = infoWindowYOffset,
+        runAnimation = runAnimation,
         isFlat = isFlat,
         icon = icon,
         tag = tag,
@@ -385,6 +403,7 @@ fun MarkerInfoWindowContent(
  * @param isFlat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param animation 设置Marker动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
@@ -408,6 +427,7 @@ private fun MarkerImpl(
     isFlat: Boolean,
     icon: BitmapDescriptor,
     animation: MarkerCustomAnimation?,
+    runAnimation :Boolean?,
     rotation: Float,
     tag: Bundle?,
     title: String?,
@@ -469,6 +489,13 @@ private fun MarkerImpl(
             set(rotation) { this.marker.rotate = it }
             set(isFlat) { this.marker.isFlat = it }
             set(animation) { this.marker.customAnimation(it) }
+            set(runAnimation) {
+                if(it == false){
+                    this.marker.cancelAnimation()
+                } else if(it == true) {
+                    this.marker.startAnimation()
+                }
+            }
             set(state.position) { this.marker.position = it }
             set(tag) {
                 this.marker.extraInfo = this.marker.extraInfo?.apply {
@@ -498,12 +525,10 @@ private fun MarkerImpl(
 
 private fun Marker.customAnimation(animation: MarkerCustomAnimation?) {
     if(null == animation) return
-    if(animation.runAnimation == false) {
-        cancelAnimation()
-    }
     setAnimateType(animation.animateType.ordinal)
-    setAnimation(animation.animation)
-    if(animation.runAnimation == true) {
-        startAnimation()
+    if(null != animation.typeEvaluator) {
+        setAnimation(animation.animation, animation.typeEvaluator)
+    } else {
+        setAnimation(animation.animation)
     }
 }

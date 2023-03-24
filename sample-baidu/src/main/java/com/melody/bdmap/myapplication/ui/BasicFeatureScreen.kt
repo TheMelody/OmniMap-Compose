@@ -67,7 +67,6 @@ internal fun BasicFeatureScreen() {
                 "卫星图",
                 "空白地图",
                 "3D楼块效果",
-                "地图俯视(3D)",
                 "地图文字标注",
                 "实时交通状况开关",
                 "地图语言切换",
@@ -75,7 +74,7 @@ internal fun BasicFeatureScreen() {
                 "设置地图显示范围",
                 "旋转手势开关",
                 "拖拽手势开关",
-                "倾斜手势开关",
+                "倾斜手势开关(地图俯视(3D))",
                 "缩放手势开关",
                 "缩放按钮开关",
                 "双击放大地图开关",
@@ -110,7 +109,6 @@ internal fun BasicFeatureScreen() {
                             "卫星图"-> mapProperties.mapType == MapType.SATELLITE
                             "空白地图"-> mapProperties.mapType == MapType.EMPTY
                             "3D楼块效果"-> mapProperties.isShowBuildings
-                            "地图俯视(3D)"-> mapProperties.overlookEnable
                             "地图文字标注"-> mapProperties.isShowMapLabels
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
                             "地图语言切换" -> mapProperties.language
@@ -118,7 +116,7 @@ internal fun BasicFeatureScreen() {
                             "设置地图显示范围" -> if(mapProperties.mapShowLatLngBounds == null) "无" else "王府井区域内"
                             "旋转手势开关" -> uiSettings.isRotateGesturesEnabled
                             "拖拽手势开关" -> uiSettings.isScrollGesturesEnabled
-                            "倾斜手势开关" -> uiSettings.isTiltGesturesEnabled
+                            "倾斜手势开关(地图俯视(3D))" -> uiSettings.isTiltGesturesEnabled
                             "缩放手势开关" -> uiSettings.isZoomGesturesEnabled
                             "缩放按钮开关" -> uiSettings.isZoomEnabled
                             "双击放大地图开关" -> uiSettings.isDoubleClickZoomEnabled
@@ -150,9 +148,6 @@ internal fun BasicFeatureScreen() {
                         "3D楼块效果" -> {
                             mapProperties = mapProperties.copy(isShowBuildings = !mapProperties.isShowBuildings)
                         }
-                        "地图俯视(3D)" -> {
-                            mapProperties = mapProperties.copy(overlookEnable = !mapProperties.overlookEnable)
-                        }
                         "地图文字标注" -> {
                             mapProperties = mapProperties.copy(isShowMapLabels = !mapProperties.isShowMapLabels)
                         }
@@ -179,7 +174,7 @@ internal fun BasicFeatureScreen() {
                         "拖拽手势开关"-> {
                             uiSettings = uiSettings.copy(isScrollGesturesEnabled = !uiSettings.isScrollGesturesEnabled)
                         }
-                        "倾斜手势开关"-> {
+                        "倾斜手势开关(地图俯视(3D))"-> {
                             uiSettings = uiSettings.copy(isTiltGesturesEnabled = !uiSettings.isTiltGesturesEnabled)
                         }
                         "缩放手势开关"-> {

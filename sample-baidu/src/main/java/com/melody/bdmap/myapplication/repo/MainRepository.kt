@@ -28,8 +28,14 @@ import com.melody.bdmap.myapplication.LocationTrackingActivity
 import com.melody.bdmap.myapplication.BM3DModelActivity
 import com.melody.bdmap.myapplication.OverlayActivity
 import com.melody.bdmap.myapplication.BM3DPrismActivity
+import com.melody.bdmap.myapplication.MarkerAnimationActivity
+import com.melody.bdmap.myapplication.MarkerClusterActivity
+import com.melody.bdmap.myapplication.MovementTrackActivity
+import com.melody.bdmap.myapplication.MovementTrackActivity2
+import com.melody.bdmap.myapplication.MultiPointOverlayActivity
 import com.melody.bdmap.myapplication.R
 import com.melody.bdmap.myapplication.SmoothMoveActivity
+import com.melody.bdmap.myapplication.TrackMoveActivity
 import com.melody.sample.common.utils.SDKUtils
 import com.melody.sample.common.utils.StringUtils
 
@@ -52,6 +58,9 @@ object MainRepository {
             StringUtils.getString(R.string.bd_map_main_feature_item_blue_location) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), LocationTrackingActivity::class.java))
             }
+            StringUtils.getString(R.string.bd_map_main_feature_item_track_move) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), TrackMoveActivity::class.java))
+            }
             StringUtils.getString(R.string.bd_map_main_feature_item_smooth_move) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), SmoothMoveActivity::class.java))
             }
@@ -67,18 +76,21 @@ object MainRepository {
 //            StringUtils.getString(R.string.bd_map_main_feature_item_route_plan) -> {
 //                startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
 //            }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_multipoint_click) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),MultiPointOverlayActivity::class.java))
-//            }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_marker_animation) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),MarkerAnimationActivity::class.java))
-//            }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_movement_track) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),MovementTrackActivity::class.java))
-//            }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_cluster_effect) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),ClusterEffectActivity::class.java))
-//            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_multipoint_click) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), MultiPointOverlayActivity::class.java))
+            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_marker_animation) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), MarkerAnimationActivity::class.java))
+            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_movement_track) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity::class.java))
+            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_movement_track2) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), MovementTrackActivity2::class.java))
+            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_cluster_effect) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(),MarkerClusterActivity::class.java))
+            }
         }
     }
 
