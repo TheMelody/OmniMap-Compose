@@ -23,6 +23,7 @@
 package com.melody.bdmap.myapplication.repo
 
 import android.content.Intent
+import com.melody.bdmap.myapplication.BM3DBuildActivity
 import com.melody.bdmap.myapplication.BasicFeatureActivity
 import com.melody.bdmap.myapplication.LocationTrackingActivity
 import com.melody.bdmap.myapplication.BM3DModelActivity
@@ -69,6 +70,9 @@ object MainRepository {
             }
             StringUtils.getString(R.string.bd_map_main_feature_item_3d_prism) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), BM3DPrismActivity::class.java))
+            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_3d_build) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), BM3DBuildActivity::class.java))
             }
 //            StringUtils.getString(R.string.bd_map_main_feature_item_drag_drop_select_point) -> {
 //                startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))

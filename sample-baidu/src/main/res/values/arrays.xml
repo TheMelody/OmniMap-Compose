@@ -4,6 +4,7 @@
         <item>@string/bd_map_main_feature_item_basic</item>
         <item>@string/bd_map_main_feature_item_overlay</item>
         <item>@string/bd_map_main_feature_item_3d_prism</item>
+        <item>@string/bd_map_main_feature_item_3d_build</item>
         <item>@string/bd_map_main_feature_item_3d_model</item>
         <item>@string/bd_map_main_feature_item_blue_location</item>
         <item>@string/bd_map_main_feature_item_track_move</item>

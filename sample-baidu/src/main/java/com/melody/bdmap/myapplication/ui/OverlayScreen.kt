@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.baidu.mapapi.map.BitmapDescriptor
 import com.baidu.mapapi.map.BitmapDescriptorFactory
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.TileProvider
@@ -176,6 +175,7 @@ internal fun OverlayScreen() {
                 }
             )
 
+            // 读者请自己，运行下面的代码
             /*val points: MutableList<LatLng> = ArrayList()
             points.add(LatLng(39.865, 116.444))
             points.add(LatLng(39.825, 116.494))

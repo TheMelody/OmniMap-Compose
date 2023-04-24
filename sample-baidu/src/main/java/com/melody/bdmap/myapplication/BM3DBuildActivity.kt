@@ -20,38 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication.viewmodel
+package com.melody.bdmap.myapplication
 
-import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
-import com.melody.sample.common.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
+import com.melody.bdmap.myapplication.ui.BM3DBuildScreen
 
 /**
- * BM3DPrismViewModel
+ * BM3DBuildActivity
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/04/24 16:45
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
-            searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
-        )
-    }
+class BM3DBuildActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun handleEvents(event: BM3DPrismContract.Event) {
-    }
-
-    init {
-        asyncLaunch(Dispatchers.IO) {
-            val bm3DPrismData = BM3DPrismRepository.init3DPrismData()
-            setState { copy(bM3DPrism = bm3DPrismData) }
+        setContent {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colors.background
+            ) {
+                BM3DBuildScreen()
+            }
         }
     }
 }

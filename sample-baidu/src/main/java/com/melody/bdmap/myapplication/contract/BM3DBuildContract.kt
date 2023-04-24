@@ -20,38 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication.viewmodel
+package com.melody.bdmap.myapplication.contract
 
 import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
-import com.melody.sample.common.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import com.melody.bdmap.myapplication.model.BM3DBuildDataModel
+import com.melody.map.baidu_compose.poperties.MapProperties
+import com.melody.map.baidu_compose.poperties.MapUiSettings
+import com.melody.sample.common.state.IUiEffect
+import com.melody.sample.common.state.IUiEvent
+import com.melody.sample.common.state.IUiState
 
 /**
- * BM3DPrismViewModel
+ * BM3DBuildContract
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/04/24 16:45
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
-            searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
-        )
-    }
+class BM3DBuildContract {
+    sealed class Event : IUiEvent
 
-    override fun handleEvents(event: BM3DPrismContract.Event) {
-    }
+    data class State(
+        val mapUiSettings: MapUiSettings,
+        val mapProperties: MapProperties,
+        val searchLatLng: LatLng,
+        val bM3DBuilds: List<BM3DBuildDataModel>?
+    ) : IUiState
 
-    init {
-        asyncLaunch(Dispatchers.IO) {
-            val bm3DPrismData = BM3DPrismRepository.init3DPrismData()
-            setState { copy(bM3DPrism = bm3DPrismData) }
-        }
+    sealed class Effect : IUiEffect {
+        internal data class Toast(val msg: String?) : Effect()
     }
 }

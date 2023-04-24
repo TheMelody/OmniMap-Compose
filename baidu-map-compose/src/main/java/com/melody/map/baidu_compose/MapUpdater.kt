@@ -152,7 +152,9 @@ internal inline fun MapUpdater(
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false
         set(mapProperties.isMyLocationEnabled) { map.isMyLocationEnabled = it }
         // 修改定位蓝点样式
-        set(mapProperties.myLocationStyle) { map.setMyLocationConfiguration(it) }
+        set(mapProperties.myLocationStyle) {
+            if(null != it) map.setMyLocationConfiguration(it)
+        }
         // 是否显示3D楼块,默认显示
         set(mapProperties.isShowBuildings) {
             map.isBuildingsEnabled = it

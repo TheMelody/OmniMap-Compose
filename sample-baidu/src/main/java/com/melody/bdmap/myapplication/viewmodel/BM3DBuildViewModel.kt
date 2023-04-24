@@ -23,35 +23,40 @@
 package com.melody.bdmap.myapplication.viewmodel
 
 import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
+import com.melody.bdmap.myapplication.contract.BM3DBuildContract
+import com.melody.bdmap.myapplication.repo.BM3DBuildRepository
 import com.melody.sample.common.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 
 /**
- * BM3DPrismViewModel
+ * BM3DBuildViewModel
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/04/24 16:45
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
+class BM3DBuildViewModel:BaseViewModel<BM3DBuildContract.Event,BM3DBuildContract.State,BM3DBuildContract.Effect>() {
+    override fun createInitialState(): BM3DBuildContract.State {
+        return BM3DBuildContract.State(
+            mapUiSettings = BM3DBuildRepository.initMapUiSettings(),
+            mapProperties = BM3DBuildRepository.initMapProperties(),
             searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
+            bM3DBuilds = null
         )
     }
 
-    override fun handleEvents(event: BM3DPrismContract.Event) {
+    override fun handleEvents(event: BM3DBuildContract.Event) {
     }
 
     init {
         asyncLaunch(Dispatchers.IO) {
-            val bm3DPrismData = BM3DPrismRepository.init3DPrismData()
-            setState { copy(bM3DPrism = bm3DPrismData) }
+            val result = kotlin.runCatching {
+                BM3DBuildRepository.searchBuilding(currentState.searchLatLng)
+            }
+            if(result.isFailure) {
+                setEffect { BM3DBuildContract.Effect.Toast(result.exceptionOrNull()?.message) }
+            }
+            setState { copy(bM3DBuilds = result.getOrNull()) }
         }
     }
 }

@@ -44,7 +44,7 @@ class BM3DPrismContract {
         val mapUiSettings: MapUiSettings,
         val mapProperties: MapProperties,
         val searchLatLng: LatLng,
-        val bM3DPrisms: List<BM3DPrismDataModel>?
+        val bM3DPrism: BM3DPrismDataModel?
     ) : IUiState
 
     sealed class Effect : IUiEffect {

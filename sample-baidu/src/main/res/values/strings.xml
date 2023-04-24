@@ -3,7 +3,8 @@
 
     <string name="bd_map_main_feature_item_basic">基础功能</string>
     <string name="bd_map_main_feature_item_overlay">简单的Overlay功能</string>
-    <string name="bd_map_main_feature_item_3d_prism">3D棱形(百度的vip客户能力)</string>
+    <string name="bd_map_main_feature_item_3d_prism">3D棱形</string>
+    <string name="bd_map_main_feature_item_3d_build">3D建筑物(百度的vip客户能力)</string>
     <string name="bd_map_main_feature_item_3d_model">3D模型</string>
     <string name="bd_map_main_feature_item_blue_location">地图定位蓝点功能</string>
     <!--百度地图这个不平滑-->

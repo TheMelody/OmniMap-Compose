@@ -2,13 +2,9 @@ package com.melody.bdmap.myapplication.repo
 
 import androidx.compose.ui.graphics.Color
 import com.baidu.mapapi.model.LatLng
-import com.baidu.mapapi.search.building.BuildingSearch
-import com.baidu.mapapi.search.building.BuildingSearchOption
-import com.baidu.mapapi.search.core.SearchResult
 import com.melody.bdmap.myapplication.model.BM3DPrismDataModel
 import com.melody.map.baidu_compose.poperties.MapProperties
 import com.melody.map.baidu_compose.poperties.MapUiSettings
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
  * BM3DPrismRepository
@@ -31,36 +27,17 @@ object BM3DPrismRepository {
         return MapProperties(isShowBuildings = false)
     }
 
-    suspend fun searchBuilding(latLng: LatLng): List<BM3DPrismDataModel> {
-        return suspendCancellableCoroutine { coroutine->
-            val buildingSearchOption = BuildingSearchOption()
-            buildingSearchOption.latLng = latLng
-            val buildingSearch = BuildingSearch.newInstance()
-            buildingSearch.setOnGetBuildingSearchResultListener { result->
-                if (null == result || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                    val resultMsg = result?.error?.let { "错误码:" + it.ordinal + ",错误描述:" + it.name } ?: ""
-                    coroutine.resumeWith(Result.failure(Exception(resultMsg)))
-                } else {
-                    val list: MutableList<BM3DPrismDataModel> = mutableListOf()
-                    result.buildingList.forEach{ buildingInfo ->
-                        list.add(
-                            BM3DPrismDataModel(
-                                buildingInfo = buildingInfo,
-                                sideFaceColor = Color(0xAAFF0000),
-                                topFaceColor = Color(0xAA00FF00),
-                                enableGrowAnim = true,
-                                zIndex =17,
-                                points = null,
-                                customSideImage = null
-                            )
-                        )
-                    }
-                    coroutine.resumeWith(Result.success(list))
-                }
-            }
-            buildingSearch.requestBuilding(buildingSearchOption)
-        }
+    fun init3DPrismData(): BM3DPrismDataModel {
+        val locations: MutableList<LatLng> = ArrayList()
+        locations.add(LatLng(40.057777, 116.306951))
+        locations.add(LatLng(40.057964, 116.307715))
+        locations.add(LatLng(40.0559, 116.308631))
+        locations.add(LatLng(40.0557, 116.307759))
+        return BM3DPrismDataModel(
+            sideFaceColor = Color(0xAAFF0000),
+            topFaceColor = Color(0xAA00FF00),
+            points = locations,
+            customSideImage = null
+        )
     }
-
-
 }
