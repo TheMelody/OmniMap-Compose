@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,62 +23,32 @@
 package com.melody.bdmap.myapplication.repo
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.location.LocationManager
-import androidx.compose.ui.graphics.toArgb
-import com.baidu.location.BDLocation
 import com.baidu.location.LocationClient
 import com.baidu.location.LocationClientOption
-import com.baidu.mapapi.map.BitmapDescriptorFactory
-import com.baidu.mapapi.map.MyLocationConfiguration
-import com.baidu.mapapi.map.MyLocationData
-import com.melody.map.baidu_compose.poperties.MapProperties
-import com.melody.map.baidu_compose.poperties.MapUiSettings
+import com.baidu.mapapi.model.LatLng
+import com.baidu.mapapi.search.core.PoiInfo
+import com.baidu.mapapi.search.geocode.GeoCodeResult
+import com.baidu.mapapi.search.geocode.GeoCoder
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult
 import com.melody.sample.common.utils.SDKUtils
-import com.melody.ui.components.R
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
- * LocationTrackingRepository
+ * DragDropSelectPointRepository
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/10 17:50
+ * created 2023/04/26 11:04
  */
-object LocationTrackingRepository {
+object DragDropSelectPointRepository {
 
     fun checkGPSIsOpen(): Boolean {
         val locationManager: LocationManager? = SDKUtils.getApplicationContext()
             .getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)?: false
-    }
-
-    fun initMapProperties() : MapProperties {
-        val iconBitmap = BitmapFactory.decodeResource(SDKUtils.getApplicationContext().resources, R.drawable.ic_map_location_self)
-        val locationIcon = BitmapDescriptorFactory.fromBitmap(iconBitmap)
-        return MapProperties(
-            isMyLocationEnabled = true,
-            myLocationStyle = MyLocationConfiguration(
-                // 更新定位数据时不对地图做任何操作
-                MyLocationConfiguration.LocationMode.NORMAL,
-                true,
-                // 修改默认小蓝点的图标
-                locationIcon,
-                // 设置圆形的填充颜色
-                androidx.compose.ui.graphics.Color(0x80DAA217).toArgb(),
-                // 设置圆形的边框颜色
-                androidx.compose.ui.graphics.Color(0xAA4453B4).toArgb()
-            )
-        )
-    }
-
-    fun initMapUiSettings(): MapUiSettings {
-        return MapUiSettings(
-            isZoomGesturesEnabled = true,
-            isZoomEnabled = true,
-            isScaleControlsEnabled = true,
-            isDoubleClickZoomEnabled = true,
-            isScrollGesturesEnabled = true,
-        )
     }
 
     fun initLocationClient(): LocationClient {
@@ -107,12 +77,58 @@ object LocationTrackingRepository {
         }
     }
 
-    fun bDLocation2MyLocation(bdLocation: BDLocation, degree: Float): MyLocationData {
-        return MyLocationData.Builder()
-            .accuracy(bdLocation.radius)// 设置定位数据的精度信息，单位：米
-            .direction(degree) //bdLocation.direction) // 此处设置开发者获取到的方向信息，顺时针0-360
-            .latitude(bdLocation.latitude)
-            .longitude(bdLocation.longitude)
-            .build()
+    /**
+     * 查询附近1000米范围内的数据
+     */
+    suspend fun queryPoiResult(
+        latLng: LatLng,
+        onSuccess: (List<PoiInfo>) -> Unit,
+        onFailed: (String?) -> Unit
+    ) {
+        // 先通过逆地址编码解析
+        val geo2AddressResult = kotlin.runCatching {
+            geo2Address(latLng)
+        }
+        val result = geo2AddressResult.getOrNull()
+        if (geo2AddressResult.isSuccess) {
+            if(null != result) {
+                // 排序
+                result.poiList?.sortBy { it.distance }
+                onSuccess.invoke(result.poiList?: emptyList())
+            } else {
+                onSuccess.invoke(emptyList())
+            }
+        } else {
+            onFailed.invoke(geo2AddressResult.exceptionOrNull()?.message)
+            return
+        }
+    }
+
+    /**
+     * 逆地址编码
+     */
+    private suspend fun geo2Address(latLng: LatLng): ReverseGeoCodeResult {
+        return suspendCancellableCoroutine { continuation ->
+            val reverseGeoCodeOption = ReverseGeoCodeOption()
+                .location(latLng) // 设置反地理编码位置坐标
+                .radius(1000) //  POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
+                .pageSize(30)
+                .pageNum(0)
+            val bdSearch = GeoCoder.newInstance()
+            bdSearch.setOnGetGeoCodeResultListener(object :OnGetGeoCoderResultListener {
+                override fun onGetGeoCodeResult(p0: GeoCodeResult?) {
+                }
+                override fun onGetReverseGeoCodeResult(result: ReverseGeoCodeResult?) {
+                    bdSearch.destroy()
+                    if (null == result) {
+                        continuation.resumeWith(Result.failure(NullPointerException()))
+                        return
+                    }
+                    continuation.resumeWith(Result.success(result))
+                }
+            })
+            //  发起反地理编码请求，该方法必须【在监听之后执行】，否则会在某些场景出现拿不到回调结果的情况
+            bdSearch.reverseGeoCode(reverseGeoCodeOption)
+        }
     }
 }

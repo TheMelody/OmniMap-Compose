@@ -20,6 +20,7 @@ class SensorEventHelper : SensorEventListener {
     private val magneticField: Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     private var lastTime: Long = 0
     private var mAngle = 0f
+    private var isFirstChange = true
     private var accelermoterValues : FloatArray ?= null  //  FloatArray(3) 不在这里初始化
     private var magneticFieldValues : FloatArray ?= null // FloatArray(3)  不在这里初始化
     private var iSensorDegreeListener:ISensorDegreeListener? = null
@@ -27,6 +28,8 @@ class SensorEventHelper : SensorEventListener {
     companion object {
         private const val TIME_SENSOR = 100
     }
+
+    fun getSensorDegree() = 360 - mAngle
 
     fun registerSensorListener(changeDegreeListener: ISensorDegreeListener) {
         iSensorDegreeListener = changeDegreeListener
@@ -74,9 +77,10 @@ class SensorEventHelper : SensorEventListener {
         }else if (x < -180.0F) {
             x += 360.0F
         }
-        if (abs(mAngle - x) < 3F) {  // if (abs(mAngle - x) <= 8.0F)
+        if (abs(mAngle - x) < 3F && !isFirstChange) {  // if (abs(mAngle - x) <= 8.0F)
             return
         }
+        isFirstChange = true
         mAngle = if (java.lang.Float.isNaN(x)) 0F else x
         iSensorDegreeListener?.onSensorDegree(360 - mAngle)
         lastTime = System.currentTimeMillis()

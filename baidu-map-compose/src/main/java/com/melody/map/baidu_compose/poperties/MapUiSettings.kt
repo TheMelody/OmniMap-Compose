@@ -32,7 +32,7 @@ internal val DefaultMapUiSettings = MapUiSettings()
  * @param mapViewPadding 地图上控件与地图边界的距离，包含比例尺、缩放控件、logo、指南针的位置 只有在 OnMapLoadedCallback.onMapLoaded() 之后设置才生效
  * @param isRotateGesturesEnabled 旋转手势是否可用
  * @param isScrollGesturesEnabled 拖拽手势是否可用
- * @param isTiltGesturesEnabled 倾斜手势(等价于：地图俯视（3D）)是否可用
+ * @param isTiltGesturesEnabled 倾斜手势(等价于：地图【俯视手势】（3D）)是否可用
  * @param isZoomGesturesEnabled 缩放手势是否可用
  * @param isDoubleClickZoomEnabled 是否允许双击放大地图手势
  * @param isFlingEnable 是否允许抛出手势，默认为true，只要启用了[isScrollGesturesEnabled]就可以直接使用了

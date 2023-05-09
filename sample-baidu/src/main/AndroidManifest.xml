@@ -82,6 +82,8 @@
 
         <activity android:name=".BM3DPrismActivity" android:exported="false"/>
 
+        <activity android:name=".DragDropSelectPointActivity" android:exported="false"/>
+
         <activity android:name=".MovementTrackActivity" android:exported="false"/>
 
         <activity android:name=".MovementTrackActivity2" android:exported="false"/>

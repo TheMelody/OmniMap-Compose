@@ -29,6 +29,7 @@ import com.melody.bdmap.myapplication.LocationTrackingActivity
 import com.melody.bdmap.myapplication.BM3DModelActivity
 import com.melody.bdmap.myapplication.OverlayActivity
 import com.melody.bdmap.myapplication.BM3DPrismActivity
+import com.melody.bdmap.myapplication.DragDropSelectPointActivity
 import com.melody.bdmap.myapplication.MarkerAnimationActivity
 import com.melody.bdmap.myapplication.MarkerClusterActivity
 import com.melody.bdmap.myapplication.MovementTrackActivity
@@ -74,9 +75,9 @@ object MainRepository {
             StringUtils.getString(R.string.bd_map_main_feature_item_3d_build) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), BM3DBuildActivity::class.java))
             }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_drag_drop_select_point) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),DragDropSelectPointActivity::class.java))
-//            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_drag_drop_select_point) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), DragDropSelectPointActivity::class.java))
+            }
 //            StringUtils.getString(R.string.bd_map_main_feature_item_route_plan) -> {
 //                startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
 //            }

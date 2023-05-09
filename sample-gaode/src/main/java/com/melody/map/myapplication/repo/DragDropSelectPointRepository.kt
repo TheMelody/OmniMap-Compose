@@ -105,13 +105,11 @@ object DragDropSelectPointRepository {
      */
     fun handlePoiSearched(query: PoiSearchV2.Query?,poiResult: PoiResultV2?, resultCode: Int, block: (List<PoiItemV2>) -> Unit) {
         if (resultCode == AMapException.CODE_AMAP_SUCCESS) {
-            if (poiResult?.query != null) {
-                if (poiResult.query == query) {
-                    val poiItems = poiResult.pois
-                    if (poiItems != null && poiItems.size > 0) {
-                        block.invoke(poiItems)
-                        return
-                    }
+            if (poiResult?.query != null && poiResult.query == query) {
+                val poiItems = poiResult.pois
+                if (poiItems != null && poiItems.size > 0) {
+                    block.invoke(poiItems)
+                    return
                 }
             }
             //无搜索结果

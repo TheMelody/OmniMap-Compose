@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022 被风吹过的夏天
+// Copyright (c) 2023 被风吹过的夏天
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,44 +22,39 @@
 
 package com.melody.bdmap.myapplication.contract
 
-import com.baidu.location.BDLocation
-import com.baidu.mapapi.map.MyLocationData
+import android.graphics.Bitmap
 import com.baidu.mapapi.model.LatLng
-import com.melody.map.baidu_compose.poperties.MapProperties
-import com.melody.map.baidu_compose.poperties.MapUiSettings
+import com.baidu.mapapi.search.core.PoiInfo
 import com.melody.sample.common.state.IUiEffect
 import com.melody.sample.common.state.IUiEvent
 import com.melody.sample.common.state.IUiState
 
 /**
- * LocationTrackingContract
+ * DragDropSelectPointContract
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2022/10/10 17:45
+ * created 2023/04/26 10:44
  */
-class LocationTrackingContract {
-
+class DragDropSelectPointContract {
     sealed class Event : IUiEvent {
         object ShowOpenGPSDialog : Event()
         object HideOpenGPSDialog : Event()
     }
 
     data class State(
-        // 是否触发了强制定位
-        val isForceLocation: Boolean,
+        // 是否点击了强制定位
+        val isClickForceStartLocation: Boolean,
         // 是否打开了系统GPS权限
         val isOpenGps: Boolean?,
         // 是否显示打开GPS的确认弹框
         val isShowOpenGPSDialog: Boolean,
-        // App是否打开了定位权限
-        val grantLocationPermission:Boolean,
-        // 当前位置的经纬度
-        val locationLatLng: LatLng?,
-        val locationData: BDLocation?,
-        val locationSource: MyLocationData?,
-        val mapProperties: MapProperties,
-        val mapUiSettings: MapUiSettings
+        // 当前用户自身定位所在的位置
+        val currentLocation: LatLng?,
+        // 当前手持设备的方向
+        val currentRotation: Float,
+        // poi列表
+        val poiItems: List<PoiInfo>?,
     ) : IUiState
 
     sealed class Effect : IUiEffect {

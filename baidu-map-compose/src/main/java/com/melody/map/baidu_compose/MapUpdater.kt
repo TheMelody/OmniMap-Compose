@@ -155,7 +155,7 @@ internal inline fun MapUpdater(
         set(mapProperties.myLocationStyle) {
             if(null != it) map.setMyLocationConfiguration(it)
         }
-        // 是否显示3D楼块,默认显示
+        // 是否显示3D楼块,默认不显示
         set(mapProperties.isShowBuildings) {
             map.isBuildingsEnabled = it
             // 设置setBuildingsEnabled之后【必须更新下地图】
@@ -177,7 +177,7 @@ internal inline fun MapUpdater(
         set(mapUiSettings.isCompassEnabled) { map.uiSettings.isCompassEnabled = it }
         // 旋转手势是否可用
         set(mapUiSettings.isRotateGesturesEnabled) { map.uiSettings.isRotateGesturesEnabled = it }
-        // 倾斜手势(同地图俯视（3D）)是否可用
+        // 倾斜手势(同地图【俯视手势】（3D）)是否可用
         set(mapUiSettings.isTiltGesturesEnabled) { map.uiSettings.isOverlookingGesturesEnabled = it }
         // 拖拽手势是否可用
         set(mapUiSettings.isScrollGesturesEnabled) { map.uiSettings.isScrollGesturesEnabled = it }
