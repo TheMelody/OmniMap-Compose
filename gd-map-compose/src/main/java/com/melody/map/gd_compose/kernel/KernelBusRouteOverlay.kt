@@ -91,7 +91,7 @@ internal class KernelBusRouteOverlay(
      * 5.公交最后一站和终点间无步行，之间连起来
      */
     fun addToMap(fromCreateNode: Boolean) = asyncLaunch {
-        removeFromMap()
+        removeFromMap(false)
         val result = kotlin.runCatching {
             val busSteps = busPath.steps
             for (i in busSteps.indices) {

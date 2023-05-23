@@ -68,7 +68,7 @@ internal class KernelRideRouteOverlay(
     fun addToMap() {
         if (routeWidth == 0f || ridePath == null) return
         asyncLaunch {
-            removeFromMap()
+            removeFromMap(false)
             initPolylineOptions()
             val ridePaths = ridePath.steps
             mPolylineOptions?.add(startPoint)

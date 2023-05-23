@@ -149,7 +149,7 @@ internal class KernelDrivingRouteOverlay(
     fun addToMap() {
         if (routeWidth == 0f || drivePath == null) return
         asyncLaunch {
-            removeFromMap()
+            removeFromMap(false)
             initPolylineOptions()
             val result = kotlin.runCatching {
                 tmcs = mutableListOf()
@@ -336,9 +336,9 @@ internal class KernelDrivingRouteOverlay(
         return b.build()
     }
 
-    override fun removeFromMap() {
+    override fun removeFromMap(isClear: Boolean) {
         val result = kotlin.runCatching {
-            super.removeFromMap()
+            super.removeFromMap(isClear)
             if (throughPointMarkerList.size > 0) {
                 for (i in throughPointMarkerList.indices) {
                     throughPointMarkerList[i].remove()
