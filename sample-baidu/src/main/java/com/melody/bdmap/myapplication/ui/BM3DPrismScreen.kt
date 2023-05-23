@@ -54,7 +54,9 @@ import kotlinx.coroutines.flow.onEach
 internal fun BM3DPrismScreen() {
     val viewModel: BM3DPrismViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val cameraPositionState = rememberCameraPositionState()
+    val cameraPositionState = rememberCameraPositionState {
+        position = position.copy(overlook = -30F)
+    }
 
     LaunchedEffect(Unit) {
         cameraPositionState.animate(
@@ -79,15 +81,16 @@ internal fun BM3DPrismScreen() {
             properties = uiState.mapProperties,
             cameraPositionState = cameraPositionState
         ) {
-            // 这个貌似也是VIP客户的能力
-            uiState.bM3DPrism?.let {
-                BM3DPrismOverlay(
-                    height = 200F,
-                    points = it.points?: emptyList(),
-                    topFaceColor = it.topFaceColor,
-                    sideFaceColor = it.sideFaceColor,
-                    customSideImage = BitmapDescriptorFactory.fromResource(R.drawable.wenli)
-                )
+            uiState.bM3DPrism?.apply {
+                points?.forEach {
+                    BM3DPrismOverlay(
+                        height = 200F,
+                        points = it,
+                        topFaceColor = this.topFaceColor,
+                        sideFaceColor = this.sideFaceColor,
+                        customSideImage = BitmapDescriptorFactory.fromResource(R.drawable.wenli)
+                    )
+                }
             }
         }
     }

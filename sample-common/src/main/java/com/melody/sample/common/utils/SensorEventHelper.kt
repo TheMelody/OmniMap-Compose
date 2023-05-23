@@ -21,8 +21,8 @@ class SensorEventHelper : SensorEventListener {
     private var lastTime: Long = 0
     private var mAngle = 0f
     private var isFirstChange = true
-    private var accelermoterValues : FloatArray ?= null  //  FloatArray(3) 不在这里初始化
-    private var magneticFieldValues : FloatArray ?= null // FloatArray(3)  不在这里初始化
+    private var accelermoterValues : FloatArray ?= null
+    private var magneticFieldValues : FloatArray ?= null
     private var iSensorDegreeListener:ISensorDegreeListener? = null
 
     companion object {
@@ -67,23 +67,24 @@ class SensorEventHelper : SensorEventListener {
         if(null == accelermoterValues || null == magneticFieldValues) return
         val values = FloatArray(3)
         val R = FloatArray(9)
-        SensorManager.getRotationMatrix(R, null, accelermoterValues, magneticFieldValues)
-        SensorManager.getOrientation(R, values)
-        var x = Math.toDegrees(values[0].toDouble()).toFloat()
-        x += getScreenRotationOnPhone(SDKUtils.getApplicationContext())
-        x %= 360.0F
-        if (x > 180.0F) {
-            x -= 360.0F
-        }else if (x < -180.0F) {
-            x += 360.0F
+        if(SensorManager.getRotationMatrix(R, null, accelermoterValues, magneticFieldValues)) {
+            SensorManager.getOrientation(R, values)
+            var x = Math.toDegrees(values[0].toDouble()).toFloat()
+            x += getScreenRotationOnPhone(SDKUtils.getApplicationContext())
+            x %= 360.0F
+            if (x > 180.0F) {
+                x -= 360.0F
+            }else if (x < -180.0F) {
+                x += 360.0F
+            }
+            if (abs(mAngle - x) < 3F && !isFirstChange) {  // if (abs(mAngle - x) <= 8.0F)
+                return
+            }
+            isFirstChange = true
+            mAngle = if (java.lang.Float.isNaN(x)) 0F else x
+            iSensorDegreeListener?.onSensorDegree(360 - mAngle)
+            lastTime = System.currentTimeMillis()
         }
-        if (abs(mAngle - x) < 3F && !isFirstChange) {  // if (abs(mAngle - x) <= 8.0F)
-            return
-        }
-        isFirstChange = true
-        mAngle = if (java.lang.Float.isNaN(x)) 0F else x
-        iSensorDegreeListener?.onSensorDegree(360 - mAngle)
-        lastTime = System.currentTimeMillis()
     }
 
     /**
@@ -96,6 +97,7 @@ class SensorEventHelper : SensorEventListener {
             val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as? DisplayManager
             displayManager?.getDisplay(Display.DEFAULT_DISPLAY)
         } else {
+            @Suppress("DEPRECATION")
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         }
         when (display?.rotation) {

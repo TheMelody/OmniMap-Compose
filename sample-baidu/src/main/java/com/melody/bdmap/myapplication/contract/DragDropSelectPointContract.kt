@@ -22,7 +22,6 @@
 
 package com.melody.bdmap.myapplication.contract
 
-import android.graphics.Bitmap
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.search.core.PoiInfo
 import com.melody.sample.common.state.IUiEffect
@@ -44,7 +43,7 @@ class DragDropSelectPointContract {
 
     data class State(
         // 是否点击了强制定位
-        val isClickForceStartLocation: Boolean,
+        val isForceStartLocation: Boolean,
         // 是否打开了系统GPS权限
         val isOpenGps: Boolean?,
         // 是否显示打开GPS的确认弹框

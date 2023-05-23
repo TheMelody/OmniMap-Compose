@@ -20,38 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication.viewmodel
+package com.melody.bdmap.myapplication.model
 
+import com.baidu.mapapi.map.BitmapDescriptor
+import com.baidu.mapapi.map.OverlayOptions
 import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
-import com.melody.sample.common.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import com.baidu.mapapi.model.LatLngBounds
 
 /**
- * BM3DPrismViewModel
+ * BusRouteDataState
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/05/23 14:02
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
-            searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
-        )
-    }
-
-    override fun handleEvents(event: BM3DPrismContract.Event) {
-    }
-
-    init {
-        asyncLaunch(Dispatchers.IO) {
-            val points = BM3DPrismRepository.queryDistrictData()
-            setState { copy(bM3DPrism = BM3DPrismRepository.init3DPrismData(points)) }
-        }
-    }
-}
+class BusRouteDataState(
+    startPoint: LatLng,
+    endPoint: LatLng,
+    latLngBounds: LatLngBounds,
+    val listOverlayOptions: List<List<OverlayOptions>?>?,
+    val selectTexture: BitmapDescriptor?,
+    val unSelectTexture: BitmapDescriptor?,
+) : BaseRouteDataState(startPoint, endPoint,  latLngBounds)

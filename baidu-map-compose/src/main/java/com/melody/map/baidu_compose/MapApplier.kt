@@ -37,6 +37,7 @@ import com.melody.map.baidu_compose.overlay.DragState
 import com.melody.map.baidu_compose.overlay.MarkerNode
 import com.melody.map.baidu_compose.overlay.MultiPointOverlayNode
 import com.melody.map.baidu_compose.overlay.PolylineNode
+import com.melody.map.baidu_compose.overlay.RoutePlanOverlayNode
 import com.melody.map.baidu_compose.utils.clustering.ClusterItem
 import com.melody.map.baidu_compose.utils.fastFirstOrNull
 
@@ -165,7 +166,8 @@ internal class MapApplier(
         }
         // Polyline的点击事件
         map.setOnPolylineClickListener {
-            decorations.nodeForPolyline(it)?.onPolylineClick?.invoke(it) ?: false
+            decorations.nodeForPolyline(it)?.onPolylineClick?.invoke(it)
+                ?: decorations.nodeForRoutePlanPolyline(it)?.onPolylineClick?.invoke(it) ?: false
         }
         // 长按触发
         map.setOnMarkerDragListener(object : BaiduMap.OnMarkerDragListener {
@@ -217,3 +219,9 @@ private fun MutableList<MapNode>.nodeForPolyline(polyline: Polyline): PolylineNo
 private fun MutableList<MapNode>.nodeForMultiPoint(multiPointItem: MultiPointItem): MultiPointOverlayNode? =
     fastFirstOrNull { it is MultiPointOverlayNode && null != it.multiPointOverlay.multiPointItems.fastFirstOrNull { child -> child == multiPointItem } } as? MultiPointOverlayNode
 
+
+/**
+ * RoutePlanOverlay
+ */
+private fun MutableList<MapNode>.nodeForRoutePlanPolyline(polyline: Polyline): RoutePlanOverlayNode? =
+    fastFirstOrNull { it is RoutePlanOverlayNode && null != it.routePlanOverlay?.getAllOverlayList()?.fastFirstOrNull { child -> child == polyline } } as? RoutePlanOverlayNode

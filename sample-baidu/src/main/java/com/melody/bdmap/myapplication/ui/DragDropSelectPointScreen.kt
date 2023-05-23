@@ -119,8 +119,8 @@ internal fun DragDropSelectPointScreen() {
         }
     }
 
-    LaunchedEffect(currentState.isClickForceStartLocation) {
-        if(!currentState.isClickForceStartLocation) return@LaunchedEffect
+    LaunchedEffect(currentState.isForceStartLocation, currentState.currentLocation) {
+        if(!currentState.isForceStartLocation) return@LaunchedEffect
         currentState.currentLocation?.let {
             locationState.position = it
             cameraPositionState.animate(MapStatusUpdateFactory.newLatLngZoom(it, 17F))

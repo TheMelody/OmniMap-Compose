@@ -36,6 +36,7 @@ import com.melody.bdmap.myapplication.MovementTrackActivity
 import com.melody.bdmap.myapplication.MovementTrackActivity2
 import com.melody.bdmap.myapplication.MultiPointOverlayActivity
 import com.melody.bdmap.myapplication.R
+import com.melody.bdmap.myapplication.RoutePlanActivity
 import com.melody.bdmap.myapplication.SmoothMoveActivity
 import com.melody.bdmap.myapplication.TrackMoveActivity
 import com.melody.sample.common.utils.SDKUtils
@@ -78,9 +79,9 @@ object MainRepository {
             StringUtils.getString(R.string.bd_map_main_feature_item_drag_drop_select_point) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), DragDropSelectPointActivity::class.java))
             }
-//            StringUtils.getString(R.string.bd_map_main_feature_item_route_plan) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),RoutePlanActivity::class.java))
-//            }
+            StringUtils.getString(R.string.bd_map_main_feature_item_route_plan) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), RoutePlanActivity::class.java))
+            }
             StringUtils.getString(R.string.bd_map_main_feature_item_multipoint_click) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), MultiPointOverlayActivity::class.java))
             }

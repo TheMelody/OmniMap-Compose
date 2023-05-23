@@ -45,6 +45,7 @@ import com.melody.map.baidu_compose.poperties.MapProperties
 import com.melody.map.baidu_compose.poperties.MapUiSettings
 import com.melody.map.baidu_compose.position.rememberCameraPositionState
 import com.melody.sample.common.model.ImmutableListWrapper
+import com.melody.sample.common.utils.showToast
 import com.melody.ui.components.BasicFeatureMenuBar
 
 /**
@@ -175,10 +176,14 @@ internal fun BasicFeatureScreen() {
                             uiSettings = uiSettings.copy(isScrollGesturesEnabled = !uiSettings.isScrollGesturesEnabled)
                         }
                         "倾斜手势开关(地图俯视(3D))"-> {
+                            // 请双指水平下拉查看效果
                             val isEnable = !uiSettings.isTiltGesturesEnabled
                             uiSettings = uiSettings.copy(isTiltGesturesEnabled = isEnable)
                             cameraPositionState.position =
                                 cameraPositionState.position.copy(overlook = if(isEnable) -45F else 0F)
+                            if(isEnable) {
+                                showToast("请双指和手机竖屏保持同一个角度，然后双指下拉")
+                            }
                         }
                         "缩放手势开关"-> {
                             uiSettings = uiSettings.copy(isZoomGesturesEnabled = !uiSettings.isZoomGesturesEnabled)

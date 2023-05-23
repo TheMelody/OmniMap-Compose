@@ -40,6 +40,7 @@ import com.melody.sample.common.utils.SensorEventHelper
 import com.melody.sample.common.utils.openAppPermissionSettingPage
 import com.melody.sample.common.utils.safeLaunch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 
 /**
  * DragDropSelectPointViewModel
@@ -57,7 +58,7 @@ class DragDropSelectPointViewModel :
 
     override fun createInitialState(): DragDropSelectPointContract.State {
         return DragDropSelectPointContract.State(
-            isClickForceStartLocation = false,
+            isForceStartLocation = false,
             isShowOpenGPSDialog = false,
             isOpenGps = null,
             currentLocation = null,
@@ -97,8 +98,8 @@ class DragDropSelectPointViewModel :
     }
 
     fun startMapLocation() = asyncLaunch(Dispatchers.IO) {
-        if(currentState.isClickForceStartLocation) return@asyncLaunch
-        setState { copy(isClickForceStartLocation = true) }
+        if(currentState.isForceStartLocation) return@asyncLaunch
+        setState { copy(isForceStartLocation = true) }
         if(null == mLocClient) {
             mLocClient = DragDropSelectPointRepository.initLocationClient()
             mLocClient?.registerLocationListener(mLocationListener)
@@ -152,12 +153,14 @@ class DragDropSelectPointViewModel :
             if(null != bdLocation) {
                 val checkErrorMsg = BDMapUtils.locationErrorMessage(bdLocation.locType)
                 if(checkErrorMsg == null) {
-                    val isFirstGetLocation = currentState.currentLocation == null
+                    val isFirst = currentState.currentLocation == null
                     // 设置定位数据
                     setState {
                         copy(currentLocation = LatLng(bdLocation.latitude, bdLocation.longitude))
                     }
-                    doSearchQueryPoi(isFirstGetLocation, LatLng(bdLocation.latitude, bdLocation.longitude))
+                    if(isFirst) {
+                        doSearchQueryPoi(latLng = LatLng(bdLocation.latitude, bdLocation.longitude))
+                    }
                 } else {
                     // 定位出错了
                     setEffect { DragDropSelectPointContract.Effect.Toast(checkErrorMsg) }
@@ -165,28 +168,22 @@ class DragDropSelectPointViewModel :
             } else {
                 setEffect { DragDropSelectPointContract.Effect.Toast("定位失败,请检查定位权限和网络....") }
             }
-            setState { copy(isClickForceStartLocation = false) }
         }
     }
+
 
     /**
      * 搜索当前位置附近1000米内的地址数据
      */
-    fun doSearchQueryPoi(isForce: Boolean = false ,latLng: LatLng) = asyncLaunch(Dispatchers.IO) {
-        val forceMoveCamera = {
-            if(isForce) {
-                setState { copy(isClickForceStartLocation = true) }
-            }
-        }
+    fun doSearchQueryPoi(latLng: LatLng) = asyncLaunch(Dispatchers.IO) {
         DragDropSelectPointRepository.queryPoiResult(
             latLng = latLng,
             onSuccess = {
-                setState { copy(poiItems = it) }
-                forceMoveCamera()
+                setState { copy(poiItems = it, isForceStartLocation = false) }
             },
             onFailed = {
                 setEffect { DragDropSelectPointContract.Effect.Toast(it) }
-                forceMoveCamera()
+                setState { copy(isForceStartLocation = false) }
             })
     }
 }

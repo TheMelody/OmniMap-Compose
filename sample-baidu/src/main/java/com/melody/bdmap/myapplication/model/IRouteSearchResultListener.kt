@@ -20,38 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication.viewmodel
+package com.melody.bdmap.myapplication.model
 
-import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
-import com.melody.sample.common.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import com.baidu.mapapi.search.route.BikingRouteResult
+import com.baidu.mapapi.search.route.DrivingRouteResult
+import com.baidu.mapapi.search.route.IndoorRouteResult
+import com.baidu.mapapi.search.route.MassTransitRouteResult
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener
+import com.baidu.mapapi.search.route.TransitRouteResult
+import com.baidu.mapapi.search.route.WalkingRouteResult
 
 /**
- * BM3DPrismViewModel
+ * IRouteSearchResultListener
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/05/12 11:43
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
-            searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
-        )
+interface IRouteSearchResultListener: OnGetRoutePlanResultListener {
+    override fun onGetWalkingRouteResult(result: WalkingRouteResult?) {
     }
-
-    override fun handleEvents(event: BM3DPrismContract.Event) {
+    override fun onGetTransitRouteResult(result: TransitRouteResult?) {
     }
-
-    init {
-        asyncLaunch(Dispatchers.IO) {
-            val points = BM3DPrismRepository.queryDistrictData()
-            setState { copy(bM3DPrism = BM3DPrismRepository.init3DPrismData(points)) }
-        }
+    override fun onGetMassTransitRouteResult(p0: MassTransitRouteResult?) {
+    }
+    override fun onGetDrivingRouteResult(result: DrivingRouteResult?) {
+    }
+    override fun onGetIndoorRouteResult(p0: IndoorRouteResult?) {
+    }
+    override fun onGetBikingRouteResult(result: BikingRouteResult?) {
     }
 }

@@ -13,7 +13,7 @@ import com.baidu.mapapi.search.core.BuildingInfo
  * created 2023/03/17 15:31
  */
 data class BM3DPrismDataModel(
-    val points: List<LatLng>?,
+    val points: List<List<LatLng>>?,
     val customSideImage: BitmapDescriptor?,
     val sideFaceColor: Color,
     val topFaceColor: Color

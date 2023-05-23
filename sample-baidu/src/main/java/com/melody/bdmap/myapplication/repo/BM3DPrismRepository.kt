@@ -2,9 +2,16 @@ package com.melody.bdmap.myapplication.repo
 
 import androidx.compose.ui.graphics.Color
 import com.baidu.mapapi.model.LatLng
+import com.baidu.mapapi.search.core.SearchResult
+import com.baidu.mapapi.search.district.DistrictResult
+import com.baidu.mapapi.search.district.DistrictSearch
+import com.baidu.mapapi.search.district.DistrictSearchOption
+import com.baidu.mapapi.search.district.OnGetDistricSearchResultListener
 import com.melody.bdmap.myapplication.model.BM3DPrismDataModel
 import com.melody.map.baidu_compose.poperties.MapProperties
 import com.melody.map.baidu_compose.poperties.MapUiSettings
+import kotlinx.coroutines.suspendCancellableCoroutine
+
 
 /**
  * BM3DPrismRepository
@@ -20,6 +27,9 @@ object BM3DPrismRepository {
             isZoomGesturesEnabled = true,
             isScrollGesturesEnabled = true,
             isDoubleClickZoomEnabled = true,
+            isTiltGesturesEnabled = true,
+            isRotateGesturesEnabled = true,
+            isFlingEnable = true,
             isZoomEnabled = true
         )
     }
@@ -27,17 +37,32 @@ object BM3DPrismRepository {
         return MapProperties(isShowBuildings = false)
     }
 
-    fun init3DPrismData(): BM3DPrismDataModel {
-        val locations: MutableList<LatLng> = ArrayList()
-        locations.add(LatLng(40.057777, 116.306951))
-        locations.add(LatLng(40.057964, 116.307715))
-        locations.add(LatLng(40.0559, 116.308631))
-        locations.add(LatLng(40.0557, 116.307759))
+    fun init3DPrismData(points: List<List<LatLng>> ): BM3DPrismDataModel {
         return BM3DPrismDataModel(
             sideFaceColor = Color(0xAAFF0000),
             topFaceColor = Color(0xAA00FF00),
-            points = locations,
+            points = points,
             customSideImage = null
         )
+    }
+
+    suspend fun queryDistrictData():List<List<LatLng>> {
+        return suspendCancellableCoroutine { continuation->
+            val search = DistrictSearch.newInstance()
+            search.setOnDistrictSearchListener(object: OnGetDistricSearchResultListener{
+                override fun onGetDistrictResult(p0: DistrictResult?) {
+                    if (null != p0 && p0.error == SearchResult.ERRORNO.NO_ERROR) {
+                        if (p0.polylines == null) {
+                            continuation.resumeWith(Result.failure(Exception("抱歉，没有获取到结果")))
+                            return
+                        }
+                        continuation.resumeWith(Result.success(p0.polylines))
+                    } else {
+                        continuation.resumeWith(Result.failure(Exception("抱歉，没有获取到结果")))
+                    }
+                }
+            })
+            search.searchDistrict(DistrictSearchOption().cityName("北京市").districtName("海淀区"))
+        }
     }
 }

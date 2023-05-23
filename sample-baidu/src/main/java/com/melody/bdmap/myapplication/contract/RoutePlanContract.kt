@@ -20,38 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package com.melody.bdmap.myapplication.viewmodel
+package com.melody.bdmap.myapplication.contract
 
 import com.baidu.mapapi.model.LatLng
-import com.melody.bdmap.myapplication.contract.BM3DPrismContract
-import com.melody.bdmap.myapplication.repo.BM3DPrismRepository
-import com.melody.sample.common.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import com.melody.bdmap.myapplication.model.BaseRouteDataState
+import com.melody.map.baidu_compose.poperties.MapProperties
+import com.melody.map.baidu_compose.poperties.MapUiSettings
+import com.melody.sample.common.state.IUiEffect
+import com.melody.sample.common.state.IUiEvent
+import com.melody.sample.common.state.IUiState
 
 /**
- * BM3DPrismViewModel
+ * RoutePlanContract
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
- * created 2023/03/17 16:51
+ * created 2023/05/09 16:21
  */
-class BM3DPrismViewModel:BaseViewModel<BM3DPrismContract.Event,BM3DPrismContract.State,BM3DPrismContract.Effect>() {
-    override fun createInitialState(): BM3DPrismContract.State {
-        return BM3DPrismContract.State(
-            mapUiSettings = BM3DPrismRepository.initMapUiSettings(),
-            mapProperties = BM3DPrismRepository.initMapProperties(),
-            searchLatLng = LatLng(23.008468, 113.72953),
-            bM3DPrism = null
-        )
+class RoutePlanContract {
+
+    sealed class Event : IUiEvent {
+        object RoadTrafficClick: Event()
+        data class QueryRoutePlan(val queryType: Int): Event()
     }
 
-    override fun handleEvents(event: BM3DPrismContract.Event) {
-    }
+    data class State (
+        val isLoading: Boolean,
+        val fromPoint: LatLng,
+        val toPoint: LatLng,
+        val uiSettings: MapUiSettings,
+        val mapProperties: MapProperties,
+        val routePlanDataState: BaseRouteDataState?
+    ) : IUiState
 
-    init {
-        asyncLaunch(Dispatchers.IO) {
-            val points = BM3DPrismRepository.queryDistrictData()
-            setState { copy(bM3DPrism = BM3DPrismRepository.init3DPrismData(points)) }
-        }
+    sealed class Effect : IUiEffect {
+        internal class Toast(val msg: String?): Effect()
     }
 }
+
