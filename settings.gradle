@@ -14,7 +14,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "OmniMap"
+rootProject.name = "OmniMap-Compose"
 include ':gd-map-compose'
 include ':tencent-map-compose'
 include ':baidu-map-compose'
