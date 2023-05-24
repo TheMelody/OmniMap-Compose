@@ -72,7 +72,7 @@ object RoutePlanRepository {
     /**
      * 查询路径规划
      */
-    suspend fun queryRoutePlan(queryType: Int, fromPoint:LatLng, toPoint:LatLng): BaseRouteDataState? {
+    suspend fun queryRoutePlan(queryType: Int, fromPoint:LatLng, toPoint:LatLng): BaseRouteDataState {
         return when(queryType) {
             0 -> drivingRoutePlanSearch(fromPoint, toPoint)
             1 -> busRoutePlanSearch(fromPoint, toPoint)

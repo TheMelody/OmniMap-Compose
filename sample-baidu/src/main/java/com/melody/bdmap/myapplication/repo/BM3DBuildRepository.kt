@@ -6,7 +6,6 @@ import com.baidu.mapapi.search.building.BuildingSearch
 import com.baidu.mapapi.search.building.BuildingSearchOption
 import com.baidu.mapapi.search.core.SearchResult
 import com.melody.bdmap.myapplication.model.BM3DBuildDataModel
-import com.melody.bdmap.myapplication.model.BM3DPrismDataModel
 import com.melody.map.baidu_compose.poperties.MapProperties
 import com.melody.map.baidu_compose.poperties.MapUiSettings
 import kotlinx.coroutines.suspendCancellableCoroutine
