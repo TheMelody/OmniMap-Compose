@@ -46,6 +46,10 @@
             android:name="com.amap.api.v2.apikey"
             android:value="36d4003d24d412c3f0da89aab1a1911a" />
 
+        <!--使用SDK默认的定位，需要使用此SDK服务-->
+        <service android:name="com.amap.api.location.APSService"/>
+
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

@@ -41,7 +41,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
- * CameraPositionState
+ * 控制和观察地图的相机状态
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
@@ -56,11 +56,7 @@ inline fun rememberCameraPositionState(
 }
 
 /**
- * 不设置TXCameraPosition，则使用默认设置北京天安门为地图中心，也保证没有获取到位置的时候，能先渲染出来，
- * 如需修改默认值，请参考这样使用：
- * rememberCameraPositionState {
- *    position = TXCameraPosition(LatLng(0.0, 0.0), 11f, 0f, 0f)
- * }
+ * 控制和观察地图的相机状态
  */
 class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(39.91, 116.40), 11f, 0f, 0f)) {
 
@@ -101,7 +97,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
                 if (map == null) {
                     rawPosition = value
                 } else {
-                    map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(value.latlng,value.zoom,value.tilt,value.bearing)))
+                    map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(value.latLng,value.zoom,value.tilt,value.bearing)))
                 }
             }
         }
@@ -149,7 +145,7 @@ class CameraPositionState(position: TXCameraPosition = TXCameraPosition(LatLng(3
             if (map == null) {
                 isMoving = false
             } else {
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(position.latlng,position.zoom,position.tilt,position.bearing)))
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(position.latLng,position.zoom,position.tilt,position.bearing)))
             }
             onMapChanged?.let {
                 // Clear this first since the callback itself might set it again for later

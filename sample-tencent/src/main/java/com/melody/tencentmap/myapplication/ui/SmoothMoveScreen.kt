@@ -81,7 +81,7 @@ internal fun SmoothMoveScreen() {
                 PolylineCustomTexture(
                     points = currentState.trackPoints,
                     polylineColor = Color(0xFF0492FF),
-                    customTexture_stable = PolylineCustomTexture.create(arrowSpacing = 30, arrowTexture = currentState.bitmapTexture),
+                    customTexture = PolylineCustomTexture.create(arrowSpacing = 30, arrowTexture = currentState.bitmapTexture),
                     width = 18F
                 )
                 MovingPointOverlay(

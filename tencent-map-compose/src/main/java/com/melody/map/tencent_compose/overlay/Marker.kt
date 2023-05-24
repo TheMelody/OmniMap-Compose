@@ -30,7 +30,6 @@ import androidx.compose.runtime.currentComposer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,7 +37,6 @@ import androidx.compose.ui.geometry.Offset
 import com.melody.map.tencent_compose.MapApplier
 import com.melody.map.tencent_compose.MapNode
 import com.melody.map.tencent_compose.model.TXMapComposable
-import com.tencent.tencentmap.mapsdk.maps.model.AnimationListener
 import com.tencent.tencentmap.mapsdk.maps.model.BaseAnimation
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
@@ -146,16 +144,17 @@ fun rememberMarkerState(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
- * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
+ * @param isFlat【初始化配置，**不支持二次更新**】Marker覆盖物是否平贴在地图上
+ * @param isClockwise【初始化配置，**不支持二次更新**】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
- * @param snippet 标注的InfoWindow(气泡)的内容
  * @param tag Marker覆盖物的附加信息对象
  * @param title 标注的InfoWindow(气泡)的标题
+ * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  */
@@ -167,19 +166,18 @@ fun Marker(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat_stable: Boolean = false,
-    clockwise_stable: Boolean = true,
+    isFlat: Boolean = false,
+    isClockwise: Boolean = true,
     icon: BitmapDescriptor? = null,
-    snippet: String? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation: Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
 ) {
     MarkerImpl(
@@ -188,8 +186,8 @@ fun Marker(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat_stable = flat_stable,
-        clockwise_stable = clockwise_stable,
+        isFlat = isFlat,
+        isClockwise = isClockwise,
         icon = icon,
         rotation = rotation,
         snippet = snippet,
@@ -198,9 +196,8 @@ fun Marker(
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = null,
         infoWindow = null
@@ -215,16 +212,17 @@ fun Marker(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
- * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
+ * @param isFlat【初始化配置，**不支持二次更新**】Marker覆盖物是否平贴在地图上
+ * @param isClockwise【初始化配置，**不支持二次更新**】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
- * @param snippet 标注的InfoWindow(气泡)的内容
  * @param tag Marker覆盖物的附加信息对象
  * @param title 标注的InfoWindow(气泡)的标题
+ * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param content 【可选】，用于自定义整个信息窗口，【里面动态的内容，建议通过title、snippet、tag的方式获取】
@@ -237,19 +235,18 @@ fun MarkerInfoWindow(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat_stable: Boolean = false,
-    clockwise_stable: Boolean = true,
+    isFlat: Boolean = false,
+    isClockwise: Boolean = true,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
-    snippet: String? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation: Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -259,19 +256,18 @@ fun MarkerInfoWindow(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat_stable = flat_stable,
-        clockwise_stable = clockwise_stable,
+        isFlat = isFlat,
+        isClockwise = isClockwise,
         icon = icon,
-        snippet = snippet,
         rotation = rotation,
         tag = tag,
         title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoWindow = content,
         infoContent = null,
@@ -286,16 +282,17 @@ fun MarkerInfoWindow(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
- * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
+ * @param isFlat【初始化配置，**不支持二次更新**】Marker覆盖物是否平贴在地图上
+ * @param isClockwise【初始化配置，**不支持二次更新**】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation 标注的旋转角度
- * @param snippet 标注的InfoWindow(气泡)的内容
  * @param tag Marker覆盖物的附加信息对象
  * @param title 标注的InfoWindow(气泡)的标题
+ * @param snippet 标注的InfoWindow(气泡)的内容
  * @param visible 标注是否可见
  * @param zIndex 标注显示的层级
- * @param animation 标注动画
+ * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param content (可选)，用于自定义信息窗口的内容，【里面动态的内容，建议通过title、snippet、tag的方式获取】
@@ -308,19 +305,18 @@ fun MarkerInfoWindowContent(
     anchor: Offset = Offset(0.5f, 1.0f),
     draggable: Boolean = false,
     isClickable: Boolean = true,
-    flat_stable: Boolean = false,
-    clockwise_stable: Boolean = true,
+    isFlat: Boolean = false,
+    isClockwise: Boolean = true,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
-    snippet: String? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     animation: BaseAnimation? = null,
+    runAnimation :Boolean? = null,
     onClick: (Marker) -> Boolean = { false },
-    onAnimationStart: () -> Unit = {},
-    onAnimationEnd: () -> Unit = {},
     onInfoWindowClick: (Marker) -> Unit = {},
     content: (@Composable (Marker) -> Unit)? = null
 ) {
@@ -330,19 +326,18 @@ fun MarkerInfoWindowContent(
         anchor = anchor,
         draggable = draggable,
         isClickable = isClickable,
-        flat_stable = flat_stable,
-        clockwise_stable = clockwise_stable,
+        isFlat = isFlat,
+        isClockwise = isClockwise,
         icon = icon,
-        snippet = snippet,
         rotation = rotation,
         tag = tag,
         title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
-        onAnimationStart = onAnimationStart,
-        onAnimationEnd = onAnimationEnd,
         animation = animation,
+        runAnimation = runAnimation,
         onInfoWindowClick = onInfoWindowClick,
         infoContent = content,
         infoWindow = null
@@ -357,16 +352,17 @@ fun MarkerInfoWindowContent(
  * @param anchor Marker覆盖物的锚点比例
  * @param draggable Marker覆盖物是否允许拖拽
  * @param isClickable Marker覆盖物是否可以点击
- * @param flat_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物是否平贴在地图上
- * @param clockwise_stable【稳定的参数，初始化配置，不支持二次更新】Marker覆盖物，旋转角度是否沿顺时针方向
+ * @param isFlat【初始化配置，**不支持二次更新**】Marker覆盖物是否平贴在地图上
+ * @param isClockwise【初始化配置，**不支持二次更新**】Marker覆盖物，旋转角度是否沿顺时针方向
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
- * @param snippet Marker 覆盖物的文字片段
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题
+ * @param snippet Marker 覆盖物的文字片段
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param animation 动画包含，旋转，缩放，消失，平移以及它们的组合动画
+ * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param onClick 标注点击事件回调
  * @param onInfoWindowClick InfoWindow的点击事件回调
  * @param infoWindow 【可选】，用于自定义整个信息窗口。如果此值为非空，则[infoContent]中的值将被忽略。
@@ -380,25 +376,22 @@ private fun MarkerImpl(
     anchor: Offset,
     draggable: Boolean,
     isClickable: Boolean,
-    flat_stable: Boolean,
-    clockwise_stable: Boolean,
+    isFlat: Boolean,
+    isClockwise: Boolean,
     icon: BitmapDescriptor?,
     rotation: Float,
     tag: Any?,
-    snippet: String?,
     title: String?,
+    snippet: String?,
     visible: Boolean,
     zIndex: Float,
     animation: BaseAnimation?,
+    runAnimation :Boolean?,
     onClick: (Marker) -> Boolean,
-    onAnimationStart: () -> Unit,
-    onAnimationEnd: () -> Unit,
     onInfoWindowClick: (Marker) -> Unit = {},
     infoWindow: (@Composable (Marker) -> Unit)?,
     infoContent: (@Composable (Marker) -> Unit)?,
 ) {
-    val currentOnAnimationStart by rememberUpdatedState(onAnimationStart)
-    val currentOnAnimationEnd by rememberUpdatedState(onAnimationEnd)
     val mapApplier = currentComposer.applier as? MapApplier
     val compositionContext = rememberCompositionContext()
     ComposeNode<MarkerNode, MapApplier>(
@@ -409,8 +402,8 @@ private fun MarkerImpl(
                     anchor(anchor.x, anchor.y)
                     draggable(draggable)
                     icon(icon)
-                    flat(flat_stable)
-                    clockwise(clockwise_stable)
+                    flat(isFlat)
+                    clockwise(isClockwise)
                     rotation(rotation)
                     position(state.position)
                     snippet(snippet)
@@ -442,7 +435,7 @@ private fun MarkerImpl(
             set(anchor) { this.marker.setAnchor(it.x, it.y) }
             set(draggable) { this.marker.isDraggable = it }
             // Marker#setMarkerOptions 方法已废弃
-            //set(flat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
+            //set(isFlat) { this.marker.setMarkerOptions(this.marker.options.flat(it)) }
             //set(clockwise) { this.marker.setMarkerOptions(this.marker.options.clockwise(it)) }
             set(icon) { this.marker.setIcon(it) }
             set(rotation) { this.marker.rotation = rotation }
@@ -463,20 +456,17 @@ private fun MarkerImpl(
             }
             set(visible) { this.marker.isVisible = it }
             set(zIndex) { this.marker.setZIndex(it) }
-            set(animation) {
-                if(null != it) {
-                    it.animationListener = object :AnimationListener{
-                        override fun onAnimationStart() {
-                            currentOnAnimationStart.invoke()
-                        }
-                        override fun onAnimationEnd() {
-                            currentOnAnimationEnd.invoke()
-                        }
+            set(runAnimation) {
+                if(it == true) {
+                    if(!this.marker.startAnimation()) {
+                        this.marker.startAnimation(animation)
                     }
-                    marker.startAnimation(it)
-                } else {
-                    marker.setAnimation(null)
+                } else if(it == false) {
+                    this.marker.setAnimation(null)
                 }
+            }
+            set(animation) {
+                this.marker.setAnimation(it)
             }
         }
     )

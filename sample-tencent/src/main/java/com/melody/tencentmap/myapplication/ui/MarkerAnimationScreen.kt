@@ -74,13 +74,13 @@ internal fun MarkerAnimationScreen() {
             MarkerInfoWindowContent(
                 state = markerState,
                 animation = uiState.markerAnimation,
+                runAnimation = uiState.runAnimation,
                 content = {
                     Text(
                         modifier = Modifier.padding(4.dp),
                         text = "点击Marker查看动画"
                     )
                 },
-                onAnimationEnd = viewModel::finishMarkerAnimation,
                 onClick = {
                     viewModel.startMarkerAnimation()
                     true

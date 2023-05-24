@@ -30,6 +30,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -100,11 +102,12 @@ internal fun OverlayScreen() {
         ) {
             MarkerInfoWindow(icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = currentState.infoWindowLatLng),
+                title = "我是一个卖报的小画家，嘎嘎香",
                 content = {
                     Card(modifier = Modifier.requiredSizeIn(maxWidth = 88.dp, minHeight = 66.dp)) {
                         Text(
                             modifier = Modifier.padding(4.dp),
-                            text = "自定义InfoWindow：我是一个卖报的小画家"
+                            text = it.title?:""
                         )
                     }
                 }
@@ -113,11 +116,10 @@ internal fun OverlayScreen() {
             MarkerInfoWindowContent(
                 icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = currentState.circleCenter),
-                title = "炎将军在此"
+                snippet = "头戴三叉束发紫金冠体挂西川红棉百花袍身披兽面吞头连环铠腰系勒甲玲珑狮蛮带手持方天画戟坐下嘶风赤兔马之吕小布是也"
             ) {
-                FlowRow(modifier = Modifier.size(120.dp)) {
-                    Text("自定义InfoContent:\t", color = Color.Red)
-                    Text(it.title ?: "", color = Color.Red)
+                FlowRow(modifier = Modifier.width(120.dp).wrapContentHeight()) {
+                    Text(it.snippet ?: "", color = Color.Red)
                     Image(
                         modifier = Modifier.size(16.dp),
                         painter = painterResource(id = R.drawable.ic_defaultcluster),
@@ -148,6 +150,7 @@ internal fun OverlayScreen() {
             )
 
             Polygon(
+                // 看到了，我在这~~~
                 points = currentState.polygonHolePointList,
                 strokeColor = Color(0XFF1033F6),
                 fillColor = Color(0X4DDAD589),

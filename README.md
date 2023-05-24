@@ -10,14 +10,17 @@ OmniMap Compose 🗺
 -------
 <table>
  <tr>
-  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.0"></td>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.1"></td>
  </tr>
  <tr>
-  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.0"></td>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.1"></td>
+ </tr>
+ <tr>
+  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.1"></td>
  </tr>
 </table>
 
-```gradle
+```groovy
 repositories {
   maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
 }
@@ -26,8 +29,8 @@ dependencies {
   // 根据自己项目情况，选择下面其中一种地图
   implementation 'io.github.TheMelody:gd_compose:<version>'       // 高德地图
   implementation 'io.github.TheMelody:tencent_compose:<version>'  // 腾讯地图
-  implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图 → 实现中
-  implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 未开始
+  implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图
+  implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 实现中
   implementation 'io.github.TheMelody:google_compose:<version>'   // Google地图 → 未开始
 }
 ```
@@ -43,49 +46,79 @@ val cameraPositionState = rememberCameraPositionState {
 GDMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState
-)
+){
+    //这里面放地图覆盖物...
+}
 ```
 - 2、添加一个腾讯地图
 ```kt
 val cameraPositionState = rememberCameraPositionState {
-   position =  TXCameraPosition(latlng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
+   position =  TXCameraPosition(latLng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
 }
 TXMap(
     modifier = Modifier.fillMaxSize(),
     cameraPositionState = cameraPositionState
-)
+){
+    //这里面可以放地图覆盖物...
+}
 ```
-- 3、配置地图
+- 3、添加一个百度地图
+```kt
+val cameraPositionState = rememberCameraPositionState {
+    position = BDCameraPosition(LatLng(39.984108,116.307557), 4F, 0f, 0f)
+}
+BDMap(
+    modifier = Modifier.fillMaxSize(),
+    cameraPositionState = cameraPositionState
+){
+    //这里面可以放地图覆盖物...
+}
+```
+- 4、配置地图
 ```kt
 // 高德地图
 GDMap(
     modifier = Modifier.fillMaxSize(),
     properties = MapProperties(/**自行修改参数**/),
     uiSettings  = MapUiSettings(/**自行修改参数**/)
-)
+){
+    //这里面可以放地图覆盖物...
+}
 
 //腾讯地图
 TXMap(
     modifier = Modifier.fillMaxSize(),
     properties = MapProperties(/**自行修改参数**/),
     uiSettings  = MapUiSettings(/**自行修改参数**/)
-)
+){
+    //这里面可以放地图覆盖物...
+}
+
+//百度地图
+BDMap(
+    modifier = Modifier.fillMaxSize(),
+    properties = MapProperties(/**自行修改参数**/),
+    uiSettings  = MapUiSettings(/**自行修改参数**/)
+){
+    //这里面可以放地图覆盖物...
+}
 ```
-- 4、自定义Marker覆盖物的InfoWindow
+- 5、自定义Marker覆盖物的InfoWindow
 ```kt
 // 只修改内容，不修改容器
 MarkerInfoWindowContent(
-    //...
+    // ...
     title = "我是title",
     snippet = "我是snippet"
 ) { marker ->
     Column {
         Text(marker.title ?: "", color = Color.Green)
         Text(marker.snippet ?: "", color = Color.Red)
+        // TODO: 如果是百度地图，请使用 marker.getTitleExt() 和 marker.getSnippetExt()
     }
 }
 
-// 修改容器及内容
+// 修改整个信息窗(容器及内容)
 MarkerInfoWindow(
     //...
     snippet = "我是一个卖报的小画家(自定义InfoWindow)"
@@ -94,10 +127,11 @@ MarkerInfoWindow(
         Text(
             modifier = Modifier.padding(4.dp),
             text = marker.snippet ?: "", color = Color.Red)
+        // TODO: 如果是百度地图，请使用 marker.getSnippetExt()
     }
 }
 ```
-- 5、已支持的覆盖物
+- 6、已支持的覆盖物
 <table>
  <tr>
   <td width="66px">高德地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、MultiPointOverlay、OpenGLOverlay、Polygon、Polyline、RoutePlanOverlay、TileOverlay</td>
@@ -105,4 +139,35 @@ MarkerInfoWindow(
  <tr>
   <td width="66px">腾讯地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、Polygon、Polyline、TileOverlay</td>
  </tr>
+ <tr>
+  <td width="66px">百度地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MultiPointOverlay、Polygon、Polyline、TileOverlay、RoutePlanOverlay、TextOverlay、TraceOverlay、BM3DBuildOverlay、BM3DModelOverlay、BM3DPrismOverlay</td>
+ </tr>
 </table>
+
+**更多能力，请查阅我们的示例Demo**
+
+License
+-------
+```
+MIT License
+
+Copyright (c) 2023 被风吹过的夏天
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

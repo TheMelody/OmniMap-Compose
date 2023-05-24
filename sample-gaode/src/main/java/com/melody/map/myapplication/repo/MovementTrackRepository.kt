@@ -21,7 +21,6 @@ object MovementTrackRepository {
 
     fun initMapUiSettings(): MapUiSettings {
         return MapUiSettings(
-            showMapLogo = true,
             isScaleControlsEnabled = true,
             isZoomGesturesEnabled = true,
             isScrollGesturesEnabled = true,

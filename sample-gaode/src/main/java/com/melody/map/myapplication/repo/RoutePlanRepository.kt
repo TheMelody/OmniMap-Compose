@@ -54,7 +54,6 @@ object RoutePlanRepository {
             isZoomEnabled = true,
             isScrollGesturesEnabled = true,
             isZoomGesturesEnabled = true,
-            showMapLogo = true,
             isScaleControlsEnabled = true
         )
     }
@@ -99,30 +98,32 @@ object RoutePlanRepository {
         )
     }
 
-    fun getDrivingCustomTexture(isSelected: Boolean): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                if(isSelected) {
-                    com.melody.ui.components.R.drawable.ic_map_route_status_default_selected
-                } else{
-                    com.melody.ui.components.R.drawable.ic_map_route_status_default
-                }
-            )
-        )
+    fun getDrivingCustomTexture(isSelected: Boolean): BitmapDescriptor? {
+        val result = kotlin.runCatching {
+            val assetsStream = SDKUtils.getApplicationContext().assets.open(if(isSelected) {
+                "ic_map_route_status_default_selected.png"
+            } else{
+                "ic_map_route_status_default.png"
+            })
+            val textureBitmap = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(assetsStream))
+            assetsStream.close()
+            textureBitmap
+        }
+        return result.getOrNull()
     }
 
-    fun getBusCustomTexture(isSelected: Boolean): BitmapDescriptor {
-        return BitmapDescriptorFactory.fromBitmap(
-            BitmapFactory.decodeResource(
-                SDKUtils.getApplicationContext().resources,
-                if(isSelected) {
-                    com.melody.ui.components.R.drawable.ic_map_route_status_green_selected
-                } else{
-                    com.melody.ui.components.R.drawable.ic_map_route_status_green
-                }
-            )
-        )
+    fun getBusCustomTexture(isSelected: Boolean): BitmapDescriptor? {
+        val result = kotlin.runCatching {
+            val assetsStream = SDKUtils.getApplicationContext().assets.open(if(isSelected) {
+                "ic_map_route_status_green_selected.png"
+            } else{
+                "ic_map_route_status_green.png"
+            })
+            val textureBitmap = BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(assetsStream))
+            assetsStream.close()
+            textureBitmap
+        }
+        return result.getOrNull()
     }
 
     suspend fun getRoutePlanResult(queryType: Int,startPoint: LatLng, endPoint: LatLng, cityCode: String): BaseRouteDataState {

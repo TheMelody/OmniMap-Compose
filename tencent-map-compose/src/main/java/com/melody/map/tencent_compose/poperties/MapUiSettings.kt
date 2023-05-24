@@ -29,7 +29,7 @@ import java.util.*
 internal val DefaultMapUiSettings = MapUiSettings()
 
 /**
- * MapUiSettings
+ * 与UI相关设置的数据类
  * @param logoScale 地图Logo的缩放比例，比例范围(0.7~1.3)
  * @param isRotateGesturesEnabled 旋转手势是否可用
  * @param isScrollGesturesEnabled 拖拽手势是否可用

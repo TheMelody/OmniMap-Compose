@@ -46,6 +46,7 @@ class MarkerAnimationContract {
     data class State(
         val mapUiSettings: MapUiSettings,
         val mapLoaded: Boolean,
+        val runAnimation: Boolean,
         val markerDefaultLocation: LatLng,
         val markerAnimation: TranslateAnimation?
     ) : IUiState

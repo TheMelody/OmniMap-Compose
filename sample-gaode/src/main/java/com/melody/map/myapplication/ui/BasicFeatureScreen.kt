@@ -72,7 +72,6 @@ internal fun BasicFeatureScreen() {
                 "地图语言切换",
                 "显示室内地图开关",
                 "设置地图显示范围",
-                "地图Logo开关",
                 "旋转手势开关",
                 "拖拽手势开关",
                 "倾斜手势开关",
@@ -110,14 +109,13 @@ internal fun BasicFeatureScreen() {
                             "地图语言切换" -> mapProperties.language
                             "显示室内地图开关" -> mapProperties.isIndoorEnabled
                             "设置地图显示范围" -> if(mapProperties.mapShowLatLngBounds == null) null else "王府井区域内"
-                            "地图Logo开关" -> uiSettings.showMapLogo
                             "旋转手势开关" -> uiSettings.isRotateGesturesEnabled
                             "拖拽手势开关" -> uiSettings.isScrollGesturesEnabled
                             "倾斜手势开关" -> uiSettings.isTiltGesturesEnabled
                             "缩放手势开关" -> uiSettings.isZoomGesturesEnabled
                             "缩放按钮开关" -> uiSettings.isZoomEnabled
                             "指南针控件开关" -> uiSettings.isCompassEnabled
-                            "比例尺控件开关" -> uiSettings.showMapLogo && uiSettings.isScaleControlsEnabled
+                            "比例尺控件开关" -> uiSettings.isScaleControlsEnabled
                             else -> ""
                         }.toString(),
                         style = MaterialTheme.typography.body2.copy(
@@ -171,9 +169,6 @@ internal fun BasicFeatureScreen() {
                                 mapProperties = mapProperties.copy(mapShowLatLngBounds = null)
                             }
                         }
-                        "地图Logo开关"-> {
-                            uiSettings = uiSettings.copy(showMapLogo = !uiSettings.showMapLogo)
-                        }
                         "旋转手势开关"-> {
                             uiSettings = uiSettings.copy(isRotateGesturesEnabled = !uiSettings.isRotateGesturesEnabled)
                         }
@@ -193,9 +188,6 @@ internal fun BasicFeatureScreen() {
                             uiSettings = uiSettings.copy(isCompassEnabled = !uiSettings.isCompassEnabled)
                         }
                         "比例尺控件开关"-> {
-                            if(!uiSettings.isScaleControlsEnabled) {
-                                uiSettings = uiSettings.copy(showMapLogo = true)
-                            }
                             uiSettings = uiSettings.copy(isScaleControlsEnabled = !uiSettings.isScaleControlsEnabled)
                         }
                     }

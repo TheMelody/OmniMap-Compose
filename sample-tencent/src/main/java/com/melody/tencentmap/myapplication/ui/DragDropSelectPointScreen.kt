@@ -114,13 +114,13 @@ internal fun DragDropSelectPointScreen() {
         } else {
             dragDropAnimatable.animateTo(Size(25F,11F))
             // 查询附近1000米地址数据
-            viewModel.doSearchQueryPoi(cameraPositionState.position.latlng,"")
+            viewModel.doSearchQueryPoi(cameraPositionState.position.latLng,"")
         }
     }
 
     LaunchedEffect(currentState.isClickForceStartLocation, currentState.currentLocation) {
         val curLocation = currentState.currentLocation
-        if(null == curLocation || cameraPositionState.position.latlng == curLocation) return@LaunchedEffect
+        if(null == curLocation || cameraPositionState.position.latLng == curLocation) return@LaunchedEffect
         locationState.position = curLocation
         cameraPositionState.animate(CameraUpdateFactory.newLatLngZoom(currentState.currentLocation, 17F))
     }

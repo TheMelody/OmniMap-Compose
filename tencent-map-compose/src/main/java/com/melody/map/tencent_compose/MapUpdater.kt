@@ -69,6 +69,9 @@ internal class MapPropertiesNode(
                 map.removeOnMapLoadedCallback(this)
             }
         })
+        map.setOnMapClickListener { clickListeners.onMapClick(it) }
+        map.setOnMapLongClickListener { clickListeners.onMapLongClick(it) }
+        map.setOnMapPoiClickListener { clickListeners.onMapPOIClick(it) }
         map.setOnCameraChangeListener(object : TencentMap.OnCameraChangeListener {
             override fun onCameraChange(cameraPosition: CameraPosition?) {
                 cameraPositionState.transformToTxCameraPosition(map.cameraPosition)
@@ -80,8 +83,6 @@ internal class MapPropertiesNode(
                 cameraPositionState.isMoving = false
             }
         })
-//        map.addOnPOIClickListener { clickListeners.onPOIClick(it) }
-//        map.setOnIndoorBuildingActiveListener { clickListeners.indoorBuildingActive(it) }
     }
 
     override fun onRemoved() {
@@ -169,9 +170,9 @@ internal inline fun MapUpdater(
         set(mapUiSettings.isScaleViewFadeEnable) { map.uiSettings.setScaleViewFadeEnable(it) }
         // 缩放手势是否可用
         set(mapUiSettings.isZoomGesturesEnabled) { map.uiSettings.isZoomGesturesEnabled = it }
-        // 设置地图最大缩放级别 缩放级别范围为[3, 20],超出范围将按最大级别计算
+        // 设置地图最大缩放级别 缩放级别范围为[3, 22],超出范围将按最大级别计算
         set(mapProperties.maxZoomPreference) { map.setMaxZoomLevel(it.toInt()) }
-        // 设置最小缩放级别 缩放级别范围为[3, 20],超出范围将按最小级别计算
+        // 设置最小缩放级别 缩放级别范围为[3, 22],超出范围将按最小级别计算
         set(mapProperties.minZoomPreference) { map.setMinZoomLevel(it.toInt()) }
         // 设置地图模式，默认为：MAP_TYPE_NORMAL
         set(mapProperties.mapType) { map.mapType = it.value }
@@ -190,8 +191,6 @@ internal inline fun MapUpdater(
                 it.ltrb.right
             )
         }
-        // 设置地图显示范围，无论如何操作地图，显示区域都不能超过该矩形区域
-        set(mapProperties.mapShowLatLngBounds) { map.setRestrictBounds(it, RestrictBoundsFitMode.FIT_WIDTH) }
 
         update(cameraPositionState) { this.cameraPositionState = it }
         update(clickListeners) { this.clickListeners = it }

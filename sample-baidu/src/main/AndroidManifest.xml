@@ -2,20 +2,100 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.melody.bdmap.myapplication">
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
-    <!--访问网络获取地图服务-->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 访问网络，进行地图相关业务数据请求，包括地图数据，路线规划，POI检索等 -->
+    <!-- 获取网络状态，根据网络状态切换进行数据请求网络转换 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 读取外置存储。如果开发者使用了so动态加载功能并且把so文件放在了外置存储区域，则需要申请该权限，否则不需要 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 写外置存储。如果开发者使用了离线地图，并且数据写在外置存储区域，则需要申请该权限 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <application
-        android:icon="@mipmap/ic_launcher"
-        android:allowNativeHeapPointerTagging="false"
         android:allowBackup="true"
+        android:allowNativeHeapPointerTagging="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="Ly7KmcP0Vc0XP0OrbwXFjWgvsTQLmftU" />
+
+        <!--定位的service组件-->
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"/>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.melody.bdmap.myapplication.initializer.AppDataInitStartup"
+                android:value="androidx.startup" />
+        </provider>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".BasicFeatureActivity" android:exported="false"/>
+
+        <activity android:name=".OverlayActivity" android:exported="false"/>
+
+        <activity android:name=".LocationTrackingActivity" android:exported="false"/>
+
+        <activity android:name=".TrackMoveActivity" android:exported="false"/>
+
+        <activity android:name=".SmoothMoveActivity" android:exported="false"/>
+
+        <activity android:name=".BM3DModelActivity" android:exported="false"/>
+
+        <activity android:name=".BM3DBuildActivity" android:exported="false"/>
+
+        <activity android:name=".BM3DPrismActivity" android:exported="false"/>
+
+        <activity android:name=".DragDropSelectPointActivity" android:exported="false"/>
+
+        <activity android:name=".MovementTrackActivity" android:exported="false"/>
+
+        <activity android:name=".MovementTrackActivity2" android:exported="false"/>
+
+        <activity android:name=".MultiPointOverlayActivity" android:exported="false"/>
+
+        <activity android:name=".MarkerAnimationActivity" android:exported="false"/>
+
+        <activity android:name=".MarkerClusterActivity" android:exported="false"/>
+
+        <activity android:name=".RoutePlanActivity" android:exported="false"/>
+
     </application>
+
 </manifest>

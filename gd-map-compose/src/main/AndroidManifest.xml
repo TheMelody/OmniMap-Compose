@@ -3,10 +3,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.melody.map.gd_compose">
 
-    <application>
-
-        <!--使用SDK默认的定位，需要使用此SDK服务-->
-        <service android:name="com.amap.api.location.APSService"/>
-    </application>
-
 </manifest>

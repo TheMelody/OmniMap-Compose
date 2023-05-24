@@ -26,6 +26,7 @@ import com.melody.sample.common.base.BaseViewModel
 import com.melody.tencentmap.myapplication.contract.MarkerAnimationContract
 import com.melody.tencentmap.myapplication.repo.MarkerAnimationRepository
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
+import kotlinx.coroutines.delay
 
 /**
  * MarkerAnimationViewModel
@@ -40,6 +41,7 @@ class MarkerAnimationViewModel :
     override fun createInitialState(): MarkerAnimationContract.State {
         return MarkerAnimationContract.State(
             mapLoaded = false,
+            runAnimation = false,
             mapUiSettings = MarkerAnimationRepository.initMapUiSettings(),
             markerDefaultLocation = LatLng(39.984108,116.307557),
             markerAnimation = null
@@ -48,18 +50,27 @@ class MarkerAnimationViewModel :
 
     override fun handleEvents(event: MarkerAnimationContract.Event) {
         if(event is MarkerAnimationContract.Event.StartMarkerAnimation) {
-            setState {
-                copy(markerAnimation =  MarkerAnimationRepository.prepareMarkerAnimation(
+            asyncLaunch {
+                MarkerAnimationRepository.prepareMarkerAnimation(
                     LatLng(
-                        markerDefaultLocation.latitude + 0.05,
-                        markerDefaultLocation.longitude - 0.05
-                    )
-                ))
+                        currentState.markerDefaultLocation.latitude + 0.05,
+                        currentState.markerDefaultLocation.longitude - 0.05
+                    ),
+                    onPlayAnimation = {
+                        setState { copy(runAnimation = true) }
+                    },
+                    onAnimationFinish = {
+                        setEvent(MarkerAnimationContract.Event.FinishMarkerAnimation)
+                    }
+                ){ animation ->
+                    setState { copy(markerAnimation =  animation) }
+                }
             }
         } else if(event is MarkerAnimationContract.Event.FinishMarkerAnimation) {
             setState {
                 copy(
                     markerAnimation = null,
+                    runAnimation = false,
                     markerDefaultLocation = LatLng(
                         markerDefaultLocation.latitude + 0.05,
                         markerDefaultLocation.longitude - 0.05
@@ -71,10 +82,6 @@ class MarkerAnimationViewModel :
 
     fun startMarkerAnimation() {
         setEvent(MarkerAnimationContract.Event.StartMarkerAnimation)
-    }
-
-    fun finishMarkerAnimation() {
-        setEvent(MarkerAnimationContract.Event.FinishMarkerAnimation)
     }
 
     fun handleMapLoaded() {

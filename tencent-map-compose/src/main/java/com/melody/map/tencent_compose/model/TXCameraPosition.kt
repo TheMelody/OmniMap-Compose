@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TXCameraPosition(
-    val latlng: LatLng,
+    val latLng: LatLng,
     val zoom: Float,
     val tilt: Float,
     val bearing: Float

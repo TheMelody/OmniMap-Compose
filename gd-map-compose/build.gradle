@@ -8,11 +8,11 @@ afterEvaluate {
 }
 
 android {
-    compileSdk 33
+    compileSdk rootProject.ext.libraryInfo.compileSdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 33
+        minSdk rootProject.ext.libraryInfo.minSdk
+        targetSdk rootProject.ext.libraryInfo.targetSdk
 
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -47,6 +47,6 @@ dependencies {
 
     // 高德地图3d
     api 'com.amap.api:3dmap:9.5.0'
-    // 高德地图：搜索相关API
+    // 高德地图：搜索相关API，路径规划需要用到这里面的类
     api "com.amap.api:search:9.4.5"
 }

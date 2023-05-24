@@ -31,6 +31,7 @@ import java.util.Objects
 val DefaultMapProperties = MapProperties()
 
 /**
+ * 可在地图上修改属性的数据类
  * @param language 设置地图底图语言，目前支持中文底图和英文底图，【语言mapType仅支持：MAP_TYPE_NORMAL】
  * @param isShowBuildings  是否显示3D楼块效果
  * @param isShowMapLabels  是否显示底图标注
@@ -51,8 +52,8 @@ class MapProperties(
     val isMyLocationEnabled: Boolean = false,
     val isTrafficEnabled: Boolean = false,
     val myLocationStyle: MyLocationStyle? = null,
-    val maxZoomPreference: Float = 21.0F,
-    val minZoomPreference: Float = 0F,
+    val maxZoomPreference: Float = 20.0F,
+    val minZoomPreference: Float = 3F,
     val mapShowLatLngBounds: LatLngBounds? = null,
     val mapType: MapType = MapType.NORMAL,
 ) {

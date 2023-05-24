@@ -44,8 +44,9 @@ class MarkerClusterViewModel :
     override fun handleEvents(event: MarkerClusterContract.Event) {
     }
 
-    init {
-        setState { copy(mapClusterItems = MarkerClusterRepository.initClusterItems()) }
+    fun handleMapLoaded() {
+        val items = MarkerClusterRepository.initClusterItems()
+        setState { copy(mapClusterItems = items) }
     }
 
 }

@@ -28,7 +28,6 @@ import com.amap.api.maps.AMap
 import com.amap.api.maps.model.*
 import com.amap.api.services.route.RidePath
 import com.amap.api.services.route.RideStep
-import kotlinx.coroutines.launch
 
 /**
  * 核心取自【高德路径规划】示例代码里面的RideRouteOverlay，骑行线路路径规划
@@ -69,7 +68,7 @@ internal class KernelRideRouteOverlay(
     fun addToMap() {
         if (routeWidth == 0f || ridePath == null) return
         asyncLaunch {
-            removeFromMap()
+            removeFromMap(false)
             initPolylineOptions()
             val ridePaths = ridePath.steps
             mPolylineOptions?.add(startPoint)

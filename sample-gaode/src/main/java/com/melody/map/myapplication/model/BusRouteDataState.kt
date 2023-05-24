@@ -43,8 +43,8 @@ class BusRouteDataState(
     endMarkerIcon: BitmapDescriptor?,
     startGuideIcon: BitmapDescriptor?,
     endGuideIcon: BitmapDescriptor?,
-    val busLineSelectedTexture: BitmapDescriptor,
-    val busLineUnSelectedTexture: BitmapDescriptor,
+    val busLineSelectedTexture: BitmapDescriptor?,
+    val busLineUnSelectedTexture: BitmapDescriptor?,
     val busPathV2List: List<BusPathV2>
 ): BaseRouteDataState(
     routeWidth = routeWidth,

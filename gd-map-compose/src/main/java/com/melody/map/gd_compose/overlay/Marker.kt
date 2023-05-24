@@ -149,9 +149,9 @@ fun rememberMarkerState(
  * @param flat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
- * @param snippet Marker 覆盖物的文字片段
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题
+ * @param snippet Marker 覆盖物的文字片段
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param isSetTop 设置为true: 则当前marker在最上面
@@ -170,10 +170,10 @@ fun Marker(
     isClickable: Boolean = true,
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
-    snippet: String? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
@@ -215,9 +215,9 @@ fun Marker(
  * @param flat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
- * @param snippet Marker 覆盖物的文字片段
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题
+ * @param snippet Marker 覆盖物的文字片段
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param isSetTop true: 设置当前marker在最上面
@@ -238,8 +238,9 @@ fun MarkerInfoWindow(
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
-    snippet: String? = null,
+    tag: Any? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
@@ -257,9 +258,10 @@ fun MarkerInfoWindow(
         isClickable = isClickable,
         flat = flat,
         icon = icon,
-        snippet = snippet,
         rotation = rotation,
+        tag = tag,
         title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
@@ -282,9 +284,9 @@ fun MarkerInfoWindow(
  * @param flat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
- * @param snippet Marker 覆盖物的文字片段
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题
+ * @param snippet Marker 覆盖物的文字片段
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param isSetTop true: 设置当前marker在最上面
@@ -305,8 +307,9 @@ fun MarkerInfoWindowContent(
     flat: Boolean = false,
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
-    snippet: String? = null,
+    tag: Any? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,
@@ -324,9 +327,10 @@ fun MarkerInfoWindowContent(
         isClickable = isClickable,
         flat = flat,
         icon = icon,
-        snippet = snippet,
         rotation = rotation,
+        tag = tag,
         title = title,
+        snippet = snippet,
         visible = visible,
         zIndex = zIndex,
         onClick = onClick,
@@ -349,9 +353,9 @@ fun MarkerInfoWindowContent(
  * @param flat Marker覆盖物是否平贴在地图上
  * @param icon Marker覆盖物的图标
  * @param rotation Marker覆盖物基于锚点旋转的角度
- * @param snippet Marker 覆盖物的文字片段
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题
+ * @param snippet Marker 覆盖物的文字片段
  * @param visible Marker 覆盖物的可见属性
  * @param zIndex Marker覆盖物的z轴值
  * @param isSetTop true: 设置当前marker在最上面
@@ -374,8 +378,8 @@ private fun MarkerImpl(
     icon: BitmapDescriptor? = null,
     rotation: Float = 0.0f,
     tag: Any? = null,
-    snippet: String? = null,
     title: String? = null,
+    snippet: String? = null,
     visible: Boolean = true,
     zIndex: Float = 0.0f,
     isSetTop: Boolean = false,

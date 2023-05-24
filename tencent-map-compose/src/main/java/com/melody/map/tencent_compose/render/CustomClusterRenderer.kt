@@ -25,11 +25,9 @@ package com.melody.map.tencent_compose.render
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.melody.map.tencent_compose.model.TXClusterItem
 import com.tencent.tencentmap.mapsdk.maps.TencentMap
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.Cluster
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterItem
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterManager
 import com.tencent.tencentmap.mapsdk.vector.utils.clustering.view.DefaultClusterRenderer
 
@@ -43,20 +41,19 @@ import com.tencent.tencentmap.mapsdk.vector.utils.clustering.view.DefaultCluster
 internal class CustomClusterRenderer(
     context: Context?,
     private val clusterColor: Color?,
-    private val clusterItemIcon: BitmapDescriptor?,
     tencentMap: TencentMap?,
-    clusterManager: ClusterManager<ClusterItem>?
-) : DefaultClusterRenderer<ClusterItem>(context, tencentMap, clusterManager) {
+    clusterManager: ClusterManager<TXClusterItem>?
+) : DefaultClusterRenderer<TXClusterItem>(context, tencentMap, clusterManager) {
 
     override fun getColor(value: Int): Int {
         // 修改聚合点的圆颜色
         return clusterColor?.toArgb()?:super.getColor(value)
     }
 
-    override fun onBeforeClusterItemRendered(p0: ClusterItem?, p1: MarkerOptions?) {
-        super.onBeforeClusterItemRendered(p0, p1?.apply {
+    override fun onBeforeClusterItemRendered(clusterItem: TXClusterItem?, options: MarkerOptions?) {
+        super.onBeforeClusterItemRendered(clusterItem, options?.apply {
             // 修改单个聚合点Marker的图标
-            clusterItemIcon?.let { this.icon(it) }
+            clusterItem?.getIcon()?.let { this.icon(it) }
         })
     }
 }

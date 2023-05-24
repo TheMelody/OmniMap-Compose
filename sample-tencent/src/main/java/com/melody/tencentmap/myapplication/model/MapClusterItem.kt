@@ -22,8 +22,9 @@
 
 package com.melody.tencentmap.myapplication.model
 
+import com.melody.map.tencent_compose.model.TXClusterItem
+import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptor
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
-import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterItem
 
 /**
  * MapClusterItem
@@ -32,6 +33,13 @@ import com.tencent.tencentmap.mapsdk.vector.utils.clustering.ClusterItem
  * @github: https://github.com/TheMelody/OmniMap
  * created 2023/03/01 09:40
  */
-class MapClusterItem(private val latitude: Double, private val longitude: Double, val tag: Any? = null): ClusterItem {
+class MapClusterItem(
+    private val latitude: Double,
+    private val longitude: Double,
+    private val icon: BitmapDescriptor? = null,
+    val tag: Any? = null
+) : TXClusterItem {
+    override fun getIcon(): BitmapDescriptor? = icon
+
     override fun getPosition(): LatLng = LatLng(latitude, longitude)
 }

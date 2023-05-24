@@ -31,7 +31,6 @@ import com.amap.api.services.core.LatLonPoint
 import com.amap.api.services.route.DrivePathV2
 import com.amap.api.services.route.DriveStepV2
 import com.amap.api.services.route.TMC
-import com.melody.map.gd_compose.R
 import kotlinx.coroutines.*
 
 /**
@@ -42,8 +41,8 @@ internal class KernelDrivingRouteOverlay(
     isSelected: Boolean,
     routeWidth: Float,
     polylineColor: Color,
-    driveLineSelectedTexture: BitmapDescriptor,
-    driveLineUnSelectedTexture: BitmapDescriptor,
+    driveLineSelectedTexture: BitmapDescriptor?,
+    driveLineUnSelectedTexture: BitmapDescriptor?,
     driveNodeIcon: BitmapDescriptor?,
     private val throughMarkerIcon: BitmapDescriptor?,
     startPoint: LatLng,
@@ -126,11 +125,11 @@ internal class KernelDrivingRouteOverlay(
             textureIndex++
             for (i in tmcSection.indices) {
                 segmentTrafficStatus = tmcSection[i]
-                val colorResID = getStatusColorDrawable(segmentTrafficStatus.status,isSelected)
+                val colorAssetsName = getStatusColorDrawable(segmentTrafficStatus.status,isSelected)
                 val ployLines = segmentTrafficStatus.polyline
                 for (j in 1 until ployLines.size) {
                     mPolylineOptionscolor?.add(convertToLatLng(ployLines.getOrNull(j)))
-                    customTextureMap[textureIndex] = BitmapDescriptorFactory.fromResource(colorResID)
+                    customTextureMap[textureIndex] = BitmapDescriptorFactory.fromAsset(colorAssetsName)
                     textureIndex++
                 }
             }
@@ -150,7 +149,7 @@ internal class KernelDrivingRouteOverlay(
     fun addToMap() {
         if (routeWidth == 0f || drivePath == null) return
         asyncLaunch {
-            removeFromMap()
+            removeFromMap(false)
             initPolylineOptions()
             val result = kotlin.runCatching {
                 tmcs = mutableListOf()
@@ -164,7 +163,7 @@ internal class KernelDrivingRouteOverlay(
             }
             isAddToMapFinish = true
             if (isSelected) {
-                zoomToSpan()
+                zoomToSpan(boundsPadding = 200)
             }
             if(result.isFailure) {
                 Log.e(TAG,"addToMap",result.exceptionOrNull())
@@ -266,41 +265,41 @@ internal class KernelDrivingRouteOverlay(
         mPolylineOptionscolor?.customTextureList = customTextureMap.values.toList()
     }
 
-    private fun getStatusColorDrawable(status: String,isSelected: Boolean): Int {
+    private fun getStatusColorDrawable(status: String,isSelected: Boolean): String {
         return when (status) {
             "畅通" -> {
                 if(isSelected) {
-                    R.drawable.ic_map_route_status_green_selected
+                    "ic_map_route_status_green_selected.png"
                 } else {
-                    R.drawable.ic_map_route_status_green
+                    "ic_map_route_status_green.png"
                 }
             }
             "缓行" -> {
                 if(isSelected) {
-                    R.drawable.ic_map_route_status_yellow_selected
+                    "ic_map_route_status_yellow_selected.png"
                 } else {
-                    R.drawable.ic_map_route_status_yellow
+                    "ic_map_route_status_yellow.png"
                 }
             }
             "拥堵" -> {
                 if(isSelected) {
-                    R.drawable.ic_map_route_status_red_selected
+                    "ic_map_route_status_red_selected.png"
                 } else {
-                    R.drawable.ic_map_route_status_red
+                    "ic_map_route_status_red.png"
                 }
             }
             "严重拥堵" -> {
                 if(isSelected) {
-                    R.drawable.ic_map_route_status_deepred_selected
+                    "ic_map_route_status_deepred_selected.png"
                 } else {
-                    R.drawable.ic_map_route_status_red
+                    "ic_map_route_status_red.png"
                 }
             }
             else -> {
                 if(isSelected) {
-                    R.drawable.ic_map_route_status_default_selected
+                    "ic_map_route_status_default_selected.png"
                 } else {
-                    R.drawable.ic_map_route_status_default
+                    "ic_map_route_status_default.png"
                 }
             }
         }
@@ -337,9 +336,9 @@ internal class KernelDrivingRouteOverlay(
         return b.build()
     }
 
-    override fun removeFromMap() {
+    override fun removeFromMap(isClear: Boolean) {
         val result = kotlin.runCatching {
-            super.removeFromMap()
+            super.removeFromMap(isClear)
             if (throughPointMarkerList.size > 0) {
                 for (i in throughPointMarkerList.indices) {
                     throughPointMarkerList[i].remove()

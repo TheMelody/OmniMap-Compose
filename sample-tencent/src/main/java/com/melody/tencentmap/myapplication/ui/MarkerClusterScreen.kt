@@ -24,6 +24,7 @@ package com.melody.tencentmap.myapplication.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -62,29 +63,24 @@ internal fun MarkerClusterScreen() {
         TXMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
-            uiSettings = uiState.mapUiSettings
+            uiSettings = uiState.mapUiSettings,
+            onMapLoaded = viewModel::handleMapLoaded
         ) {
             uiState.mapClusterItems?.let { items ->
                 ClusterOverlay(
                     clusterItems = items,
                     clusterColor = Color(0xFF5AC95A),
-                    // 不设置clusterItemIcon，会使用SDK默认的图标
-                    clusterItemIcon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                     onClusterItemClick = {
                         showToast("单个Marker被点击:"+it?.position.toString())
+                        false
                     },
                     onClustersClick = {
-                        // 你也可以，在这里自行缩放地图，触发：聚合点展开，懂？
+                        // 你也可以，在这里自行缩放地图，触发：聚合点展开
                         showToast("聚合点被点击:"+it?.position.toString())
+                        false
                     },
-                    // 不需要InfoWindow，就不设置，懂？
-                    onClustersInfoWindow = null/*{ cluster ->
-                        Card(modifier = Modifier.size(100.dp).background(Color.White).padding(16.dp)) {
-                            Text(text = "我是聚合点的InfoWindow")
-                        }
-                    }*/,
                     onClusterItemInfoWindow = { clusterItem ->
-                        Card(modifier = Modifier
+                        Column(modifier = Modifier
                             .width(100.dp)
                             .wrapContentHeight()
                             .background(Color.White)

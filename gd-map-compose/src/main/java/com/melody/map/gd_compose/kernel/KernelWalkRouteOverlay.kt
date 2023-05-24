@@ -32,7 +32,6 @@ import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.maps.model.PolylineOptions
 import com.amap.api.services.route.WalkPath
 import com.amap.api.services.route.WalkStep
-import kotlinx.coroutines.launch
 
 
 /**
@@ -76,7 +75,7 @@ internal class KernelWalkRouteOverlay(
      * 添加步行路线到地图中
      */
     fun addToMap() = asyncLaunch {
-        removeFromMap()
+        removeFromMap(false)
         initPolylineOptions()
         val result = kotlin.runCatching {
             val walkPaths: List<WalkStep> = walkPath?.steps ?: emptyList()
