@@ -27,7 +27,7 @@ android {
         }
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion "1.3.2"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 
     // 地图库
-    api 'com.tencent.map:tencent-map-vector-sdk:4.5.12'
+    api 'com.tencent.map:tencent-map-vector-sdk:5.0.0'
     // 地图组件库，包括小车平移、点聚合等组件功能。
-    api 'com.tencent.map:sdk-utilities:1.0.8'
+    api 'com.tencent.map:sdk-utilities:1.0.9.1'
 }

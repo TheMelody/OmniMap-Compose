@@ -10,13 +10,13 @@ OmniMap Compose 🗺
 -------
 <table>
  <tr>
-  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.1"></td>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.2"></td>
  </tr>
  <tr>
-  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.1"></td>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.2"></td>
  </tr>
  <tr>
-  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.1"></td>
+  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.2"></td>
  </tr>
 </table>
 
