@@ -57,7 +57,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion "1.3.2"
     }
     packagingOptions {
         resources {
@@ -77,6 +77,6 @@ dependencies {
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':tencent-map-compose')
     // 定位SDK
-    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.0'
+    implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.5.2'
 
 }
