@@ -52,12 +52,8 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - 新增百度地图能力若干；
-            - 移除SDK中高德地图隐藏Logo不合规的问题；
-            - Map可组合项新增：onMapClick、onMapLongClick、onMapPOIClick等事件的回调；
-            - 升级百度地图SDK最新版本；
-            ### 问题修复
-            - 修复:sample示例中，安卓11+上的错误上下文；
+            - 升级高德地图、百度地图SDK到最新版本
+            - Compose升级至1.3.3稳定版本
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称
