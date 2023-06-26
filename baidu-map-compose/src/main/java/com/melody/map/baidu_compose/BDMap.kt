@@ -156,6 +156,10 @@ private fun MapLifecycle(mapView: MapView) {
 
         onDispose {
             lifecycle.removeObserver(mapLifecycleObserver)
+        }
+    }
+    DisposableEffect(mapView) {
+        onDispose {
             // fix memory leak
             mapView.onDestroy()
             mapView.removeAllViews()

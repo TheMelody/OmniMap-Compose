@@ -76,12 +76,12 @@ dependencies {
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':baidu-map-compose')
     // 基础库
-    implementation 'com.baidu.lbsyun:base:7.5.7.1'
+    implementation 'com.baidu.lbsyun:base:7.5.8'
     // 定位组件
-    implementation "com.baidu.lbsyun:BaiduMapSDK_Location:9.4.0"
+    implementation "com.baidu.lbsyun:BaiduMapSDK_Location:9.4.5"
     // 检索组件
-    implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.7.1'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.8'
     // 工具组件
-    implementation 'com.baidu.lbsyun:BaiduMapSDK_Util:7.5.7.1'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Util:7.5.8'
 
 }

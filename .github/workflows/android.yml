@@ -52,8 +52,8 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - 升级高德地图、百度地图SDK到最新版本
-            - Compose升级至1.3.3稳定版本
+            - 升级腾讯地图、高德地图、百度地图SDK到最新版本
+            - 针对MapView单独做onDispose处理
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称
