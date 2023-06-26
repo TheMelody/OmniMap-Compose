@@ -46,5 +46,5 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     // 地图组件
-    api 'com.baidu.lbsyun:BaiduMapSDK_Map:7.5.7.1'
+    api 'com.baidu.lbsyun:BaiduMapSDK_Map:7.5.8'
 }

@@ -31,7 +31,6 @@ import com.tencent.lbssearch.`object`.param.Geo2AddressParam
 import com.tencent.lbssearch.`object`.param.SearchParam
 import com.tencent.lbssearch.`object`.result.Geo2AddressResultObject
 import com.tencent.lbssearch.`object`.result.SearchResultObject
-import com.tencent.map.tools.net.http.HttpResponseListener
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -122,7 +121,8 @@ object DragDropSelectPointRepository {
                         .setPageSize(20)
                         .setPolicy(Geo2AddressParam.PoiOptions.POLICY_DEFAULT)
                 )
-            tencentSearch.geo2address(geo2AddressParam, object: HttpResponseListener<BaseObject> {
+            tencentSearch.geo2address(geo2AddressParam, object:
+                com.tencent.lbssearch.httpresponse.HttpResponseListener<BaseObject> {
                 override fun onSuccess(p0: Int, arg1: BaseObject?) {
                     val obj = arg1 as? Geo2AddressResultObject?
                     if (null == obj?.result) {
@@ -148,7 +148,7 @@ object DragDropSelectPointRepository {
             val nearBy = SearchParam.Nearby(latLng, 1000)
             //圆形范围搜索， autoExtend(false) => 设置搜索范围不扩大，这里传true，扩大搜索范围
             val searchParam = SearchParam(addressName, SearchParam.Region(cityName).autoExtend(true)).pageSize(20).boundary(nearBy)
-            search.search(searchParam,object: HttpResponseListener<BaseObject>{
+            search.search(searchParam,object: com.tencent.lbssearch.httpresponse.HttpResponseListener<BaseObject>{
                 override fun onSuccess(arg0: Int, arg1: BaseObject?) {
                     val obj = arg1 as? SearchResultObject?
                     if (obj?.data == null) {
