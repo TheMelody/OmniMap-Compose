@@ -52,8 +52,7 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - 升级腾讯地图、高德地图、百度地图SDK到最新版本
-            - 针对MapView单独做onDispose处理
+            - 处理MapView内存泄露问题，onDispose不可靠，Lifecycle.Event.ON_DESTROY中也要做地图销毁处理
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称

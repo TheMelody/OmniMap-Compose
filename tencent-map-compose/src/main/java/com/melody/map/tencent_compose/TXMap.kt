@@ -169,7 +169,9 @@ private fun MapView.lifecycleObserver(/*previousState: MutableState<Lifecycle.Ev
             Lifecycle.Event.ON_PAUSE -> this.onPause()
             Lifecycle.Event.ON_STOP -> this.onStop()
             Lifecycle.Event.ON_DESTROY -> {
-                // handled in onDispose
+                // fix memory leak
+                this.onDestroy()
+                this.removeAllViews()
             }
             else -> { /* ignore */ }
         }
