@@ -52,7 +52,9 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - 处理MapView内存泄露问题，onDispose不可靠，Lifecycle.Event.ON_DESTROY中也要做地图销毁处理
+            - 处理高德地图内存泄露问题
+            - 百度地图同高德地图在MapApplier中移除对MapView的引用
+            - 升级Compose版本和JDK版本
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称

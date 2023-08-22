@@ -91,7 +91,10 @@ fun BDMap(
     val mapView = remember {
         MapView(context, bdMapOptionsFactory())
     }
-    AndroidView(modifier = modifier, factory = { mapView })
+    AndroidView(modifier = modifier, factory = { mapView }, onRelease = {
+        runCatching { it.onDestroy() }
+        it.removeAllViews()
+    })
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
@@ -111,6 +114,7 @@ fun BDMap(
         disposingComposition {
             mapView.newComposition(parentComposition) {
                 MapUpdater(
+                    mapView = mapView,
                     mapUiSettings = currentUiSettings,
                     clickListeners = mapClickListeners,
                     locationSource = currentLocationSource,
@@ -138,7 +142,7 @@ private suspend inline fun MapView.newComposition(
 ): Composition {
     val map = awaitMap()
     return Composition(
-        MapApplier(map, this), parent
+        MapApplier(map, this.context.applicationContext), parent
     ).apply {
         setContent(content)
     }
@@ -161,7 +165,7 @@ private fun MapLifecycle(mapView: MapView) {
     DisposableEffect(mapView) {
         onDispose {
             // fix memory leak
-            mapView.onDestroy()
+            runCatching { mapView.onDestroy() }
             mapView.removeAllViews()
         }
     }
@@ -180,11 +184,6 @@ private fun MapView.lifecycleObserver(previousState: MutableState<Lifecycle.Even
             }
             Lifecycle.Event.ON_RESUME -> this.onResume()
             Lifecycle.Event.ON_PAUSE -> this.onPause()
-            Lifecycle.Event.ON_DESTROY -> {
-                // fix memory leak
-                this.onDestroy()
-                this.removeAllViews()
-            }
             else -> { /* ignore */ }
         }
         previousState.value = event

@@ -87,7 +87,10 @@ fun TXMap(
     val mapView = remember {
         MapView(context, tMapOptionsFactory())
     }
-    AndroidView(modifier = modifier, factory = { mapView })
+    AndroidView(modifier = modifier, factory = { mapView }, onRelease = {
+        it.onDestroy()
+        it.removeAllViews()
+    })
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
@@ -168,11 +171,6 @@ private fun MapView.lifecycleObserver(/*previousState: MutableState<Lifecycle.Ev
             Lifecycle.Event.ON_RESUME -> this.onResume()
             Lifecycle.Event.ON_PAUSE -> this.onPause()
             Lifecycle.Event.ON_STOP -> this.onStop()
-            Lifecycle.Event.ON_DESTROY -> {
-                // fix memory leak
-                this.onDestroy()
-                this.removeAllViews()
-            }
             else -> { /* ignore */ }
         }
         //previousState.value = event
