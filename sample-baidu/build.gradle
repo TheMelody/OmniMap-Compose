@@ -84,5 +84,6 @@ dependencies {
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.8'
     // 工具组件
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Util:7.5.8'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 
 }
