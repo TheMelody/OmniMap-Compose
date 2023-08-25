@@ -32,34 +32,7 @@ jobs:
 
       - name: Clean with Gradle
         run: ./gradlew clean
-
-      # 对安装包进行签名
-      - name: Build Signed APK
-        uses: victorbnl/build-signed-apk@main
-        with:
-          keystore_b64: ${{ secrets.BUILD_SIGN_KEY_STOREB64 }}
-          keystore_password: ${{ secrets.BUILD_SIGN_KEY_STORE_PASSWORD }}
-          key_alias: ${{ secrets.BUILD_SIGN_KEY_STORE_KEY_ALIAS }}
-          key_password: ${{ secrets.BUILD_SIGN_KEY_STORE_KEY_PASSWORD }}
-
-      # 创建并提交签名后的APK包和源码提交至对应ref_name的tag
-      - name: Create a Release APK
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          # 安装包
-          artifacts: "sample-gaode/build/outputs/apk/release/*.apk,sample-tencent/build/outputs/apk/release/*.apk,sample-baidu/build/outputs/apk/release/*.apk"
-          artifactErrorsFailBuild: true
-          body:  |
-            ### 功能更新
-            - 处理高德地图内存泄露问题
-            - 百度地图同高德地图在MapApplier中移除对MapView的引用
-            - 升级Compose版本和JDK版本
-          token: ${{ secrets.github_token }}
-          commit: master
-          # tag名称
-          tag: ${{ github.ref_name }}
-
+        
       - name: "Publish Map-Compose"
         run: ./gradlew clean assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
 #        # 下面的方式：不自动关闭暂存库，手动去执行关闭的话，可以在网页中选择是否删除或者释放：https://s01.oss.sonatype.org/#stagingRepositories
