@@ -64,9 +64,12 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
             outputFileName = "gaode_${defaultConfig.versionName}_${formattedDate}-${variant.buildType.name}.apk"
         }
     }

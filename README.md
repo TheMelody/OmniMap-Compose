@@ -1,6 +1,6 @@
 OmniMap Compose 🗺
 ===============
-<a href="https://github.com/TheMelody/OmniMap-Compose/blob/main/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/TheMelody/OmniMap-Compose"/></a>  <img alt="issues" src="https://img.shields.io/github/issues/TheMelody/OmniMap-Compose?color=important"/>  <img alt="forks" src="https://img.shields.io/github/forks/TheMelody/OmniMap-Compose?color=blueviolet"/>  <img alt="stars" src="https://img.shields.io/github/stars/TheMelody/OmniMap-Compose?color=success"/>  <a href="https://juejin.cn/user/8451824316670/posts"><img alt="稀土掘金" src="https://img.shields.io/badge/%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91-392-green?labelColor=%231e80FF&color=black" ></a>  <a href="https://www.zhihu.com/people/fq_halifax"><img src="https://img.shields.io/badge/dynamic/json?color=282c34&amp;labelColor=0084ff&amp;label=%E7%9F%A5%E4%B9%8E%E5%85%B3%E6%B3%A8&amp;query=%24.data.totalSubs&amp;url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3Dfq_halifax&amp;longCache=true" alt="知乎"></a>  <a href="https://blog.csdn.net/logicsboy"><img src="https://img.shields.io/badge/CSDN-3k+-red?labelColor=%231e80FF&color=black" alt="CSDN"></a>
+<a href="https://github.com/TheMelody/OmniMap-Compose/blob/main/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/TheMelody/OmniMap-Compose"/></a>  <img alt="issues" src="https://img.shields.io/github/issues/TheMelody/OmniMap-Compose?color=important"/>  <img alt="forks" src="https://img.shields.io/github/forks/TheMelody/OmniMap-Compose?color=blueviolet"/>  <img alt="stars" src="https://img.shields.io/github/stars/TheMelody/OmniMap-Compose?color=success"/>  <a href="https://juejin.cn/user/8451824316670/posts"><img alt="稀土掘金" src="https://img.shields.io/badge/%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91-432-green?labelColor=%231e80FF&color=black" ></a>  <a href="https://www.zhihu.com/people/fq_halifax"><img src="https://img.shields.io/badge/dynamic/json?color=282c34&amp;labelColor=0084ff&amp;label=%E7%9F%A5%E4%B9%8E&amp;query=%24.data.totalSubs&amp;url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3Dfq_halifax&amp;longCache=true" alt="知乎"></a>  <a href="https://blog.csdn.net/logicsboy"><img src="https://img.shields.io/badge/CSDN-3k+-red?labelColor=%231e80FF&color=black" alt="CSDN"></a>
 
 **Compose一键集成5大地图神器**
 
@@ -10,13 +10,13 @@ OmniMap Compose 🗺
 -------
 <table>
  <tr>
-  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.4"></td>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.5"></td>
  </tr>
  <tr>
-  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.4"></td>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.5"></td>
  </tr>
  <tr>
-  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.4"></td>
+  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.5"></td>
  </tr>
 </table>
 
