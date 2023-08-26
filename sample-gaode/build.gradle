@@ -16,8 +16,8 @@ android {
         applicationId "com.melody.map.myapplication"
         minSdk rootProject.ext.libraryInfo.minSdk
         targetSdk rootProject.ext.libraryInfo.targetSdk
-        versionCode 104
-        versionName "1.0.4"
+        versionCode 105
+        versionName "1.0.5"
 
         vectorDrawables {
             useSupportLibrary true
@@ -46,26 +46,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion "1.3.2"
+    composeOptions  {
+        kotlinCompilerExtensionVersion "1.3.2" 
+        kotlinCompilerVersion "1.7.10"
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
             outputFileName = "gaode_${defaultConfig.versionName}_${formattedDate}-${variant.buildType.name}.apk"
         }
     }
@@ -75,4 +79,5 @@ dependencies {
     implementation project(path: ':sample-common')
     implementation project(path: ':sample-ui-components')
     implementation project(path: ':gd-map-compose')
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }

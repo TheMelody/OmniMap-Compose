@@ -22,11 +22,13 @@
 
 package com.melody.map.baidu_compose.adapter
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.TextView
@@ -34,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
 import androidx.compose.ui.platform.ComposeView
 import com.baidu.mapapi.map.InfoWindow
-import com.baidu.mapapi.map.MapView
 import com.melody.map.baidu_compose.R
 import com.melody.map.baidu_compose.extensions.getInfoWindowYOffset
 import com.melody.map.baidu_compose.extensions.getSnippetExt
@@ -43,18 +44,7 @@ import com.melody.map.baidu_compose.overlay.ClusterOverlayNode
 import com.melody.map.baidu_compose.overlay.MarkerNode
 import com.melody.map.baidu_compose.utils.clustering.ClusterItem
 
-internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
-
-    private val infoWindowView: ComposeView
-        get() = ComposeView(mapView.context).apply {
-            mapView.addView(
-                this,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
+internal class ComposeInfoWindowAdapter(private val mapContext: Context) {
 
     fun getInfoContents(markerNode: MarkerNode): InfoWindow {
         val infoContent = markerNode.infoContent
@@ -63,7 +53,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
             val snippet = markerNode.marker.getSnippetExt()
             getDefaultInfoContent(title, snippet)
         } else {
-            infoWindowView.applyAndRemove(false, markerNode.compositionContext) {
+            applyAndRemove(false, markerNode.compositionContext) {
                 infoContent(markerNode.marker)
             }
         }
@@ -76,7 +66,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
 
     fun getInfoWindow(markerNode: MarkerNode): InfoWindow {
         val infoWindow = markerNode.infoWindow!!
-        val view = infoWindowView.applyAndRemove(true, markerNode.compositionContext) {
+        val view = applyAndRemove(true, markerNode.compositionContext) {
             infoWindow(markerNode.marker)
         }
         return InfoWindow(
@@ -87,7 +77,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
     }
 
     fun getInfoWindow(clusterItem: ClusterItem, clusterItemNode: ClusterOverlayNode): InfoWindow {
-        val view = infoWindowView.applyAndRemove(true, clusterItemNode.compositionContext) {
+        val view = applyAndRemove(true, clusterItemNode.compositionContext) {
             clusterItemNode.onClusterItemInfoWindow?.invoke(clusterItem)
         }
         return InfoWindow(
@@ -97,30 +87,38 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
         )
     }
 
-    private fun ComposeView.applyAndRemove(
+    private fun applyAndRemove(
         fromInfoWindow: Boolean,
         parentContext: CompositionContext,
         content: @Composable () -> Unit
-    ): ComposeView {
-        val result = this.apply {
-            setParentCompositionContext(parentContext)
-            setContent {
+    ):  ViewGroup{
+        return FrameLayout(mapContext).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            if (fromInfoWindow) {
+                // 去除地图默认气泡背景, 如果是InfoContent，则只定制内容，不修改窗口背景和样式
                 setBackgroundColor(Color.TRANSPARENT)
-                if (!fromInfoWindow) {
-                    setBackgroundResource(R.drawable.infowindow_bg)
-                }
-                content.invoke()
+            }else {
+                setBackgroundResource(R.drawable.infowindow_bg)
             }
+            addView(
+                ComposeView(mapContext).apply {
+                    setParentCompositionContext(parentContext)
+                    setContent {
+                        content.invoke()
+                    }
+                }
+            )
         }
-        (this.parent as? MapView)?.removeView(this)
-        return result
     }
 
     /**
      * 针对普通的Marker
      */
     private fun getDefaultInfoContent(title: String?,snippet: String?): LinearLayout {
-        return LinearLayout(mapView.context).apply {
+        return LinearLayout(mapContext).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -129,7 +127,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
             orientation = LinearLayout.VERTICAL
             if (title?.isNotBlank() == true) {
                 addView(
-                    TextView(mapView.context).apply {
+                    TextView(mapContext).apply {
                         gravity = Gravity.CENTER
                         setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                         setTextColor(Color.BLACK)
@@ -138,7 +136,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
                 )
             }
             addView(
-                Space(mapView.context).apply {
+                Space(mapContext).apply {
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -148,7 +146,7 @@ internal class ComposeInfoWindowAdapter(private val mapView: MapView) {
             )
             if (snippet?.isNotBlank() == true) {
                 addView(
-                    TextView(mapView.context).apply {
+                    TextView(mapContext).apply {
                         gravity = Gravity.CENTER
                         setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                         setTextColor(Color.BLACK)

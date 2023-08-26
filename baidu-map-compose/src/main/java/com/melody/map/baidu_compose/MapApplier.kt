@@ -22,6 +22,7 @@
 
 package com.melody.map.baidu_compose
 
+import android.content.Context
 import androidx.compose.runtime.*
 import com.baidu.mapapi.map.BaiduMap
 import com.baidu.mapapi.map.MapView
@@ -51,11 +52,11 @@ private object MapNodeRoot : MapNode
 
 internal class MapApplier(
     val map: BaiduMap,
-    val mapView: MapView,
+    mapContext: Context,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
     private val decorations = mutableListOf<MapNode>()
     private var enableMultipleInfoWindow: Boolean = false
-    private val infoWindowAdapter = ComposeInfoWindowAdapter(mapView)
+    private val infoWindowAdapter = ComposeInfoWindowAdapter(mapContext)
 
     init {
         attachClickListeners()

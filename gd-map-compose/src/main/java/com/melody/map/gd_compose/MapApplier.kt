@@ -22,9 +22,9 @@
 
 package com.melody.map.gd_compose
 
+import android.content.Context
 import androidx.compose.runtime.*
 import com.amap.api.maps.AMap
-import com.amap.api.maps.MapView
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MultiPointItem
 import com.amap.api.maps.model.Polyline
@@ -46,7 +46,7 @@ private object MapNodeRoot : MapNode
 
 internal class MapApplier(
     val map: AMap,
-    private val mapView: MapView,
+    private val mapContext: Context,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
 
     private val decorations = mutableListOf<MapNode>()
@@ -132,7 +132,7 @@ internal class MapApplier(
         // 设置InfoWindow内容
         map.setInfoWindowAdapter(
             ComposeInfoWindowAdapter(
-                mapView,
+                mapContext,
                 markerNodeFinder = {
                     decorations.nodeForMarker(it)
                 }

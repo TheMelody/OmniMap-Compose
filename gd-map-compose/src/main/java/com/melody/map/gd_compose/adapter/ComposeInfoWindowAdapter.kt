@@ -27,6 +27,7 @@ import android.graphics.Color
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.TextView
@@ -34,39 +35,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
 import androidx.compose.ui.platform.ComposeView
 import com.amap.api.maps.AMap
-import com.amap.api.maps.MapView
 import com.amap.api.maps.model.Marker
 import com.melody.map.gd_compose.overlay.MarkerNode
 
 internal class ComposeInfoWindowAdapter(
-    private val mapView: MapView,
+    private val mapContext: Context,
     private val markerNodeFinder: (Marker) -> MarkerNode?
 ) : AMap.InfoWindowAdapter {
-
-    private val infoWindowView: ComposeView
-        get() = ComposeView(mapView.context).apply {
-            mapView.addView(
-                this,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
 
     override fun getInfoContents(marker: Marker): View? {
         // https://lbs.amap.com/api/android-sdk/guide/draw-on-map/draw-marker
         // 当实现此方法并返回有效值时（返回值不为空，则视为有效）,SDK 将不会使用默认的样式，而采用此方法返回的样式
-        val markerNode = markerNodeFinder(marker) ?: return Space(mapView.context)
+        val markerNode = markerNodeFinder(marker) ?: return Space(mapContext)
         val infoContent  = markerNode.infoContent
         if (infoContent == null) { // 这里返回null，是处理getInfoWindow这2个方法谁返回视图的并显示冲突的问题
             if(markerNode.infoWindow == null){
                 // 由于上面返回了一个SpaceView，这里返回一个，啥都没有设置的默认视图内容
-                return getDefaultInfoContent(marker, mapView.context)
+                return getDefaultInfoContent(marker, mapContext)
             }
             return null
         }
-        return infoWindowView.applyAndRemove(false,markerNode.compositionContext) {
+        return applyAndRemove(false ,markerNode.compositionContext) {
             infoContent(marker)
         }
     }
@@ -74,12 +63,12 @@ internal class ComposeInfoWindowAdapter(
     override fun getInfoWindow(marker: Marker): View? {
         // https://lbs.amap.com/api/android-sdk/guide/draw-on-map/draw-marker
         // 当实现此方法并返回有效值时（返回值不为空，则视为有效）,SDK 将不会使用默认的样式，而采用此方法返回的样式
-        val markerNode = markerNodeFinder(marker) ?: return Space(mapView.context)
+        val markerNode = markerNodeFinder(marker) ?: return Space(mapContext)
         val infoWindow  = markerNode.infoWindow
         if (infoWindow == null) { // 这里返回null，是处理getInfoContents这2个方法谁返回视图的并显示冲突的问题
             return null
         }
-        return infoWindowView.applyAndRemove(true,markerNode.compositionContext) {
+        return applyAndRemove(true,markerNode.compositionContext) {
             infoWindow(marker)
         }
     }
@@ -107,22 +96,28 @@ internal class ComposeInfoWindowAdapter(
         }
     }
 
-    private fun ComposeView.applyAndRemove(
+    private fun applyAndRemove(
         fromInfoWindow: Boolean,
         parentContext: CompositionContext,
         content: @Composable () -> Unit
-    ): ComposeView {
-        val result = this.apply {
-            setParentCompositionContext(parentContext)
-            setContent {
-                if(fromInfoWindow) {
-                    // 去除地图默认气泡背景, 如果是InfoContent，则只定制内容，不修改窗口背景和样式
-                    setBackgroundColor(Color.TRANSPARENT)
-                }
-                content.invoke()
+    ): ViewGroup {
+        return FrameLayout(mapContext).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            if(fromInfoWindow) {
+                // 去除地图默认气泡背景, 如果是InfoContent，则只定制内容，不修改窗口背景和样式
+                setBackgroundColor(Color.TRANSPARENT)
             }
+            addView(
+                ComposeView(mapContext).apply {
+                    setParentCompositionContext(parentContext)
+                    setContent {
+                        content.invoke()
+                    }
+                }
+            )
         }
-        (this.parent as? MapView)?.removeView(this)
-        return result
     }
 }

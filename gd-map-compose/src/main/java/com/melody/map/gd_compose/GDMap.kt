@@ -37,7 +37,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.amap.api.maps.AMapOptions
 import com.amap.api.maps.LocationSource
 import com.amap.api.maps.MapView
-import com.amap.api.maps.model.IndoorBuildingInfo
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Poi
 import com.melody.map.gd_compose.extensions.awaitMap
@@ -56,7 +55,7 @@ import kotlinx.coroutines.awaitCancellation
  *
  * @param modifier [Modifier]修饰符
  * @param cameraPositionState 地图相机位置状态[CameraPositionState]
- * @param aMapOptionsFactory 可以传百度地图[AMapOptions]参数，如离线地图开关等。
+ * @param aMapOptionsFactory 可以传高德地图[AMapOptions]参数，如离线地图开关等。
  * @param properties 地图属性配置[MapProperties]
  * @param uiSettings 地图SDK UI配置[MapUiSettings]
  * @param locationSource 设置定位数据, 只有先允许定位图层后设置数据才会生效，参见: [com.melody.map.gd_compose.poperties.MapProperties.isMyLocationEnabled]
@@ -95,7 +94,10 @@ fun GDMap(
     val mapView = remember {
         MapView(context, aMapOptionsFactory())
     }
-    AndroidView(modifier = modifier, factory = { mapView })
+    AndroidView(modifier = modifier, factory = { mapView }, onRelease = {
+        it.onDestroy()
+        it.removeAllViews()
+    })
     MapLifecycle(mapView)
     val mapClickListeners = remember { MapClickListeners() }.also {
         it.onMapLoaded = onMapLoaded
@@ -143,7 +145,7 @@ private suspend inline fun MapView.newComposition(
 ): Composition {
     val map = awaitMap()
     return Composition(
-        MapApplier(map, this), parent
+        MapApplier(map, this.context.applicationContext), parent
     ).apply {
         setContent(content)
     }
@@ -188,11 +190,6 @@ private fun MapView.lifecycleObserver(previousState: MutableState<Lifecycle.Even
             }
             Lifecycle.Event.ON_RESUME -> this.onResume()
             Lifecycle.Event.ON_PAUSE -> this.onPause()
-            Lifecycle.Event.ON_DESTROY -> {
-                // fix memory leak
-                this.onDestroy()
-                this.removeAllViews()
-            }
             else -> { /* ignore */ }
         }
         previousState.value = event
