@@ -56,7 +56,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="com.melody.map.myapplication.initializer.AppDataInitStartup"
+                android:name="com.melody.petal.map_sample.initializer.AppDataInitStartup"
                 android:value="androidx.startup" />
         </provider>
 

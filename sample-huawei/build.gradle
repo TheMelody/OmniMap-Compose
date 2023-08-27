@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.huawei.agconnect' apply false
 }
 
 def formattedDate = new Date().format('yyyyMMddHHmm')
@@ -75,5 +76,9 @@ android {
 dependencies {
     implementation project(path: ':sample-common')
     implementation project(path: ':sample-ui-components')
-
+    // https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/android-sdk-integrating-sdk-0000001061671869#section52581942164415
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.huawei.agconnect:agconnect-core:1.9.1.300'
+    implementation project(path: ':huawei-map-compose')
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }

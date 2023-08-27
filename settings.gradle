@@ -4,6 +4,15 @@ pluginManagement {
         maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
         google()
         mavenCentral()
+        maven {url 'https://developer.huawei.com/repo/'}
+    }
+    resolutionStrategy {
+        // https://docs.gradle.org/current/userguide/plugins.html
+        eachPlugin {
+            if ((it.requested.id.toString() == "com.huawei.agconnect" && null != it.requested.version)) {
+                it.useModule('com.huawei.agconnect:agcp:1.9.1.300')
+            }
+        }
     }
 }
 dependencyResolutionManagement {
@@ -12,12 +21,14 @@ dependencyResolutionManagement {
         maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
         google()
         mavenCentral()
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 }
 rootProject.name = "OmniMap-Compose"
 include ':gd-map-compose'
 include ':tencent-map-compose'
 include ':baidu-map-compose'
+include ':huawei-map-compose'
 include ':sample-gaode'
 include ':sample-baidu'
 include ':sample-tencent'

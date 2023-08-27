@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.melody.petal.myapplication">
+    <!--允许程序访问网络连接-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--允许程序获取网络信息状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!--自定义权限，允许程序读取公共数据-->
+    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
+    <!--允许改变WLAN状态的开关-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!--允许程序通过Wi-Fi或移动基站的方式获取用户粗略的经纬度信息-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--允许程序通过GPS芯片接收卫星的定位信息-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
@@ -12,6 +25,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.melody.petal.map_sample.initializer.AppDataInitStartup"
+                android:value="androidx.startup" />
+        </provider>
+
+        <activity
+            android:name="com.melody.petal.map_sample.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.melody.petal.map_sample.BasicFeatureActivity" android:exported="false"/>
+        <activity android:name="com.melody.petal.map_sample.OverlayActivity" android:exported="false"/>
 
     </application>
 </manifest>
