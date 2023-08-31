@@ -7,8 +7,10 @@ pluginManagement {
         maven {url 'https://developer.huawei.com/repo/'}
     }
     resolutionStrategy {
-        // https://docs.gradle.org/current/userguide/plugins.html
         eachPlugin {
+            if ((it.requested.id.toString() == "com.android.tools.build" && null != it.requested.version)) {
+                it.useModule('com.android.tools.build:gradle:7.3.0')
+            }
             if ((it.requested.id.toString() == "com.huawei.agconnect" && null != it.requested.version)) {
                 it.useModule('com.huawei.agconnect:agcp:1.9.1.300')
             }

@@ -8,7 +8,7 @@ plugins {
     id 'com.android.library' version '7.3.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
-    // 华为AGC插件依赖关系: https://developer.huawei.com/consumer/cn/doc/development/AppGallery-connect-Guides/agc-sdk-changenotes-0000001058732550#section7117746172220
+    id 'com.android.tools.build' version '7.3.0' apply false
     id 'com.huawei.agconnect' version '1.9.1.300' apply false
 }
 

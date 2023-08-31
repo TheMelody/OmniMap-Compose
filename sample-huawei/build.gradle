@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.huawei.agconnect' apply false
+    id 'com.huawei.agconnect'
 }
 
 def formattedDate = new Date().format('yyyyMMddHHmm')

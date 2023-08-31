@@ -41,9 +41,6 @@ class AppDataInitStartup : Initializer<Boolean> {
         SDKUtils.init(context as Application)
         // 自行授权隐私声明之后进行初始化
         MapsInitializer.initialize(context.applicationContext)
-        // TODO:  奇怪，无法读取agconect-service.json,已提工单，待处理，暂时代码设置
-        MapsInitializer.setAppId("109050473")
-        MapsInitializer.setApiKey("DAEDAPibORK3yWM7w93ZWXBqqO035NVZx2uC3OJkSd1O/pLlQpRJ5ySeMvP1sDZkTU8WhUadMbk19mXrE2NY1X1S4Wvly7mSxen4qQ==")
         return true
     }
 
