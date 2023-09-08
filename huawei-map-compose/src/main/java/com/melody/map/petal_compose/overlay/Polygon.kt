@@ -27,6 +27,7 @@ import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.currentComposer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.huawei.hms.maps.model.GroundOverlay
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.PatternItem
 import com.huawei.hms.maps.model.Polygon
@@ -36,7 +37,8 @@ import com.melody.map.petal_compose.MapNode
 import com.melody.map.petal_compose.model.HWMapComposable
 
 internal class PolygonNode(
-    val polygon: Polygon
+    val polygon: Polygon,
+    val onPolygonClick: (Polygon) -> Unit
 ) : MapNode {
     override fun onRemoved() {
         polygon.remove()
@@ -51,6 +53,7 @@ internal class PolygonNode(
  * @param fillColor 多边形的填充颜色
  * @param strokeColor 多边形的边框颜色
  * @param strokeWidth 多边形的边框宽度，单位：像素
+ * @param isClickable 多边形是否可以点击。
  * @param visible 多边形的可见属性。当不可见时，多边形将不会被绘制，但是其他属性将会保存。
  * @param zIndex 多边形的显示层级
  */
@@ -62,8 +65,10 @@ fun Polygon(
     fillColor: Color = Color.Black,
     strokeColor: Color = Color.Black,
     strokeWidth: Float = 10f,
+    isClickable: Boolean = true,
     visible: Boolean = true,
-    zIndex: Float = 0f
+    zIndex: Float = 0f,
+    onPolygonClick: (Polygon) -> Unit = {}
 ) {
     val mapApplier = currentComposer.applier as MapApplier?
     ComposeNode<PolygonNode, MapApplier>(
@@ -74,14 +79,16 @@ fun Polygon(
                 strokeColor(strokeColor.toArgb())
                 strokeWidth(strokeWidth)
                 strokePattern(patternItems)
+                clickable(isClickable)
                 visible(visible)
                 zIndex(zIndex)
             }) ?: error("Error adding polygon")
-            PolygonNode(polygon)
+            PolygonNode(polygon,onPolygonClick)
         },
         update = {
             set(points) { this.polygon.points = it }
             set(patternItems) { this.polygon.strokePattern = it }
+            set(isClickable) { this.polygon.isClickable = it }
             set(fillColor) { this.polygon.fillColor = it.toArgb() }
             set(strokeColor) { this.polygon.strokeColor = it.toArgb() }
             set(strokeWidth) { this.polygon.strokeWidth = it }

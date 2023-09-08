@@ -49,6 +49,7 @@
 
         <activity android:name="com.melody.petal.map_sample.BasicFeatureActivity" android:exported="false"/>
         <activity android:name="com.melody.petal.map_sample.OverlayActivity" android:exported="false"/>
+        <activity android:name="com.melody.petal.map_sample.LocationTrackingActivity" android:exported="false"/>
 
     </application>
 </manifest>

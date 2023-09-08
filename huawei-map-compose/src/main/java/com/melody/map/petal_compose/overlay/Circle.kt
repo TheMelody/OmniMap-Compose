@@ -31,12 +31,14 @@ import com.huawei.hms.maps.model.Circle
 import com.huawei.hms.maps.model.CircleOptions
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.PatternItem
+import com.huawei.hms.maps.model.Polygon
 import com.melody.map.petal_compose.MapApplier
 import com.melody.map.petal_compose.MapNode
 import com.melody.map.petal_compose.model.HWMapComposable
 
 internal class CircleNode(
-    val circle: Circle
+    val circle: Circle,
+    val onCircleClick: (Circle) -> Unit
 ) : MapNode {
     override fun onRemoved() {
         circle.remove()
@@ -52,6 +54,7 @@ internal class CircleNode(
  * @param strokeColor 圆的边框颜色
  * @param strokeWidth 圆的边框宽度
  * @param patternItems 圆的边框样式
+ * @param isClickable 圆形是否可以点击。
  * @param visible 圆是否可见
  * @param zIndex 设置显示的层级，越大越靠上显示
  */
@@ -64,8 +67,10 @@ fun Circle(
     strokeColor: Color = Color.Black,
     strokeWidth: Float = 10f,
     patternItems: List<PatternItem> = emptyList(),
+    isClickable: Boolean = true,
     visible: Boolean = true,
     zIndex: Float = 0f,
+    onCircleClick: (Circle) -> Unit = {}
 ) {
     val mapApplier = currentComposer.applier as? MapApplier
     ComposeNode<CircleNode, MapApplier>(
@@ -78,15 +83,17 @@ fun Circle(
                     strokePattern(patternItems)
                     strokeColor(strokeColor.toArgb())
                     strokeWidth(strokeWidth)
+                    clickable(isClickable)
                     visible(visible)
                     zIndex(zIndex)
                 }
             ) ?: error("Error adding circle")
-            CircleNode(circle)
+            CircleNode(circle,onCircleClick)
         },
         update = {
             set(center) { this.circle.center = it }
             set(fillColor) { this.circle.fillColor = it.toArgb() }
+            set(isClickable) { this.circle.isClickable = it }
             set(radius) { this.circle.radius = it }
             set(strokeColor) { this.circle.strokeColor = it.toArgb() }
             set(strokeWidth) { this.circle.strokeWidth = it }

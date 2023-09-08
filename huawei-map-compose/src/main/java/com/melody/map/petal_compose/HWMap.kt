@@ -36,6 +36,7 @@ import com.huawei.hms.maps.HuaweiMapOptions
 import com.huawei.hms.maps.LocationSource
 import com.huawei.hms.maps.MapView
 import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.MapStyleOptions
 import com.huawei.hms.maps.model.PointOfInterest
 import com.melody.map.petal_compose.extensions.awaitMap
 import com.melody.map.petal_compose.model.HWMapComposable
@@ -55,6 +56,14 @@ import java.lang.ref.WeakReference
  * @param modifier [Modifier]修饰符
  * @param cameraPositionState 地图相机位置状态[CameraPositionState]
  * @param mapOptionsFactory 可以传华为地图[HuaweiMapOptions]参数，如离线地图开关等。
+ * @param mapStyleOptionsFactory 可以传华为地图[MapStyleOptions]参数，用于定义HuaweiMap样式的类,可以自定义地图样式，更改道路、公园和其他兴趣点等功能的视觉显示。除了更改这些特征的样式外，您还可以完全隐藏特征，这意味着您可以控制地图的特定组件。
+ *
+ * 自定义样式，请点击 [Petal Maps Studio](https://developer.petalmaps.com/console/studio/AddMap)
+ *  ```
+ *  mapStyleOptionsFactory = {
+ *      MapStyleOptions.loadRawResourceStyle(applicationContext, R.raw.***.json)
+ *  }
+ *  ```
  * @param properties 地图属性配置[MapProperties]
  * @param uiSettings 地图SDK UI配置[MapUiSettings]
  * @param locationSource 设置定位数据, 只有先允许定位图层后设置数据才会生效，参见: [com.melody.map.petal_compose.poperties.MapProperties.isMyLocationEnabled]
@@ -74,6 +83,7 @@ fun HWMap(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     mapOptionsFactory: () -> HuaweiMapOptions = { HuaweiMapOptions() },
+    mapStyleOptionsFactory: () -> MapStyleOptions? = { null },
     properties: MapProperties = DefaultMapProperties,
     uiSettings: MapUiSettings = DefaultMapUiSettings,
     locationSource: LocationSource? = null,
@@ -104,6 +114,7 @@ fun HWMap(
         it.onMapPOIClick = onMapPOIClick
     }
 
+    val currentMapStyleOptions by rememberUpdatedState(mapStyleOptionsFactory())
     val currentLocationSource by rememberUpdatedState(locationSource)
     val currentMapProperties by rememberUpdatedState(properties)
     val currentUiSettings by rememberUpdatedState(uiSettings)
@@ -118,7 +129,8 @@ fun HWMap(
                     clickListeners = mapClickListeners,
                     locationSource = currentLocationSource,
                     mapProperties = currentMapProperties,
-                    cameraPositionState = cameraPositionState
+                    cameraPositionState = cameraPositionState,
+                    mapStyleOptions = currentMapStyleOptions
                 )
                 currentContent?.invoke()
             }

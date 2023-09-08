@@ -35,6 +35,7 @@ import com.huawei.hms.maps.HuaweiMap
 import com.huawei.hms.maps.LocationSource
 import com.huawei.hms.maps.MapView
 import com.huawei.hms.maps.model.CameraPosition
+import com.huawei.hms.maps.model.MapStyleOptions
 import com.huawei.hms.maps.model.MyLocationStyle
 import com.melody.map.petal_compose.model.MapClickListeners
 import com.melody.map.petal_compose.poperties.MapProperties
@@ -94,6 +95,7 @@ internal inline fun MapUpdater(
     clickListeners: MapClickListeners,
     locationSource: LocationSource?,
     mapProperties: MapProperties,
+    mapStyleOptions: MapStyleOptions?,
     cameraPositionState: CameraPositionState
 ) {
     val map = (currentComposer.applier as MapApplier).map
@@ -163,6 +165,7 @@ internal inline fun MapUpdater(
         set(mapProperties.mapShowLatLngBounds) { map.setLatLngBoundsForCameraTarget(it) }
 
         update(cameraPositionState) { this.cameraPositionState = it }
+        update(mapStyleOptions) { this.map.setMapStyle(it)  }
         update(clickListeners) { this.clickListeners = it }
     }
 }

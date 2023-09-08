@@ -24,6 +24,7 @@ package com.melody.petal.map_sample.repo
 
 import android.content.Intent
 import com.melody.petal.map_sample.BasicFeatureActivity
+import com.melody.petal.map_sample.LocationTrackingActivity
 import com.melody.petal.map_sample.OverlayActivity
 import com.melody.petal.myapplication.R
 import com.melody.sample.common.utils.SDKUtils
@@ -45,9 +46,9 @@ object MainRepository {
             StringUtils.getString(R.string.hw_map_main_feature_item_overlay) -> {
                 startActivity(Intent(SDKUtils.getApplicationContext(), OverlayActivity::class.java))
             }
-//            StringUtils.getString(R.string.hw_map_main_feature_item_blue_location) -> {
-//                startActivity(Intent(SDKUtils.getApplicationContext(),LocationTrackingActivity::class.java))
-//            }
+            StringUtils.getString(R.string.hw_map_main_feature_item_blue_location) -> {
+                startActivity(Intent(SDKUtils.getApplicationContext(), LocationTrackingActivity::class.java))
+            }
 //            StringUtils.getString(R.string.hw_map_main_feature_item_smooth_move) -> {
 //                startActivity(Intent(SDKUtils.getApplicationContext(),SmoothMoveActivity::class.java))
 //            }

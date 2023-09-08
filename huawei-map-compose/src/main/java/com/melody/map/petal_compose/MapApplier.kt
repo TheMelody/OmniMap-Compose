@@ -25,11 +25,17 @@ package com.melody.map.petal_compose
 import androidx.compose.runtime.*
 import com.huawei.hms.maps.HuaweiMap
 import com.huawei.hms.maps.MapView
+import com.huawei.hms.maps.model.Circle
+import com.huawei.hms.maps.model.GroundOverlay
 import com.huawei.hms.maps.model.Marker
+import com.huawei.hms.maps.model.Polygon
 import com.huawei.hms.maps.model.Polyline
 import com.melody.map.petal_compose.adapter.ComposeInfoWindowAdapter
+import com.melody.map.petal_compose.overlay.CircleNode
 import com.melody.map.petal_compose.overlay.DragState
+import com.melody.map.petal_compose.overlay.GroundOverlayNode
 import com.melody.map.petal_compose.overlay.MarkerNode
+import com.melody.map.petal_compose.overlay.PolygonNode
 import com.melody.map.petal_compose.overlay.PolylineNode
 import com.melody.map.petal_compose.utils.fastFirstOrNull
 import java.lang.ref.WeakReference
@@ -95,15 +101,18 @@ internal class MapApplier(
         map.setOnInfoWindowClickListener { marker ->
             decorations.nodeForMarker(marker)?.onInfoWindowClick?.invoke(marker)
         }
-        // MultiPointOverlay的点击事件
-//        map.setOnMultiPointClickListener { multiPointItem ->
-//            val node = decorations.nodeForMultiPoint(multiPointItem)
-//            if(null != node) {
-//                node.onPointItemClick.invoke(multiPointItem)
-//                return@setOnMultiPointClickListener true
-//            }
-//            return@setOnMultiPointClickListener false
-//        }
+        // GroundOverlay的点击事件
+        map.setOnGroundOverlayClickListener {
+            decorations.nodeForGroundOverlay(it)?.onGroundOverlayClick?.invoke(it)
+        }
+        // Polygon的点击事件
+        map.setOnPolygonClickListener {
+            decorations.nodeForPolygon(it)?.onPolygonClick?.invoke(it)
+        }
+        // Circle的点击事件
+        map.setOnCircleClickListener {
+            decorations.nodeForCircle(it)?.onCircleClick?.invoke(it)
+        }
         // 长按触发
         map.setOnMarkerDragListener(object : HuaweiMap.OnMarkerDragListener {
             override fun onMarkerDrag(marker: Marker) {
@@ -144,26 +153,26 @@ internal class MapApplier(
 private fun MutableList<MapNode>.nodeForMarker(marker: Marker): MarkerNode? =
     fastFirstOrNull { it is MarkerNode && it.marker.title == marker.title && it.marker.snippet == marker.snippet } as? MarkerNode
 
-///**
-// * MovingPointOverlay轨迹移动
-// */
-//private fun MutableList<MapNode>.nodeForMovingPointOverlay(marker: Marker): MovingPointOverlayNode? =
-//    fastFirstOrNull { it is MovingPointOverlayNode && it.marker.`object` == marker.`object` } as? MovingPointOverlayNode
-
 /**
  * Polyline
  */
 private fun MutableList<MapNode>.nodeForPolyline(polyline: Polyline): PolylineNode? =
     fastFirstOrNull { it is PolylineNode && it.polyline == polyline } as? PolylineNode
 
-///**
-// * RoutePlanOverlay
-// */
-//private fun MutableList<MapNode>.nodeForRoutePlanPolyline(polyline: Polyline): RoutePlanOverlayNode? =
-//    fastFirstOrNull { it is RoutePlanOverlayNode && null != it.routePlanOverlay?.allPolyLines?.fastFirstOrNull { child -> child == polyline } } as? RoutePlanOverlayNode
+/**
+ * GroundOverlay
+ */
+private fun MutableList<MapNode>.nodeForGroundOverlay(overlay: GroundOverlay): GroundOverlayNode? =
+    fastFirstOrNull { it is GroundOverlayNode && it.groundOverlay == overlay } as? GroundOverlayNode
 
-///**
-// * MultiPointOverlay
-// */
-//private fun MutableList<MapNode>.nodeForMultiPoint(multiPointItem: MultiPointItem): MultiPointOverlayNode? =
-//    fastFirstOrNull { it is MultiPointOverlayNode && null != it.multiPointOverlay.items.fastFirstOrNull { child -> child == multiPointItem  } } as? MultiPointOverlayNode
+/**
+ * Polygon
+ */
+private fun MutableList<MapNode>.nodeForPolygon(polygon: Polygon): PolygonNode? =
+    fastFirstOrNull { it is PolygonNode && it.polygon == polygon } as? PolygonNode
+
+/**
+ * Circle
+ */
+private fun MutableList<MapNode>.nodeForCircle(circle: Circle): CircleNode? =
+    fastFirstOrNull { it is CircleNode && it.circle == circle } as? CircleNode
