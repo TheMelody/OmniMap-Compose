@@ -112,45 +112,11 @@ class LocationTrackingViewModel :
         }
     }
 
-//    override fun onLocationChanged(amapLocation: AMapLocation?) {
-//        LocationTrackingRepository.handleLocationChange(amapLocation) { aMapLocation, msg ->
-//            if(null != aMapLocation) {
-//                val delayTime = if(null == currentState.locationLatLng) 100L else 0L
-//                setState {
-//                    copy(locationLatLng = LatLng(aMapLocation.latitude, aMapLocation.longitude))
-//                }
-//                asyncLaunch {
-//                    // 首次直接显示，高德地图【默认小蓝点】会【有点闪烁】，延迟一下再回调
-//                    delay(delayTime)
-//                    // 显示系统小蓝点
-//                    mListener?.onLocationChanged(aMapLocation)
-//                }
-//            } else {
-//                setEffect { LocationTrackingContract.Effect.Toast(msg) }
-//            }
-//        }
-//    }
-//
-//    override fun activate(listener: OnLocationChangedListener?) {
-//        mListener = listener
-//        if(DragDropSelectPointRepository.checkGPSIsOpen() && currentState.grantLocationPermission) {
-//            startMapLocation()
-//        }
-//    }
-//
-//    override fun deactivate() {
-//        mLocationClient?.stopLocation()
-//        mLocationClient?.onDestroy()
-//        mLocationClient = null
-//        mListener = null
-//    }
-
     override fun onCleared() {
         super.onCleared()
     }
 
     override fun activate(listener: LocationSource.OnLocationChangedListener?) {
-
     }
 
     override fun deactivate() {

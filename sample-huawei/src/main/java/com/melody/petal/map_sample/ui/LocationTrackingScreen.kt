@@ -44,7 +44,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
 /**
- * 高德地图默认定位蓝点，这里我们代码动态替换了SDK默认的蓝点图片
+ * 默认定位蓝点，这里我们代码动态替换了SDK默认的蓝点图片
  * @author 被风吹过的夏天
  * @email developer_melody@163.com
  * @github: https://github.com/TheMelody/OmniMap
@@ -55,10 +55,7 @@ import kotlinx.coroutines.flow.onEach
 internal fun LocationTrackingScreen() {
     val viewModel: LocationTrackingViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val cameraPosition = rememberCameraPositionState {
-        // 不预加载显示默认北京的位置
-        position = CameraPosition(LatLng(0.0, 0.0), 11f, 0f, 0f)
-    }
+    val cameraPosition = rememberCameraPositionState()
     LaunchedEffect(viewModel.effect) {
         viewModel.effect.onEach {
             if(it is LocationTrackingContract.Effect.Toast) {
