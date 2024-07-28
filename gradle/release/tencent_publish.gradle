@@ -62,7 +62,7 @@ publishing {
       artifact androidSourcesJar
 
       pom {
-        name = libs.versions.publish.maven.group.id.get() + ":" + libs.versions.plublish.gd.artifact.id.get()
+        name = libs.versions.publish.maven.group.id.get() + ":" + libs.versions.plublish.tx.artifact.id.get()
         description = "🔥🔥🔥Compose一键集成5大地图平台地图 - 腾讯地图"
         url = "https://github.com/TheMelody/OmniMap-Compose"
         licenses {
