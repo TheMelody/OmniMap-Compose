@@ -22,6 +22,8 @@
 
 -keep class com.melody.map.gd_compose.model.** {*;}
 -dontwarn com.melody.map.gd_compose.model.**
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
 
 #高德地图SDK配置
 -keep class com.amap.api.maps.**{*;}

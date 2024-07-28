@@ -24,3 +24,5 @@
 -keep class com.baidu.** {*;}
 -keep class mapsdkvi.com.** {*;}
 -dontwarn com.baidu.**
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**

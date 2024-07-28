@@ -22,6 +22,8 @@
 
 -keep class android.support.v4.** {*;}
 -dontwarn android.support.v4.**
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
 
 -keep class com.melody.map.tencent_compose.model.** {*;}
 -dontwarn com.melody.map.tencent_compose.model.**
