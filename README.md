@@ -35,8 +35,10 @@ android {
       implementation 'io.github.TheMelody:gd_compose:<version>'       // 高德地图
       implementation 'io.github.TheMelody:tencent_compose:<version>'  // 腾讯地图
       implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图
-      implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 华为这个大部分能力需要企业账号，无法开始
       implementation 'io.github.TheMelody:google_compose:<version>'   // Google地图 → 未开始
+        
+      // 华为这个大部分能力需要企业账号才能开通，无法继续其他功能验证，暂时放弃了，劝退
+      implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 中途放弃
     }
 }
 ```
