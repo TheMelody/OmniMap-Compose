@@ -6,16 +6,16 @@ pluginManagement {
         mavenCentral()
         maven {url 'https://developer.huawei.com/repo/'}
     }
-    resolutionStrategy {
-        eachPlugin {
-            if ((it.requested.id.toString() == "com.android.tools.build" && null != it.requested.version)) {
-                it.useModule('com.android.tools.build:gradle:7.3.0')
-            }
-            if ((it.requested.id.toString() == "com.huawei.agconnect" && null != it.requested.version)) {
-                it.useModule('com.huawei.agconnect:agcp:1.9.1.300')
-            }
-        }
-    }
+//    resolutionStrategy {
+//        eachPlugin {
+//            if ((it.requested.id.toString() == "com.android.tools.build" && null != it.requested.version)) {
+//                it.useModule('com.android.tools.build:gradle:7.3.0')
+//            }
+//            if ((it.requested.id.toString() == "com.huawei.agconnect" && null != it.requested.version)) {
+//                it.useModule('com.huawei.agconnect:agcp:1.9.1.300')
+//            }
+//        }
+//    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -30,11 +30,11 @@ rootProject.name = "OmniMap-Compose"
 include ':gd-map-compose'
 include ':tencent-map-compose'
 include ':baidu-map-compose'
-include ':huawei-map-compose'
+//include ':huawei-map-compose'
 include ':sample-gaode'
 include ':sample-baidu'
 include ':sample-tencent'
-include ':sample-huawei'
+//include ':sample-huawei'
 include ':sample-google'
 include ':sample-ui-components'
 include ':sample-common'

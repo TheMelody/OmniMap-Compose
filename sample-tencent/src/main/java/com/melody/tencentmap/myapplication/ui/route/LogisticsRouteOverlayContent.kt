@@ -25,16 +25,18 @@ package com.melody.tencentmap.myapplication.ui.route
 import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.graphics.asImageBitmap
 import com.melody.map.tencent_compose.model.TXMapComposable
 import com.melody.map.tencent_compose.overlay.MarkerInfoWindow
 import com.melody.map.tencent_compose.overlay.PolylineRainbow
 import com.melody.map.tencent_compose.overlay.rememberMarkerState
+import com.melody.sample.common.utils.SDKUtils
 import com.melody.tencentmap.myapplication.R
 import com.melody.tencentmap.myapplication.model.LogisticsRouteDataState
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory
@@ -67,7 +69,7 @@ internal fun LogisticsRouteOverlayContent(dataState: LogisticsRouteDataState) {
     )
 
     MarkerInfoWindow(
-        anchor = Offset(0.5f,1f),
+        anchor = Offset(0.5f,-0.3f),
         draggable = true,
         icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_pdd_fahuo_location),
         state = startState,
@@ -81,7 +83,7 @@ internal fun LogisticsRouteOverlayContent(dataState: LogisticsRouteDataState) {
     )
 
     MarkerInfoWindow(
-        anchor = Offset(0.5f,1f),
+        anchor = Offset(0.5f,-0.3f),
         draggable = true,
         zIndex = 1F,
         icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_pdd_shouhuo_dark_location),
@@ -94,7 +96,7 @@ internal fun LogisticsRouteOverlayContent(dataState: LogisticsRouteDataState) {
     )
 
     MarkerInfoWindow(
-        anchor = Offset(0.5f,0.5f),
+        anchor = Offset(0.25f,0.3f),
         draggable = true,
         icon = BitmapDescriptorFactory.fromAsset("ic_pdd_car.png"),
         state = carState,
@@ -111,7 +113,8 @@ internal fun LogisticsRouteOverlayContent(dataState: LogisticsRouteDataState) {
 
 @Composable
 private fun LogisticsMarkInfoWindowContent(resource: Int, title: String) {
-    AndroidView(
+    // 处理升级compose版本闪退问题
+    /*AndroidView(
         modifier = Modifier.wrapContentSize(),
         factory = {
             TextView(it).apply {
@@ -122,12 +125,24 @@ private fun LogisticsMarkInfoWindowContent(resource: Int, title: String) {
     {
         it.setBackgroundResource(resource)
         it.text = title
-    }
+    }*/
+    val fromView =
+        BitmapDescriptorFactory.fromView(TextView(SDKUtils.getApplicationContext()).apply {
+            setTextColor(Color.BLACK)
+            setBackgroundResource(resource)
+            text = title
+        })
+    Image(
+        modifier = Modifier.wrapContentSize(),
+        bitmap = fromView.getBitmap(SDKUtils.getApplicationContext()).asImageBitmap(),
+        contentDescription = null
+    )
 }
 
 @Composable
 private fun LogisticsMarkInfoWindowContent2(resource: Int, title: String, snippet: String) {
-    AndroidView(
+    // 处理升级compose版本闪退问题
+    /*AndroidView(
         modifier = Modifier.wrapContentSize(),
         factory = {
             LinearLayout(it).apply {
@@ -147,5 +162,27 @@ private fun LogisticsMarkInfoWindowContent2(resource: Int, title: String, snippe
         it.setBackgroundResource(resource)
         (it.getChildAt(0) as TextView).text = title
         (it.getChildAt(1) as TextView).text = snippet
-    }
+    }*/
+    val fromView =
+        BitmapDescriptorFactory.fromView(
+            LinearLayout(SDKUtils.getApplicationContext()).apply {
+                orientation = LinearLayout.VERTICAL
+                addView(TextView(SDKUtils.getApplicationContext()).apply {
+                    setTextColor(Color.WHITE)
+                    textSize = 16F
+                    text = title
+                })
+                addView(TextView(SDKUtils.getApplicationContext()).apply {
+                    setTextColor(Color.WHITE)
+                    textSize = 12F
+                    text = snippet
+                })
+                setBackgroundResource(resource)
+            }
+        )
+    Image(
+        modifier = Modifier.wrapContentSize(),
+        bitmap = fromView.getBitmap(SDKUtils.getApplicationContext()).asImageBitmap(),
+        contentDescription = null
+    )
 }

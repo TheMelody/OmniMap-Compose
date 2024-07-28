@@ -1,6 +1,6 @@
 OmniMap Compose 🗺
 ===============
-<a href="https://github.com/TheMelody/OmniMap-Compose/blob/main/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/TheMelody/OmniMap-Compose"/></a>  <img alt="issues" src="https://img.shields.io/github/issues/TheMelody/OmniMap-Compose?color=important"/>  <img alt="forks" src="https://img.shields.io/github/forks/TheMelody/OmniMap-Compose?color=blueviolet"/>  <img alt="stars" src="https://img.shields.io/github/stars/TheMelody/OmniMap-Compose?color=success"/>  <a href="https://juejin.cn/user/8451824316670/posts"><img alt="稀土掘金" src="https://img.shields.io/badge/%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91-432-green?labelColor=%231e80FF&color=black" ></a>  <a href="https://www.zhihu.com/people/fq_halifax"><img src="https://img.shields.io/badge/dynamic/json?color=282c34&amp;labelColor=0084ff&amp;label=%E7%9F%A5%E4%B9%8E&amp;query=%24.data.totalSubs&amp;url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3Dfq_halifax&amp;longCache=true" alt="知乎"></a>  <a href="https://blog.csdn.net/logicsboy"><img src="https://img.shields.io/badge/CSDN-3k+-red?labelColor=%231e80FF&color=black" alt="CSDN"></a>
+<a href="https://github.com/TheMelody/OmniMap-Compose/blob/main/LICENSE"><img alt="LICENSE" src="https://img.shields.io/github/license/TheMelody/OmniMap-Compose"/></a>  <img alt="issues" src="https://img.shields.io/github/issues/TheMelody/OmniMap-Compose?color=important"/>  <img alt="forks" src="https://img.shields.io/github/forks/TheMelody/OmniMap-Compose?color=blueviolet"/>  <img alt="stars" src="https://img.shields.io/github/stars/TheMelody/OmniMap-Compose?color=success"/>  <a href="https://xiaozhuanlan.com/u/halifax" target="blank"><img alt="小专栏" src="https://img.shields.io/badge/%E5%B0%8F%E4%B8%93%E6%A0%8F-ff7055" ></a>  <a href="https://juejin.cn/user/8451824316670/posts" target="blank"><img alt="稀土掘金" src="https://img.shields.io/badge/%E7%A8%80%E5%9C%9F%E6%8E%98%E9%87%91-%231e80FF" ></a>  <a href="https://www.zhihu.com/people/fq_halifax" target="blank"><img src="https://img.shields.io/badge/%E7%9F%A5%E4%B9%8E-1772F6" alt="知乎"></a>  <a href="https://blog.csdn.net/logicsboy" target="blank"><img src="https://img.shields.io/badge/CSDN-FC5531" alt="CSDN"></a>
 
 **Compose一键集成5大地图神器**
 
@@ -10,13 +10,13 @@ OmniMap Compose 🗺
 -------
 <table>
  <tr>
-  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.5"></td>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.6"></td>
  </tr>
  <tr>
-  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.5"></td>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.6"></td>
  </tr>
  <tr>
-  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.5"></td>
+  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.6"></td>
  </tr>
 </table>
 
@@ -25,20 +25,63 @@ repositories {
   maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
 }
 
-dependencies {
-  // 根据自己项目情况，选择下面其中一种地图
-  implementation 'io.github.TheMelody:gd_compose:<version>'       // 高德地图
-  implementation 'io.github.TheMelody:tencent_compose:<version>'  // 腾讯地图
-  implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图
-  implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 实现中
-  implementation 'io.github.TheMelody:google_compose:<version>'   // Google地图 → 未开始
+android {
+    // ...
+    kotlinOptions {
+        jvmTarget = '19'
+    }
+    dependencies {
+      // 根据自己项目情况，选择下面其中一种地图
+      implementation 'io.github.TheMelody:gd_compose:<version>'       // 高德地图
+      implementation 'io.github.TheMelody:tencent_compose:<version>'  // 腾讯地图
+      implementation 'io.github.TheMelody:baidu_compose:<version>'    // 百度地图
+      implementation 'io.github.TheMelody:huawei_compose:<version>'   // 花瓣地图(Android 7.0+) → 华为这个大部分能力需要企业账号，无法开始
+      implementation 'io.github.TheMelody:google_compose:<version>'   // Google地图 → 未开始
+    }
 }
+```
+
+注意事项
+-------
+
+```
+JDK : 19
+Gradle :  8.5
+Compose BOM：2024.06.00
+AndroidStudio建议使用：Android Studio Koala及以上版本
+
+// 地图隐私合规，请在合理的地方自行使用：
+MapUtils#setMapPrivacy
+
+// baidu_compose这个库中，默认使用的是国测局坐标，如想切换请使用：
+MapUtils#updateCoordType
+
+// 地图API Key配置 (😂请在AndroidManifest.xml中配置)
+//（地图厂商问题，如腾讯的地图SDK在用到定位相关的服务的时候会报：请申请秘钥的提示，无法在代码中直接设置）
+// 还是按照地图SDK默认给的配置规则去做吧，暂时无法统一名称进行收拢
+
+// 百度地图api key配置：
+<meta-data
+    android:name="com.baidu.lbsapi.API_KEY"
+    android:value="自己去百度地图开发者平台申请" />
+
+// 腾讯地图api key配置：
+<meta-data
+    android:name="TencentMapSDK"
+    android:value="自己去腾讯地图开发者平台申请"/>
+
+// 高德地图api key配置：
+<meta-data
+    android:name="com.amap.api.v2.apikey"
+    android:value="自己去高德地图开发者平台申请"/>
+
 ```
 
 用法
 -------
 
 - 1、添加一个高德地图
+
 ```kt
 val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(39.984108,116.307557), 10F)
@@ -50,7 +93,9 @@ GDMap(
     //这里面放地图覆盖物...
 }
 ```
+
 - 2、添加一个腾讯地图
+
 ```kt
 val cameraPositionState = rememberCameraPositionState {
    position =  TXCameraPosition(latLng = LatLng(39.984108,116.307557), zoom = 10F, tilt = 0F, bearing = 0F)
@@ -62,7 +107,9 @@ TXMap(
     //这里面可以放地图覆盖物...
 }
 ```
+
 - 3、添加一个百度地图
+
 ```kt
 val cameraPositionState = rememberCameraPositionState {
     position = BDCameraPosition(LatLng(39.984108,116.307557), 4F, 0f, 0f)
@@ -74,7 +121,9 @@ BDMap(
     //这里面可以放地图覆盖物...
 }
 ```
+
 - 4、配置地图
+
 ```kt
 // 高德地图
 GDMap(
@@ -103,7 +152,9 @@ BDMap(
     //这里面可以放地图覆盖物...
 }
 ```
+- 
 - 5、自定义Marker覆盖物的InfoWindow
+
 ```kt
 // 只修改内容，不修改容器
 MarkerInfoWindowContent(
@@ -131,7 +182,9 @@ MarkerInfoWindow(
     }
 }
 ```
+
 - 6、已支持的覆盖物
+
 <table>
  <tr>
   <td width="66px">高德地图</td> <td>Arc、Circle、ClusterOverlay、GroundOverlay、Marker、MovingPointOverlay、MultiPointOverlay、OpenGLOverlay、Polygon、Polyline、RoutePlanOverlay、TileOverlay</td>

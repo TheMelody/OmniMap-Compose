@@ -217,6 +217,7 @@ internal fun OverlayScreen() {
                 position = currentState.textOverlayPos,
                 fontSize = 26,
                 fontColor = Color(0xFFF7F7F7),
+                // TODO: 百度地图SDK更新之后，这个属性失效了，等百度官方给答复
                 backgroundColor = Color(0xFF00C3E6),
             )
 
