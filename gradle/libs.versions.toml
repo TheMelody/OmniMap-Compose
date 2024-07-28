@@ -25,6 +25,20 @@ tencent_location_map = "7.5.2"
 tencent_vector_map = "5.1.0"
 tencent_utils_map = "1.0.9.1"
 
+# publish maven config
+publish_maven_group_id = "io.github.TheMelody"
+plublish_gd_artifact_id = "gd_compose"
+plublish_tx_artifact_id = "tencent_compose"
+plublish_baidu_artifact_id = "baidu_compose"
+# sdk common version
+compile_sdk_version = "34"
+target_sdk_version = "34"
+min_sdk_version = "21"
+huawei_min_sdk_version = "24"
+# publish maven central library version_name
+lib_maven_version_name = "1.0.6"
+lib_maven_version_code = "106"
+
 [libraries]
 compose-bom = {module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 material = {module = "androidx.compose.material:material", version.ref = "material"}
@@ -52,7 +66,6 @@ tencent-map-sdk-utilities = {module = "com.tencent.map:sdk-utilities", version.r
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "publishPlugin" }

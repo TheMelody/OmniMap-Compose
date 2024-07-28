@@ -5,20 +5,11 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.nexus.publish.plugin)
-    //id 'com.huawei.agconnect' version '1.9.1.300' apply false
+    // id("com.huawei.agconnect") version "1.9.1.300" apply false
 }
 
-apply from: 'gradle/release/map_lib_info.gradle'
-
-ext {
-    libraryInfo = getLibraryInfo()
-}
-
-group = libraryInfo.groupId
-version = libraryInfo.lib_versionName
-
-tasks.register('clean', Delete) {
-    delete rootProject.layout.buildDir
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
 }
 
 nexusPublishing {
@@ -26,8 +17,8 @@ nexusPublishing {
         sonatype {
             nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-            username = System.getenv("MAVEN_TOKEN_USERNAME")
-            password = System.getenv("MAVEN_TOKEN_PASSWORD")
+            username.set(System.getenv("MAVEN_TOKEN_USERNAME"))
+            password.set(System.getenv("MAVEN_TOKEN_PASSWORD"))
         }
     }
 }

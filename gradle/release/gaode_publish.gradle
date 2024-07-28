@@ -53,16 +53,16 @@ static def addPomDependency(groovy.util.Node dependenciesNode, Dependency depend
 publishing {
   publications {
     nexus(MavenPublication) {
-      groupId rootProject.ext.libraryInfo.groupId
-      artifactId rootProject.ext.libraryInfo.gd_artifactId
-      version rootProject.ext.libraryInfo.lib_versionName
+      groupId libs.versions.publish.maven.group.id.get()
+      artifactId libs.versions.plublish.gd.artifact.id.get()
+      version libs.versions.lib.maven.version.name.get()
 
       artifact bundleReleaseAar
       artifact androidJavaDocJar
       artifact androidSourcesJar
 
       pom {
-        name = rootProject.ext.libraryInfo.groupId + ":" + rootProject.ext.libraryInfo.gd_artifactId
+        name = libs.versions.publish.maven.group.id.get() + ":" + libs.versions.plublish.gd.artifact.id.get()
         description = "🔥🔥🔥Compose一键集成5大地图平台地图 - 高德地图"
         url = "https://github.com/TheMelody/OmniMap-Compose"
         licenses {

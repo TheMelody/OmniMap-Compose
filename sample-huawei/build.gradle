@@ -13,13 +13,13 @@ def jksDir = keystorePropertiesFile.absolutePath.substring(0,keystorePropertiesF
 
 android {
     namespace 'com.melody.petal.myapplication'
-    compileSdk rootProject.ext.libraryInfo.compileSdk
+    compileSdk libs.versions.compile.sdk.version
 
     defaultConfig {
-        minSdk rootProject.ext.libraryInfo.huaweiMinSdk
-        targetSdk rootProject.ext.libraryInfo.targetSdk
-        versionCode 100
-        versionName "1.0.0"
+        minSdk libs.versions.min.sdk.version
+        targetSdk libs.versions.target.sdk.version
+        versionCode libs.versions.lib.maven.version.code
+        versionName libs.versions.lib.maven.version.name
 
         vectorDrawables {
             useSupportLibrary true
