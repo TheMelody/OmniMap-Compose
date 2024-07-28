@@ -29,6 +29,11 @@ jobs:
 
       - name: Verify Java version
         run: java -version
+
+      - name: Set JDK environment variables
+        run: |
+          echo "JAVA_HOME=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/19.0.2-7/x64" >> $GITHUB_ENV
+          echo "GRADLE_OPTS=-Dorg.gradle.java.home=/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/19.0.2-7/x64" >> $GITHUB_ENV
         
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
