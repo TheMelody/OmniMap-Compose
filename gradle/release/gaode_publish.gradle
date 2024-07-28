@@ -12,6 +12,12 @@ task androidJavaDoc(type: Javadoc) {
   failOnError false
 }
 
+tasks.withType(Javadoc) {
+  options.addStringOption('Xdoclint:none', '-quiet')
+  options.addStringOption('encoding', 'UTF-8')
+  options.addStringOption('charSet', 'UTF-8')
+}
+
 task androidJavaDocJar(type: Jar, dependsOn: androidJavaDoc) {
   archiveClassifier.set('javadoc')
   from androidJavaDoc.destinationDir

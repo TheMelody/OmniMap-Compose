@@ -22,6 +22,8 @@
 
 -keep class com.melody.map.gd_compose.model.** {*;}
 -dontwarn com.melody.map.gd_compose.model.**
+-keep class com.melody.map.gd_compose.poperties.** {*;}
+-dontwarn com.melody.map.gd_compose.poperties.**
 -keep class okhttp3.** { *; }
 -dontwarn okhttp3.**
 

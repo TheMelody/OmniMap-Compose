@@ -27,6 +27,8 @@
 
 -keep class com.melody.map.tencent_compose.model.** {*;}
 -dontwarn com.melody.map.tencent_compose.model.**
+-keep class com.melody.map.tencent_compose.poperties.** {*;}
+-dontwarn com.melody.map.tencent_compose.poperties.**
 
 -keep class com.tencent.tencentmap.**{*;}
 -keep class com.tencent.map.**{*;}
