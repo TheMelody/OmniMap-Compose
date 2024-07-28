@@ -10,6 +10,7 @@ task androidJavaDoc(type: Javadoc) {
   options.author true
   options.version true
   failOnError false
+  exclude("**/*.kt")
 }
 
 tasks.withType(Javadoc) {

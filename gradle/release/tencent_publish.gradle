@@ -10,6 +10,7 @@ task androidJavaDoc(type: Javadoc) {
   options.author true
   options.version true
   failOnError false
+  exclude("**/*.kt")
 }
 
 tasks.withType(Javadoc) {
@@ -113,9 +114,9 @@ publishing {
 
 signing {
   useInMemoryPgpKeys(
-      System.getenv("SIGNING_KEY_ID"),
-      System.getenv("SIGNING_KEY"),
-      System.getenv("SIGNING_KEY_PASSWORD"),
+          System.getenv("SIGNING_KEY_ID"),
+          System.getenv("SIGNING_KEY"),
+          System.getenv("SIGNING_KEY_PASSWORD"),
   )
 
   sign publishing.publications.nexus
