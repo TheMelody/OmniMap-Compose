@@ -52,7 +52,7 @@ Gradle :  8.5
 Compose BOM：2024.06.00
 AndroidStudio建议使用：Android Studio Koala及以上版本
 
-// 地图隐私合规，请在合理的地方自行使用：
+// 地图隐私合规，请在App授权完隐私弹窗协议的第一时间，立即调用
 MapUtils#setMapPrivacy
 
 // baidu_compose这个库中，默认使用的是国测局坐标，如想切换请使用：
