@@ -20,6 +20,12 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class android.support.v4.** {*;}
+-dontwarn android.support.v4.**
+
+-keep class com.melody.map.tencent_compose.model.** {*;}
+-dontwarn com.melody.map.tencent_compose.model.**
+
 -keep class com.tencent.tencentmap.**{*;}
 -keep class com.tencent.map.**{*;}
 -keep class com.tencent.beacontmap.**{*;}
