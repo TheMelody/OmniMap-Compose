@@ -25,7 +25,7 @@ package com.melody.map.myapplication.initializer
 import android.app.Application
 import android.content.Context
 import androidx.startup.Initializer
-import com.melody.map.myapplication.utils.GDMapUtils
+import com.melody.map.gd_compose.utils.MapUtils
 import com.melody.sample.common.utils.SDKUtils
 
 /**
@@ -39,7 +39,8 @@ class AppDataInitStartup : Initializer<Boolean> {
 
     override fun create(context: Context): Boolean {
         SDKUtils.init(context as Application)
-        GDMapUtils.updateMapViewPrivacy(context.applicationContext)
+        // 更新地图的隐私合规，【不调用地图无法正常显示】要先调用它
+        MapUtils.setMapPrivacy(context.applicationContext,true)
         return true
     }
 

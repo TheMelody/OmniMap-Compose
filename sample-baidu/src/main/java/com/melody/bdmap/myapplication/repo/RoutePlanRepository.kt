@@ -29,6 +29,7 @@ import com.baidu.mapapi.search.route.BikingRoutePlanOption
 import com.baidu.mapapi.search.route.BikingRouteResult
 import com.baidu.mapapi.search.route.DrivingRoutePlanOption
 import com.baidu.mapapi.search.route.DrivingRouteResult
+import com.baidu.mapapi.search.route.IntegralRouteResult
 import com.baidu.mapapi.search.route.PlanNode
 import com.baidu.mapapi.search.route.RoutePlanSearch
 import com.baidu.mapapi.search.route.TransitRoutePlanOption
@@ -134,6 +135,8 @@ object RoutePlanRepository {
                         }
                     }
                 }
+                override fun onGetIntegralRouteResult(p0: IntegralRouteResult?) {
+                }
             })
             val drivingRoutePlanOption = DrivingRoutePlanOption()
             // 时间优先策略，默认时间优先
@@ -198,6 +201,9 @@ object RoutePlanRepository {
                         }
                     }
                 }
+
+                override fun onGetIntegralRouteResult(p0: IntegralRouteResult?) {
+                }
             })
             val startNode = PlanNode.withLocation(fromPoint)
             val endNode = PlanNode.withLocation(toPoint)
@@ -256,6 +262,9 @@ object RoutePlanRepository {
                     } else {
                         continuation.resumeWith(Result.failure(Exception("抱歉，未找到结果")))
                     }
+                }
+
+                override fun onGetIntegralRouteResult(p0: IntegralRouteResult?) {
                 }
             })
             val startNode = PlanNode.withLocation(fromPoint)
@@ -317,6 +326,9 @@ object RoutePlanRepository {
                             continuation.resumeWith(Result.failure(Exception("抱歉，未找到结果")))
                         }
                     }
+                }
+
+                override fun onGetIntegralRouteResult(p0: IntegralRouteResult?) {
                 }
             })
             val startNode = PlanNode.withLocation(fromPoint)

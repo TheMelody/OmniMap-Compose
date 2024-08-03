@@ -60,6 +60,8 @@ fun MultiPointOverlay(
     multiPointItems: List<MultiPointItem>,
     onClick: (MultiPointItem) -> Unit
 ) {
+    // Fix：新版本SDK为空的时候不给渲染的错误
+    if(multiPointItems.isEmpty()) return
     val mapApplier = currentComposer.applier as? MapApplier
     ComposeNode<MultiPointOverlayNode, MapApplier>(
         factory = {

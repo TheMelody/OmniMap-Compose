@@ -25,8 +25,8 @@ package com.melody.tencentmap.myapplication.initializer
 import android.app.Application
 import android.content.Context
 import androidx.startup.Initializer
+import com.melody.map.tencent_compose.utils.MapUtils
 import com.melody.sample.common.utils.SDKUtils
-import com.melody.tencentmap.myapplication.utils.TXMapUtils
 
 /**
  * AppDataInitStartup
@@ -39,7 +39,7 @@ class AppDataInitStartup : Initializer<Boolean> {
 
     override fun create(context: Context): Boolean {
         SDKUtils.init(context as Application)
-        TXMapUtils.updateMapViewPrivacy()
+        MapUtils.setMapPrivacy(true)
         return true
     }
 

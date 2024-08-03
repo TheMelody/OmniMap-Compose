@@ -14,10 +14,10 @@ import com.melody.sample.common.model.ISensorDegreeListener
 import kotlin.math.abs
 
 class SensorEventHelper : SensorEventListener {
-    private val mSensorManager: SensorManager = SDKUtils.getApplicationContext()
-        .getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val mAccelerometer: Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-    private val magneticField: Sensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+    private val mSensorManager: SensorManager? = SDKUtils.getApplicationContext()
+        .getSystemService(Context.SENSOR_SERVICE) as SensorManager?
+    private val mAccelerometer: Sensor? = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val magneticField: Sensor? = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
     private var lastTime: Long = 0
     private var mAngle = 0f
     private var isFirstChange = true
@@ -33,12 +33,12 @@ class SensorEventHelper : SensorEventListener {
 
     fun registerSensorListener(changeDegreeListener: ISensorDegreeListener) {
         iSensorDegreeListener = changeDegreeListener
-        mSensorManager.registerListener(
+        mSensorManager?.registerListener(
             this, mAccelerometer,
             /*Sensor.TYPE_ACCELEROMETER*/
             SensorManager.SENSOR_DELAY_UI
         )
-        mSensorManager.registerListener(
+        mSensorManager?.registerListener(
             this, magneticField,
             /*Sensor.TYPE_MAGNETIC_FIELD*/
             SensorManager.SENSOR_DELAY_UI
@@ -47,8 +47,8 @@ class SensorEventHelper : SensorEventListener {
 
     fun unRegisterSensorListener() {
         iSensorDegreeListener = null
-        mSensorManager.unregisterListener(this, mAccelerometer)
-        mSensorManager.unregisterListener(this, magneticField)
+        mSensorManager?.unregisterListener(this, mAccelerometer)
+        mSensorManager?.unregisterListener(this, magneticField)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {

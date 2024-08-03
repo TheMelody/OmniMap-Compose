@@ -48,7 +48,7 @@ private object MapNodeRoot : MapNode
 
 internal class MapApplier(
     val map: TencentMap,
-    private val mapView: MapView,
+    val mapView: MapView,
 ) : AbstractApplier<MapNode>(MapNodeRoot) {
 
     private val decorations = mutableListOf<MapNode>()

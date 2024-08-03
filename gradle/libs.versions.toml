@@ -1,0 +1,77 @@
+[versions]
+androidGradlePlugin = "8.5.1"
+kotlin = "2.0.0"
+lifecycleRunTimektx = "2.8.3"
+lifecycleViewmodelCompose = "2.8.3"
+publishPlugin = "2.0.0"
+leakcanary_android = "2.12"
+coreKtx = "1.13.1"
+activityCompose = "1.9.0"
+accompanistPermissions = "0.31.5-beta"
+accompanistFlowlayout = "0.26.2-beta"
+accompanistDrawablepainter = "0.26.2-beta"
+startUpRunTime = "1.2.0-alpha02"
+material = "1.6.8"
+composeBom = "2024.06.00"
+# 地图SDK版本号
+gaode_map3d = "10.0.600"
+gaode_search = "9.7.0"
+baidu_map = "7.6.2"
+baidu_base_libmap = "7.6.2"
+baidu_search_map = "7.6.2"
+baidu_util_map = "7.6.2"
+baidu_location_map = "9.6.4"
+tencent_location_map = "7.5.2"
+tencent_vector_map = "5.1.0"
+tencent_utils_map = "1.0.9.1"
+
+# publish maven config
+publish_maven_group_id = "io.github.TheMelody"
+plublish_gd_artifact_id = "gd_compose"
+plublish_tx_artifact_id = "tencent_compose"
+plublish_baidu_artifact_id = "baidu_compose"
+# sdk common version
+compile_sdk_version = "34"
+target_sdk_version = "34"
+min_sdk_version = "21"
+huawei_min_sdk_version = "24"
+# publish maven central library version_name
+lib_maven_version_name = "1.0.6"
+lib_maven_version_code = "106"
+
+[libraries]
+androidx-compose-ui-ui = { module = "androidx.compose.ui:ui" }
+androidx-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-ui = { module = "androidx.compose.ui:ui" }
+compose-bom = {module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+foundation = { module = "androidx.compose.foundation:foundation" }
+material = {module = "androidx.compose.material:material", version.ref = "material"}
+core-ktx = {module = "androidx.core:core-ktx", version.ref = "coreKtx"}
+leakcanary-android = {module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary_android"}
+lifecycle-runtime-ktx = {module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRunTimektx"}
+lifecycle-viewmodel-compose = {module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose"}
+activity-compose = {module = "androidx.activity:activity-compose", version.ref = "activityCompose"}
+accompanist-permissions = {module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions"}
+accompanist-flowlayout = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout"}
+accompanist-drawablepainter = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistDrawablepainter"}
+startup-runtime = {module = "androidx.startup:startup-runtime", version.ref = "startUpRunTime"}
+gaode-map3d = {module = "com.amap.api:3dmap", version.ref = "gaode_map3d"}
+gaode-search = {module = "com.amap.api:search", version.ref = "gaode_search"}
+baidu-map = {module = "com.baidu.lbsyun:BaiduMapSDK_Map", version.ref = "baidu_map"}
+baidu-base-libmap = {module = "com.baidu.lbsyun:base", version.ref = "baidu_base_libmap"}
+baidu-location-map = {module = "com.baidu.lbsyun:BaiduMapSDK_Location", version.ref = "baidu_location_map"}
+baidu-search-map = {module = "com.baidu.lbsyun:BaiduMapSDK_Search", version.ref = "baidu_search_map"}
+baidu-util-map = {module = "com.baidu.lbsyun:BaiduMapSDK_Util", version.ref = "baidu_util_map"}
+tencent-location-map = {module = "com.tencent.map.geolocation:TencentLocationSdk-openplatform", version.ref = "tencent_location_map"}
+tencent-map-vector-sdk = {module = "com.tencent.map:tencent-map-vector-sdk", version.ref = "tencent_vector_map"}
+tencent-map-sdk-utilities = {module = "com.tencent.map:sdk-utilities", version.ref = "tencent_utils_map"}
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+nexus-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "publishPlugin" }

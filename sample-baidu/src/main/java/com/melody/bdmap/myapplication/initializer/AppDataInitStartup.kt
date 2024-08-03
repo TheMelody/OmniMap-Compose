@@ -26,6 +26,7 @@ import android.app.Application
 import android.content.Context
 import androidx.startup.Initializer
 import com.melody.bdmap.myapplication.utils.BDMapUtils
+import com.melody.map.baidu_compose.utils.MapUtils
 import com.melody.sample.common.utils.SDKUtils
 
 /**
@@ -39,8 +40,8 @@ class AppDataInitStartup : Initializer<Boolean> {
 
     override fun create(context: Context): Boolean {
         SDKUtils.init(context as Application)
-        BDMapUtils.updateMapViewPrivacy(context.applicationContext)
-        BDMapUtils.initConfig(context.applicationContext)
+        MapUtils.setMapPrivacy(context,true)
+        MapUtils.init(context)
         return true
     }
 

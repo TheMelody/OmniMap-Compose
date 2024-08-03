@@ -11,6 +11,10 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 
 fun <T:Any> ActivityResultLauncher<T>.safeLaunch(input:T?){
+    if (null == input) {
+        Log.e("AppUtils", "safeLaunch(T): input = null")
+        return
+    }
     val launchResult = kotlin.runCatching {
         launch(input)
     }

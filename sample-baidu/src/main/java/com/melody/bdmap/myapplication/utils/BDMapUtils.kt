@@ -14,23 +14,7 @@ import com.baidu.mapapi.common.BaiduMapSDKException
  * created 2023/03/07 17:44
  */
 object BDMapUtils {
-
-    fun updateMapViewPrivacy(context: Context) {
-        SDKInitializer.setAgreePrivacy(context, true)
-        LocationClient.setAgreePrivacy(true)
-    }
-
-    fun initConfig(context: Context){
-        try {
-            // 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
-            SDKInitializer.initialize(context)
-        } catch (ignore: BaiduMapSDKException) {
-            // ignore
-        }
-        //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标，这里设置成国测局坐标
-        SDKInitializer.setCoordType(CoordType.GCJ02)
-    }
-
+    
     fun locationErrorMessage(locationType: Int): String? {
         return when(locationType) {
             62 -> "无法获取有效定位依据，定位失败，请检查运营商网络或者WiFi网络是否正常开启，尝试重新请求定位。"

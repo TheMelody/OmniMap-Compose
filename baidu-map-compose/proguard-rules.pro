@@ -21,6 +21,10 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.melody.map.baidu_compose.model.** {*;}
 -dontwarn com.melody.map.baidu_compose.model.**
+-keep class com.melody.map.baidu_compose.poperties.** {*;}
+-dontwarn com.melody.map.baidu_compose.poperties.**
 -keep class com.baidu.** {*;}
 -keep class mapsdkvi.com.** {*;}
 -dontwarn com.baidu.**
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
