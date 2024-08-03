@@ -21,4 +21,5 @@ nexusPublishing {
             password.set(System.getenv("MAVEN_TOKEN_PASSWORD"))
         }
     }
+    packageGroup.set(libs.versions.publish.maven.group.id.get())
 }
