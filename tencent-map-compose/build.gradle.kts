@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
+        lint.targetSdk = libs.versions.target.sdk.version.get().toInt()
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -46,15 +46,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_19
         targetCompatibility = JavaVersion.VERSION_19
     }
-    lintOptions {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
+    lint {
+        abortOnError = false
+        checkReleaseBuilds =  false
     }
 }
 
 dependencies {
     implementation(platform(libs.compose.bom))
-    implementation("androidx.compose.ui:ui")
+    implementation(libs.androidx.ui)
     implementation(libs.lifecycle.runtime.ktx)
 
     // 地图库

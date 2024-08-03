@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
+        lint.targetSdk = libs.versions.target.sdk.version.get().toInt()
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -42,7 +42,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -51,7 +51,7 @@ android {
 
 dependencies {
     implementation(platform(libs.compose.bom))
-    api("androidx.compose.runtime:runtime")
+    api(libs.androidx.runtime)
     api(libs.core.ktx)
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.compose)

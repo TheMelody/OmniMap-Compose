@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
+        lint.targetSdk = libs.versions.target.sdk.version.get().toInt()
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -37,12 +37,10 @@ android {
     kotlinOptions {
         jvmTarget = "19"
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
-
-    packagingOptions {
+    packaging {
         resources {
             excludes += setOf("/META-INF/{AL2.0,LGPL2.1}")
         }
@@ -51,9 +49,9 @@ android {
 
 dependencies {
     implementation(platform(libs.compose.bom))
-    api("androidx.compose.ui:ui")
-    api("androidx.compose.ui:ui-tooling-preview")
-    api("androidx.compose.foundation:foundation")
+    api(libs.compose.ui)
+    api(libs.compose.ui.tooling.preview)
+    api(libs.foundation)
 
     api(libs.core.ktx)
     api(libs.material)

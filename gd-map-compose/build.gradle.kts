@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.version.get().toInt()
-        targetSdk = libs.versions.target.sdk.version.get().toInt()
+        lint.targetSdk =  libs.versions.target.sdk.version.get().toInt()
         consumerProguardFiles("consumer-rules.pro")
     }
     buildFeatures {
@@ -44,7 +44,7 @@ android {
 
 dependencies {
     implementation(platform(libs.compose.bom))
-    implementation("androidx.compose.ui:ui")
+    implementation(libs.androidx.compose.ui.ui)
     implementation(libs.lifecycle.runtime.ktx)
 
     // 高德地图3d
