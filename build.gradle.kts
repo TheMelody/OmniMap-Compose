@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.nexus.publish.plugin)
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
     // id("com.huawei.agconnect") version "1.9.1.300" apply false
 }
 
