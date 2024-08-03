@@ -70,6 +70,6 @@ jobs:
           tag: ${{ github.ref_name }}
 
       - name: "Publish Map-Compose"
-        run: ./gradlew clean assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew clean assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository --stacktrace
 #        # 下面的方式：不自动关闭暂存库，手动去执行关闭的话，可以在网页中选择是否删除或者释放：https://s01.oss.sonatype.org/#stagingRepositories
 #        #run: ./gradlew clean gd-map-compose:assembleRelease androidJavaDocJar androidSourcesJar generatePomFileForNexusPublication publishNexusPublicationToSonatypeRepository
