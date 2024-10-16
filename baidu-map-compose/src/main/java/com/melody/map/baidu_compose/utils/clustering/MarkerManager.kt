@@ -3,6 +3,7 @@
  */
 package com.melody.map.baidu_compose.utils.clustering
 
+import android.util.Log
 import com.baidu.mapapi.map.BaiduMap
 import com.baidu.mapapi.map.Marker
 import com.baidu.mapapi.map.MarkerOptions
@@ -16,7 +17,7 @@ import java.util.Collections
  * All marker operations (adds and removes) should occur via its collection class. That is, don't
  * add a marker via a collection, then remove it via Marker.remove()
  */
-internal class MarkerManager constructor(private val mMap: BaiduMap) : BaiduMap.OnMarkerClickListener,
+internal class MarkerManager(private val mMap: BaiduMap) : BaiduMap.OnMarkerClickListener,
     BaiduMap.OnMarkerDragListener {
     private val mNamedCollections: MutableMap<String, Collection?> = HashMap()
     private val mAllMarkers: MutableMap<Marker?, Collection> = HashMap()
@@ -30,7 +31,7 @@ internal class MarkerManager constructor(private val mMap: BaiduMap) : BaiduMap.
      */
     fun newCollection(id: String): Collection {
         if (mNamedCollections[id] != null) {
-            throw IllegalArgumentException("collection id is not unique: " + id)
+            throw IllegalArgumentException("collection id is not unique: $id")
         }
         val collection = Collection()
         mNamedCollections[id] = collection
@@ -47,34 +48,22 @@ internal class MarkerManager constructor(private val mMap: BaiduMap) : BaiduMap.
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val collection: Collection? = mAllMarkers.get(marker)
-        if (collection != null && collection.mMarkerClickListener != null) {
-            // you can set the click action
-            return collection.mMarkerClickListener!!.onMarkerClick(marker)
-        } else {
-            // click single maker out of cluster
-        }
-        return false
+        return collection?.mMarkerClickListener?.onMarkerClick(marker)?:false
     }
 
     override fun onMarkerDragStart(marker: Marker) {
         val collection: Collection? = mAllMarkers.get(marker)
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener!!.onMarkerDragStart(marker)
-        }
+        collection?.mMarkerDragListener?.onMarkerDragStart(marker)
     }
 
     override fun onMarkerDrag(marker: Marker) {
         val collection: Collection? = mAllMarkers.get(marker)
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener!!.onMarkerDrag(marker)
-        }
+        collection?.mMarkerDragListener?.onMarkerDrag(marker)
     }
 
     override fun onMarkerDragEnd(marker: Marker) {
         val collection: Collection? = mAllMarkers.get(marker)
-        if (collection != null && collection.mMarkerDragListener != null) {
-            collection.mMarkerDragListener!!.onMarkerDragEnd(marker)
-        }
+        collection?.mMarkerDragListener?.onMarkerDragEnd(marker)
     }
 
     /**
@@ -92,10 +81,14 @@ internal class MarkerManager constructor(private val mMap: BaiduMap) : BaiduMap.
         private val mMarkers: MutableSet<Marker?> = HashSet()
         var mMarkerClickListener: BaiduMap.OnMarkerClickListener? = null
         var mMarkerDragListener: BaiduMap.OnMarkerDragListener? = null
-        fun addMarker(opts: MarkerOptions?): Marker {
-            val marker: Marker = mMap.addOverlay(opts) as Marker
-            mMarkers.add(marker)
-            mAllMarkers.put(marker, this@Collection)
+        fun addMarker(opts: MarkerOptions?): Marker? {
+            val marker: Marker? = mMap.addOverlay(opts) as? Marker?
+            if(null != marker) {
+                mMarkers.add(marker)
+                mAllMarkers[marker] = this@Collection
+            } else {
+                Log.w("MarkerManager","Collection#addMarker，Exception Reason：Map.addOverlay return null!")
+            }
             return marker
         }
 

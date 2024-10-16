@@ -10,13 +10,13 @@ OmniMap Compose 🗺
 -------
 <table>
  <tr>
-  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.6"></td>
+  <td>gd_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/gd_compose?versionPrefix=1.0.7"></td>
  </tr>
  <tr>
-  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.6"></td>
+  <td>tencent_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/tencent_compose?versionPrefix=1.0.7"></td>
  </tr>
  <tr>
-  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.6"></td>
+  <td>baidu_compose</td><td><img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.TheMelody/baidu_compose?versionPrefix=1.0.7"></td>
  </tr>
 </table>
 
@@ -37,8 +37,8 @@ android {
       implementation("io.github.TheMelody:baidu_compose:<version>")    // 百度地图
       implementation("io.github.TheMelody:google_compose:<version>")   // Google地图 → 未开始
         
-      // 华为这个大部分能力需要企业账号才能开通，无法继续其他功能验证，暂时放弃了，劝退
-      implementation("io.github.TheMelody:huawei_compose:<version>")   // 花瓣地图(Android 7.0+) → 中途放弃
+      // 华为这个大部分能力需要企业账号才能开通，无法继续其他功能验证，暂时放弃，劝退!
+      //implementation("io.github.TheMelody:huawei_compose:<version>")   // 花瓣地图(Android 7.0+)
     }
 }
 ```
@@ -49,7 +49,7 @@ android {
 ```
 JDK : 19
 Gradle :  8.5
-Compose BOM：2024.06.00
+Compose BOM：2024.09.03
 AndroidStudio建议使用：Android Studio Koala及以上版本
 
 // 地图隐私合规，请在App授权完隐私弹窗协议的第一时间，立即调用

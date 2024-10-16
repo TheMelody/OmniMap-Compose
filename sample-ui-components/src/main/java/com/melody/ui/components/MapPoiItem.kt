@@ -30,7 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -56,7 +56,7 @@ fun MapPoiItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
-                indication = rememberRipple(),
+                indication = ripple(),
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = currentOnItemClick
             )
