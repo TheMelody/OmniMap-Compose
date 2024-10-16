@@ -87,7 +87,7 @@ internal class MarkerManager(private val mMap: BaiduMap) : BaiduMap.OnMarkerClic
                 mMarkers.add(marker)
                 mAllMarkers[marker] = this@Collection
             } else {
-                Log.w("MarkerManager","Collection#addMarker，Exception Reason：Map.addOverlay return null!")
+                Log.w("MarkerManager","Collection#addMarker，Exception Reason：Map.addOverlay(**) as Marker => return null，MarkerOptions：$opts")
             }
             return marker
         }
