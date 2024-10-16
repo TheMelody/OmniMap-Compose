@@ -60,10 +60,10 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - 升级Android三方库，包含地图SDK
-            - 升级JDK版本
-            - 使用Compose BOM维护Compose版本
-            - 处理版本升级的异常显示和闪退问题
+            - fix: [https://github.com/TheMelody/OmniMap-Compose/issues/28](https://github.com/TheMelody/OmniMap-Compose/issues/28)
+            - ComposeBOM，更新 2024.06.00 → 2024.09.03
+            - sample工程的中material库，由1.6.8  → 1.7.3
+            - rememberRipple() 已废弃，请使用 ripple()
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称

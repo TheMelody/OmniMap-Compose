@@ -56,9 +56,9 @@ internal class DefaultClusterRenderer<T : ClusterItem?>(
     clusterManager: ClusterManager<T>
 ) : ClusterRenderer<T> {
 
-    private val mIconGenerator: IconGenerator
     private val mClusterManager: ClusterManager<T>
-    private val mDensity: Float
+    private val mIconGenerator: IconGenerator = IconGenerator(context)
+    private val mDensity: Float = context.resources.displayMetrics.density
     private var mClusterColor: Int = -1
     private var mMaxDistanceAtZoom: Int = 100
     private var mColoredCircleBackground: ShapeDrawable? = null
@@ -292,16 +292,11 @@ internal class DefaultClusterRenderer<T : ClusterItem?>(
      * When zooming in, markers are animated out from the nearest existing cluster. When zooming
      * out, existing clusters are animated to the nearest new cluster.
      */
-    private inner class RenderTask constructor(clusters: Set<Cluster<T?>?>?) : Runnable {
-        val clusters: Set<Cluster<T?>?>?
+    private inner class RenderTask(val clusters: Set<Cluster<T?>?>?) : Runnable {
         private var mCallback: Runnable? = null
         private var mProjection: Projection? = null
         private var mSphericalMercatorProjection: SphericalMercatorProjection? = null
         private var mapZoom = 0f
-
-        init {
-            this.clusters = clusters
-        }
 
         /**
          * A callback to be run when all work has been completed.
@@ -724,25 +719,16 @@ internal class DefaultClusterRenderer<T : ClusterItem?>(
 
     /**
      * Creates markerWithPosition(s) for a particular cluster, animating it if necessary.
-     * @param c            the cluster to render.
-     * @param markersAdded a collection of markers to append any created markers.
+     * @param cluster            the cluster to render.
+     * @param newMarkers a collection of markers to append any created markers.
      * @param animateFrom  the location to animate the markerWithPosition from, or null if no
      * animation is required.
      */
     private inner class CreateMarkerTask(
-        c: Cluster<T?>?,
-        markersAdded: MutableSet<MarkerWithPosition>,
-        animateFrom: LatLng?
-    ) {
-        private val cluster: Cluster<T?>?
-        private val newMarkers: MutableSet<MarkerWithPosition>
+        private val cluster: Cluster<T?>?,
+        private val newMarkers: MutableSet<MarkerWithPosition>,
         private val animateFrom: LatLng?
-
-        init {
-            cluster = c
-            newMarkers = markersAdded
-            this.animateFrom = animateFrom
-        }
+    ) {
 
         fun perform(markerModifier: MarkerModifier) {
             // Don't show small clusters. Render the markers inside, instead.
@@ -814,8 +800,6 @@ internal class DefaultClusterRenderer<T : ClusterItem?>(
     }
 
     init {
-        mDensity = context.resources.displayMetrics.density
-        mIconGenerator = IconGenerator(context)
         mIconGenerator.setContentView(makeSquareTextView(context))
         mIconGenerator.setTextAppearance(R.style.BD_ClusterIcon_TextAppearance)
         mIconGenerator.setBackground(makeClusterBackground())
