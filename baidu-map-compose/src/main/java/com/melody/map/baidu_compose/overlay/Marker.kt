@@ -22,8 +22,8 @@
 
 package com.melody.map.baidu_compose.overlay
 
-import android.os.Bundle
 import android.animation.TypeEvaluator
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.CompositionContext
@@ -36,14 +36,15 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
+import com.baidu.mapapi.animation.Animation
 import com.baidu.mapapi.map.BitmapDescriptor
 import com.baidu.mapapi.map.Marker
 import com.baidu.mapapi.map.MarkerOptions
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType
+import com.baidu.mapapi.map.TitleOptions
 import com.baidu.mapapi.model.LatLng
 import com.melody.map.baidu_compose.MapApplier
 import com.melody.map.baidu_compose.MapNode
-import com.baidu.mapapi.animation.Animation
 import com.melody.map.baidu_compose.model.BDMapComposable
 
 internal class MarkerNode(
@@ -219,6 +220,7 @@ fun Marker(
     runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
+    titleOptions: TitleOptions? = null,
     snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
@@ -241,6 +243,7 @@ fun Marker(
         isFlat = isFlat,
         tag = tag,
         title = title,
+        titleOptions = titleOptions,
         snippet = snippet,
         visible = visible,
         zIndex = zIndex,
@@ -288,6 +291,7 @@ fun MarkerInfoWindow(
     runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
+    titleOptions: TitleOptions? = null,
     snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
@@ -311,6 +315,7 @@ fun MarkerInfoWindow(
         rotation = rotation,
         tag = tag,
         title = title,
+        titleOptions = titleOptions,
         snippet = snippet,
         visible = visible,
         zIndex = zIndex,
@@ -359,6 +364,7 @@ fun MarkerInfoWindowContent(
     runAnimation :Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
+    titleOptions: TitleOptions? = null,
     snippet: String? = null,
     rotation: Float = 0.0f,
     visible: Boolean = true,
@@ -379,6 +385,7 @@ fun MarkerInfoWindowContent(
         icon = icon,
         tag = tag,
         title = title,
+        titleOptions = titleOptions,
         snippet = snippet,
         rotation = rotation,
         animation = animation,
@@ -431,6 +438,7 @@ private fun MarkerImpl(
     rotation: Float,
     tag: Bundle?,
     title: String?,
+    titleOptions: TitleOptions?,
     snippet: String?,
     visible: Boolean,
     zIndex: Int,
@@ -450,6 +458,7 @@ private fun MarkerImpl(
                         title?.let { putString("title", it) }
                         snippet?.let { putString("snippet", it) }
                     }
+                    titleOptions(titleOptions)
                     alpha(alpha)
                     anchor(anchor.x, anchor.y)
                     draggable(draggable)

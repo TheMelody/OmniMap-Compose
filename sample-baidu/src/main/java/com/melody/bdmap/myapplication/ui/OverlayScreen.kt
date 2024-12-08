@@ -46,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.baidu.mapapi.map.BitmapDescriptorFactory
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.TileProvider
+import com.baidu.mapapi.map.TitleOptions
 import com.baidu.mapapi.map.UrlTileProvider
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.model.LatLngBounds
@@ -64,8 +65,6 @@ import com.melody.map.baidu_compose.overlay.Marker
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindow
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindowContent
 import com.melody.map.baidu_compose.overlay.Polygon
-import com.melody.map.baidu_compose.overlay.Polyline
-import com.melody.map.baidu_compose.overlay.PolylineCustomTexture
 import com.melody.map.baidu_compose.overlay.PolylineRainbow
 import com.melody.map.baidu_compose.overlay.TextOverlay
 import com.melody.map.baidu_compose.overlay.TileOverlay
@@ -149,6 +148,7 @@ internal fun OverlayScreen() {
                 icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = currentState.polygonCornerLatLng),
                 title = "看到了不？",
+                titleOptions = TitleOptions().text("Marker标记物").titleOffset(0, -40),
                 snippet = "我的下方还有个多边形记得放大查看!",
                 zIndex = 1
             )
