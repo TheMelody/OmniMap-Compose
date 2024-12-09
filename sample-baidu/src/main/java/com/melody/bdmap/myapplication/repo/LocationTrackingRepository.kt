@@ -49,7 +49,8 @@ object LocationTrackingRepository {
     fun checkGPSIsOpen(): Boolean {
         val locationManager: LocationManager? = SDKUtils.getApplicationContext()
             .getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)?: false
+        // fix: 部分设备系统的位置开关已经开了，但是GPS_PROVIDER始终返回false的问题
+        return (locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)?: false) || (locationManager?.isProviderEnabled(LocationManager.NETWORK_PROVIDER)?: false)
     }
 
     fun initMapProperties() : MapProperties {

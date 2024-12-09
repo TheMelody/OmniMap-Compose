@@ -251,7 +251,7 @@ fun Marker(
 }
 
 /**
- * 覆盖物[Marker]，此组合项可定制整个InfoWindow信息窗口，如果不需要此自定义，请使用 [com.melody.map.tencent_compose.overlay.Marker].
+ * 覆盖物[Marker]，此组合项可定制整个InfoWindow信息窗口，如果不需要此自定义，请使用 [com.melody.map.baidu_compose.overlay.Marker].
  *
  * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
  * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1
@@ -321,7 +321,7 @@ fun MarkerInfoWindow(
 }
 
 /**
- * 覆盖物[Marker]，此组合项可定制InfoWindow信息窗口内容，如果不需要此自定义，请使用 [com.melody.map.tencent_compose.overlay.Marker].
+ * 覆盖物[Marker]，此组合项可定制InfoWindow信息窗口内容，如果不需要此自定义，请使用 [com.melody.map.baidu_compose.overlay.Marker].
  *
  * @param state [MarkerState]控制和观察[Marker]状态的状态对象。
  * @param alpha Marker覆盖物的透明度,透明度范围[0,1] 1为不透明,默认值为1

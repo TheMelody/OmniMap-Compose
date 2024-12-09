@@ -60,10 +60,8 @@ jobs:
           artifactErrorsFailBuild: true
           body:  |
             ### 功能更新
-            - fix: [https://github.com/TheMelody/OmniMap-Compose/issues/28](https://github.com/TheMelody/OmniMap-Compose/issues/28)
-            - ComposeBOM，更新 2024.06.00 → 2024.09.03
-            - sample工程的中material库，由1.6.8  → 1.7.3
-            - rememberRipple() 已废弃，请使用 ripple()
+            - fix: Demo中有些同学的测试机只提供网络定位，无法显示定位蓝点，所以Demo中的LocationManager.GPS_PROVIDER始终返回false，现在同时增加LocationManager.NETWORK_PROVIDER一起判断是否打开了GPS开关
+            - 其他.........
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称
