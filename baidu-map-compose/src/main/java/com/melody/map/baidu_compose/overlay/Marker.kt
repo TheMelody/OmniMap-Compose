@@ -59,6 +59,7 @@ internal class MarkerNode(
     override fun onAttached() {
         markerState.markerNode = this
     }
+
     override fun onRemoved() {
         markerState.markerNode = null
         marker.cancelAnimation()
@@ -157,6 +158,7 @@ class MarkerCustomAnimation private constructor(
                 typeEvaluator = null
             )
         }
+
         /**
          * @param animType 设置Marker动画类型，见[MarkerAnimateType]，默认无动画，**设置此参数，单独触发内置类型的动画**
          * @param animation 设置Marker动画类: [com.baidu.mapapi.animation.AlphaAnimation]、[com.baidu.mapapi.animation.AnimationSet]、[com.baidu.mapapi.animation.RotateAnimation]、[com.baidu.mapapi.animation.ScaleAnimation]、[com.baidu.mapapi.animation.SingleScaleAnimation]、[com.baidu.mapapi.animation.Transformation]
@@ -173,6 +175,138 @@ class MarkerCustomAnimation private constructor(
                 typeEvaluator = typeEvaluator
             )
         }
+    }
+}
+
+/**
+ * MarkerTextOverlayOptions
+ * 用于设置地图标题的显示样式选项。
+ * 通过此类可以自定义标题的文字内容、背景色、文字颜色、文字大小、锚点位置、偏移量等属性。
+ *
+ * @param text 文字内容
+ * @param textBgColor 文字背景框颜色，默认值为 0（无背景）
+ * @param textFontColor 文字颜色，默认值为 -16777216（黑色）
+ * @param textFontSize 文字大小，默认值为 48
+ * @param textYOffset 文字竖直偏移量，默认值为 0
+ * @param textXOffset 文字水平偏移量，默认值为 0
+ * @param textAnchorX 文字X锚点，默认值为 0.5f（表示锚点位于文字的中心）
+ * @param textAnchorY 文字Y锚点，默认值为 1.0f（表示锚点位于文字的底部）
+ * @param textBgBitmapDescriptor 文字背景图，默认为 null
+ * @param align 文字对齐方式，默认值为 2
+ * @param width 文字背景框宽度，默认为 0
+ * @param height 文字背景框高度，默认为 0
+ * @param maxLines 文字最大行数，默认为 0
+ * @param leftPadding 文字背景框左边距，默认为 0
+ * @param rightPadding 文字背景框右边距，默认为 0
+ * @param topPadding 文字背景框上边距，默认为 0
+ * @param bottomPadding 文字背景框下边距，默认为 0
+ * @param textRotate 文字旋转角度，默认值为 0f
+ */
+class MarkerTextOverlayOptions private constructor(
+    val text: String,
+    val textBgColor: Int,
+    val textFontColor: Int,
+    val textFontSize: Int,
+    val textYOffset: Int,
+    val textXOffset: Int,
+    val textAnchorX: Float,
+    val textAnchorY: Float,
+    val textBgBitmapDescriptor: BitmapDescriptor?,
+    val align: Int,
+    val width: Int,
+    val height: Int,
+    val maxLines: Int,
+    val leftPadding: Int,
+    val rightPadding: Int,
+    val topPadding: Int,
+    val bottomPadding: Int,
+    val textRotate: Float
+) {
+    companion object {
+        /**
+         * 创建一个TitleOptions实例
+         * @param text 文字内容，默认值为空字符串
+         * @param textBgColor 文字背景框颜色，默认值为 0（无背景）
+         * @param textFontColor 文字颜色，默认值为 -16777216（黑色）
+         * @param textFontSize 文字大小，默认值为 48
+         * @param textYOffset 文字竖直偏移量，默认值为 0
+         * @param textXOffset 文字水平偏移量，默认值为 0
+         * @param textAnchorX 文字X锚点，默认值为 0.5f
+         * @param textAnchorY 文字Y锚点，默认值为 1.0f
+         * @param textBgBitmapDescriptor 文字背景图，默认为 null
+         * @param align 文字对齐方式，默认值为 2
+         * @param width 文字背景框宽度，默认为 0
+         * @param height 文字背景框高度，默认为 0
+         * @param maxLines 文字最大行数，默认为 0
+         * @param leftPadding 文字背景框左边距，默认为 0
+         * @param rightPadding 文字背景框右边距，默认为 0
+         * @param topPadding 文字背景框上边距，默认为 0
+         * @param bottomPadding 文字背景框下边距，默认为 0
+         * @param textRotate 文字旋转角度，默认值为 0f
+         */
+        fun create(
+            text: String = "",
+            textBgColor: Int = 0,
+            textFontColor: Int = -16777216,
+            textFontSize: Int = 48,
+            textYOffset: Int = 0,
+            textXOffset: Int = 0,
+            textAnchorX: Float = 0.5f,
+            textAnchorY: Float = 1.0f,
+            textBgBitmapDescriptor: BitmapDescriptor? = null,
+            align: Int = 2,
+            width: Int = 0,
+            height: Int = 0,
+            maxLines: Int = 0,
+            leftPadding: Int = 0,
+            rightPadding: Int = 0,
+            topPadding: Int = 0,
+            bottomPadding: Int = 0,
+            textRotate: Float = 0f
+        ): MarkerTextOverlayOptions {
+            return MarkerTextOverlayOptions(
+                text,
+                textBgColor,
+                textFontColor,
+                textFontSize,
+                textYOffset,
+                textXOffset,
+                textAnchorX,
+                textAnchorY,
+                textBgBitmapDescriptor,
+                align,
+                width,
+                height,
+                maxLines,
+                leftPadding,
+                rightPadding,
+                topPadding,
+                bottomPadding,
+                textRotate % 360
+            )
+        }
+    }
+
+    /**
+     * 转换为 TitleOptions 实例
+     * @return TitleOptions 对象
+     */
+    fun toTitleOptions(): TitleOptions {
+        val titleOptions = TitleOptions()
+        titleOptions.text(this.text)
+            .titleBgColor(this.textBgColor)
+            .titleFontColor(this.textFontColor)
+            .titleFontSize(this.textFontSize)
+            .titleOffset(this.textXOffset, this.textYOffset)
+            .titleAnchor(this.textAnchorX, this.textAnchorY)
+            .titleBgBitmapDescriptor(this.textBgBitmapDescriptor)
+            .setAlign(this.align)
+            .setWidth(this.width)
+            .setHeight(this.height)
+            .setMaxLines(this.maxLines)
+            .setPadding(this.leftPadding, this.topPadding, this.rightPadding, this.bottomPadding)
+            .titleRotate(this.textRotate)
+        return titleOptions
     }
 }
 
@@ -199,6 +333,7 @@ fun rememberMarkerState(
  * @param animation 设置Marker动画
  * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
+ * @param textOptions Marker覆盖物附带的文字覆盖物
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
  * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
@@ -217,10 +352,10 @@ fun Marker(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    runAnimation :Boolean? = null,
+    runAnimation: Boolean? = null,
+    textOptions: MarkerTextOverlayOptions? = null,
     tag: Bundle? = null,
     title: String? = null,
-    titleOptions: TitleOptions? = null,
     snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
@@ -237,13 +372,13 @@ fun Marker(
         isClickable = isClickable,
         animation = animation,
         runAnimation = runAnimation,
+        textOptions = textOptions,
         isPerspective = isPerspective,
         icon = icon,
         rotation = rotation,
         isFlat = isFlat,
         tag = tag,
         title = title,
-        titleOptions = titleOptions,
         snippet = snippet,
         visible = visible,
         zIndex = zIndex,
@@ -268,6 +403,7 @@ fun Marker(
  * @param animation 设置Marker动画
  * @param runAnimation 【只有配置了**animation**才有效】设置为true，启动动画，设置为false取消动画，设置为null，不触发动画
  * @param rotation Marker覆盖物基于锚点旋转的角度，百度地图逆时针
+ * @param textOptions Marker覆盖物附带的文字覆盖物
  * @param tag Marker覆盖物的附加信息对象
  * @param title Marker覆盖物的标题，通过Marker.getTitleExt()获取title值
  * @param snippet Marker 覆盖物的文字片段，通过Marker.getSnippetExt()获取snippet值
@@ -288,10 +424,10 @@ fun MarkerInfoWindow(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    runAnimation :Boolean? = null,
+    runAnimation: Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
-    titleOptions: TitleOptions? = null,
+    textOptions: MarkerTextOverlayOptions? = null,
     snippet: String? = null,
     icon: BitmapDescriptor,
     rotation: Float = 0.0f,
@@ -310,12 +446,12 @@ fun MarkerInfoWindow(
         animation = animation,
         runAnimation = runAnimation,
         infoWindowYOffset = infoWindowYOffset,
+        textOptions = textOptions,
         icon = icon,
         isFlat = isFlat,
         rotation = rotation,
         tag = tag,
         title = title,
-        titleOptions = titleOptions,
         snippet = snippet,
         visible = visible,
         zIndex = zIndex,
@@ -347,7 +483,7 @@ fun MarkerInfoWindow(
  * @param zIndex Marker覆盖物的z轴值
  * @param onClick 标注点击事件回调，true拦截事件，不继续往下传递，false事件可以继续往下传递到地图
  * @param content 用于自定义信息窗口的内容，【里面动态的内容，通过extraInfo的方式获取】
-*/
+ */
 @Composable
 @BDMapComposable
 fun MarkerInfoWindowContent(
@@ -361,10 +497,10 @@ fun MarkerInfoWindowContent(
     isPerspective: Boolean = false,
     isFlat: Boolean = false,
     animation: MarkerCustomAnimation? = null,
-    runAnimation :Boolean? = null,
+    runAnimation: Boolean? = null,
     tag: Bundle? = null,
     title: String? = null,
-    titleOptions: TitleOptions? = null,
+    textOptions: MarkerTextOverlayOptions? = null,
     snippet: String? = null,
     rotation: Float = 0.0f,
     visible: Boolean = true,
@@ -381,11 +517,11 @@ fun MarkerInfoWindowContent(
         isPerspective = isPerspective,
         infoWindowYOffset = infoWindowYOffset,
         runAnimation = runAnimation,
+        textOptions = textOptions,
         isFlat = isFlat,
         icon = icon,
         tag = tag,
         title = title,
-        titleOptions = titleOptions,
         snippet = snippet,
         rotation = rotation,
         animation = animation,
@@ -434,11 +570,11 @@ private fun MarkerImpl(
     isFlat: Boolean,
     icon: BitmapDescriptor,
     animation: MarkerCustomAnimation?,
-    runAnimation :Boolean?,
+    runAnimation: Boolean?,
     rotation: Float,
     tag: Bundle?,
     title: String?,
-    titleOptions: TitleOptions?,
+    textOptions: MarkerTextOverlayOptions? = null,
     snippet: String?,
     visible: Boolean,
     zIndex: Int,
@@ -454,11 +590,13 @@ private fun MarkerImpl(
                 MarkerOptions().apply {
                     // 保证和国内其他地图平台一致的传参体验
                     val bundle = Bundle().apply {
-                        tag?.let { putBundle("tag",it) }
+                        tag?.let { putBundle("tag", it) }
                         title?.let { putString("title", it) }
                         snippet?.let { putString("snippet", it) }
                     }
-                    titleOptions(titleOptions)
+                    if (textOptions != null) {
+                        titleOptions(textOptions.toTitleOptions())
+                    }
                     alpha(alpha)
                     anchor(anchor.x, anchor.y)
                     draggable(draggable)
@@ -499,9 +637,9 @@ private fun MarkerImpl(
             set(isFlat) { this.marker.isFlat = it }
             set(animation) { this.marker.customAnimation(it) }
             set(runAnimation) {
-                if(it == false){
+                if (it == false) {
                     this.marker.cancelAnimation()
-                } else if(it == true) {
+                } else if (it == true) {
                     this.marker.startAnimation()
                 }
             }
@@ -533,9 +671,9 @@ private fun MarkerImpl(
 }
 
 private fun Marker.customAnimation(animation: MarkerCustomAnimation?) {
-    if(null == animation) return
+    if (null == animation) return
     setAnimateType(animation.animateType.ordinal)
-    if(null != animation.typeEvaluator) {
+    if (null != animation.typeEvaluator) {
         setAnimation(animation.animation, animation.typeEvaluator)
     } else {
         setAnimation(animation.animation)
