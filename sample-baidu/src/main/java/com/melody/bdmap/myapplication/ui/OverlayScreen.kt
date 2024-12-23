@@ -63,9 +63,8 @@ import com.melody.map.baidu_compose.overlay.GroundOverlayPosition
 import com.melody.map.baidu_compose.overlay.Marker
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindow
 import com.melody.map.baidu_compose.overlay.MarkerInfoWindowContent
+import com.melody.map.baidu_compose.overlay.MarkerTextOverlayOptions
 import com.melody.map.baidu_compose.overlay.Polygon
-import com.melody.map.baidu_compose.overlay.Polyline
-import com.melody.map.baidu_compose.overlay.PolylineCustomTexture
 import com.melody.map.baidu_compose.overlay.PolylineRainbow
 import com.melody.map.baidu_compose.overlay.TextOverlay
 import com.melody.map.baidu_compose.overlay.TileOverlay
@@ -149,6 +148,10 @@ internal fun OverlayScreen() {
                 icon = BitmapDescriptorFactory.fromAsset("red_marker.png"),
                 state = rememberMarkerState(position = currentState.polygonCornerLatLng),
                 title = "看到了不？",
+                textOptions = MarkerTextOverlayOptions.create(
+                    text = "标记物",
+                    textYOffset = -40,
+                ),
                 snippet = "我的下方还有个多边形记得放大查看!",
                 zIndex = 1
             )
