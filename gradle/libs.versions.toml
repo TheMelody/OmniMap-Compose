@@ -1,29 +1,30 @@
 [versions]
-androidGradlePlugin = "8.5.1"
+androidGradlePlugin = "8.6.0"
 kotlin = "2.0.0"
 lifecycleRunTimektx = "2.8.3"
 lifecycleViewmodelCompose = "2.8.3"
 publishPlugin = "2.0.0"
 leakcanary_android = "2.12"
-coreKtx = "1.13.1"
-activityCompose = "1.9.0"
+coreKtx = "1.16.0"
+activityCompose = "1.10.1"
 accompanistPermissions = "0.31.5-beta"
 accompanistFlowlayout = "0.26.2-beta"
 accompanistDrawablepainter = "0.26.2-beta"
-startUpRunTime = "1.2.0-alpha02"
-material = "1.7.3"
-composeBom = "2024.09.03"
+startUpRunTime = "1.2.0"
+material = "1.8.0"
+composeBom = "2025.04.01"
 # 地图SDK版本号
 gaode_map3d = "10.0.600"
-gaode_search = "9.7.0"
-baidu_map = "7.6.2"
-baidu_base_libmap = "7.6.2"
-baidu_search_map = "7.6.2"
-baidu_util_map = "7.6.2"
+gaode_search = "9.7.1"
+baidu_map = "7.6.4"
+baidu_base_libmap = "7.6.4"
+baidu_search_map = "7.6.4"
+baidu_util_map = "7.6.4"
 baidu_location_map = "9.6.4"
-tencent_location_map = "7.5.2"
-tencent_vector_map = "5.1.0"
-tencent_utils_map = "1.0.9.1"
+tencent_location_map = "7.6.1"
+tencent_vector_map = "6.3.0.250311.940c5007.146962199"
+tencent-map-foundation = "0.5.7.fc32fe3"
+tencent_utils_map = "1.0.10"
 
 # publish maven config
 publish_maven_group_id = "io.github.TheMelody"
@@ -31,7 +32,7 @@ plublish_gd_artifact_id = "gd_compose"
 plublish_tx_artifact_id = "tencent_compose"
 plublish_baidu_artifact_id = "baidu_compose"
 # sdk common version
-compile_sdk_version = "34"
+compile_sdk_version = "35"
 target_sdk_version = "34"
 min_sdk_version = "21"
 huawei_min_sdk_version = "24"
@@ -54,6 +55,7 @@ activity-compose = {module = "androidx.activity:activity-compose", version.ref =
 accompanist-permissions = {module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions"}
 accompanist-flowlayout = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout"}
 accompanist-drawablepainter = {module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistDrawablepainter"}
+openmap-foundation = { module = "com.tencent.openmap:foundation", version.ref = "tencent-map-foundation" }
 startup-runtime = {module = "androidx.startup:startup-runtime", version.ref = "startUpRunTime"}
 gaode-map3d = {module = "com.amap.api:3dmap", version.ref = "gaode_map3d"}
 gaode-search = {module = "com.amap.api:search", version.ref = "gaode_search"}

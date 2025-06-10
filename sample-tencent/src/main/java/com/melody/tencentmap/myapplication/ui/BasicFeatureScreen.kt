@@ -66,6 +66,7 @@ internal fun BasicFeatureScreen() {
                 "普通地图",
                 "卫星图",
                 "暗色地图",
+                "新3D沉浸地图",
                 "3D楼块效果",
                 "地图标注及名称",
                 "实时交通状况开关",
@@ -108,6 +109,7 @@ internal fun BasicFeatureScreen() {
                             "普通地图"-> mapProperties.mapType == MapType.NORMAL
                             "卫星图"-> mapProperties.mapType == MapType.SATELLITE
                             "暗色地图"-> mapProperties.mapType == MapType.DARK
+                            "新3D沉浸地图"-> mapProperties.mapType == MapType.NEW_3D_IMMERSIVE
                             "3D楼块效果"-> mapProperties.isShowBuildings
                             "地图标注及名称"-> mapProperties.isShowMapLabels
                             "实时交通状况开关" -> mapProperties.isTrafficEnabled
@@ -144,6 +146,9 @@ internal fun BasicFeatureScreen() {
                         }
                         "暗色地图"-> {
                             mapProperties = mapProperties.copy(mapType = MapType.DARK)
+                        }
+                        "新3D沉浸地图"-> {
+                            mapProperties = mapProperties.copy(mapType = MapType.NEW_3D_IMMERSIVE)
                         }
                         "3D楼块效果" -> {
                             mapProperties = mapProperties.copy(isShowBuildings = !mapProperties.isShowBuildings)

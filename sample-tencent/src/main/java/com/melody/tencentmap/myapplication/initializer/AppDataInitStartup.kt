@@ -39,7 +39,7 @@ class AppDataInitStartup : Initializer<Boolean> {
 
     override fun create(context: Context): Boolean {
         SDKUtils.init(context as Application)
-        MapUtils.setMapPrivacy(true)
+        MapUtils.setMapPrivacy(context,true)
         return true
     }
 

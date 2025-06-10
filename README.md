@@ -48,8 +48,8 @@ android {
 
 ```
 JDK : 19
-Gradle :  8.5
-Compose BOM：2024.09.03
+Gradle :  8.6.0
+Compose BOM：2025.04.01
 AndroidStudio建议使用：Android Studio Koala及以上版本
 
 // 地图隐私合规，请在App授权完隐私弹窗协议的第一时间，立即调用

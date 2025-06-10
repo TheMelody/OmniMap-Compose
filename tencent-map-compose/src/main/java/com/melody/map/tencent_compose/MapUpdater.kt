@@ -38,6 +38,7 @@ import com.tencent.tencentmap.mapsdk.maps.LocationSource
 import com.tencent.tencentmap.mapsdk.maps.TencentMap
 import com.tencent.tencentmap.mapsdk.maps.TencentMap.OnMapLoadedCallback
 import com.tencent.tencentmap.mapsdk.maps.model.CameraPosition
+import com.tencent.tencentmap.mapsdk.maps.model.MyLocationConfig
 import com.tencent.tencentmap.mapsdk.maps.model.RestrictBoundsFitMode
 
 internal class MapPropertiesNode(
@@ -123,7 +124,7 @@ internal inline fun MapUpdater(
         // 设置Logo的缩放比例，比例范围(0.7~1.3)
         set(mapUiSettings.logoScale) { map.uiSettings.setLogoScale(it) }
         // 设置定位监听
-        set(locationSource) { map.setLocationSource(it) }
+        set(locationSource) { map.myLocationConfig = MyLocationConfig.newBuilder(map.myLocationConfig).setLocationSource(it).build() }
         // 设置地图是否允许多InfoWindow模式，默认是false(只允许显示一个InfoWindow)
         set(mapProperties.enableMultipleInfoWindow) { map.enableMultipleInfowindow(it) }
         // 是否显示地图标注及名称
@@ -141,11 +142,11 @@ internal inline fun MapUpdater(
             }
         }
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false
-        set(mapProperties.isMyLocationEnabled) { map.isMyLocationEnabled = it }
+        set(mapProperties.isMyLocationEnabled) { map.myLocationConfig = MyLocationConfig.newBuilder(map.myLocationConfig).setMyLocationEnabled(it).build() }
         // 设置默认定位按钮是否显示，非必需设置。
         set(mapUiSettings.myLocationButtonEnabled) { map.uiSettings.isMyLocationButtonEnabled = it }
         // 修改定位蓝点样式
-        set(mapProperties.myLocationStyle) { map.setMyLocationStyle(it) }
+        set(mapProperties.myLocationStyle) { map.myLocationConfig = MyLocationConfig.newBuilder(map.myLocationConfig).setMyLocationStyle(it).build() }
         // 是否显示3D楼块,默认显示
         set(mapProperties.isShowBuildings) { map.setBuilding3dEffectEnable(it) }
         // 是否显示室内地图

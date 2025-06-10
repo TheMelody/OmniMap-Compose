@@ -43,5 +43,10 @@ enum class MapType(val value: Int) {
     /**
      * 暗色地图
      */
-    DARK(TencentMap.MAP_TYPE_DARK)
+    DARK(TencentMap.MAP_TYPE_DARK),
+
+    /**
+     * 新3D沉浸地图
+     */
+    NEW_3D_IMMERSIVE(TencentMap.MAP_TYPE_NEW_3D_IMMERSIVE)
 }

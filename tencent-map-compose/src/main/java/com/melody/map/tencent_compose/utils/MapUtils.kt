@@ -1,13 +1,15 @@
 package com.melody.map.tencent_compose.utils
 
+import android.content.Context
 import android.util.Log
 import com.tencent.tencentmap.mapsdk.maps.TencentMapInitializer
 
 object MapUtils {
     private const val TAG = "MapUtils"
 
-    fun setMapPrivacy(isAgree: Boolean) {
-        TencentMapInitializer.setAgreePrivacy(isAgree)
+    fun setMapPrivacy(context:Context,isAgree: Boolean) {
+        TencentMapInitializer.setAgreePrivacy(context,isAgree)
+        TencentMapInitializer.start(context)
         try {
             // 获取TencentLocationManager类的Class对象
             val clazz = Class.forName("com.tencent.map.geolocation.TencentLocationManager")

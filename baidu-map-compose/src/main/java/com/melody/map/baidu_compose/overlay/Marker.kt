@@ -191,15 +191,6 @@ class MarkerCustomAnimation private constructor(
  * @param textXOffset 文字水平偏移量，默认值为 0
  * @param textAnchorX 文字X锚点，默认值为 0.5f（表示锚点位于文字的中心）
  * @param textAnchorY 文字Y锚点，默认值为 1.0f（表示锚点位于文字的底部）
- * @param textBgBitmapDescriptor 文字背景图，默认为 null
- * @param align 文字对齐方式，默认值为 2
- * @param width 文字背景框宽度，默认为 0
- * @param height 文字背景框高度，默认为 0
- * @param maxLines 文字最大行数，默认为 0
- * @param leftPadding 文字背景框左边距，默认为 0
- * @param rightPadding 文字背景框右边距，默认为 0
- * @param topPadding 文字背景框上边距，默认为 0
- * @param bottomPadding 文字背景框下边距，默认为 0
  * @param textRotate 文字旋转角度，默认值为 0f
  */
 class MarkerTextOverlayOptions private constructor(
@@ -211,15 +202,6 @@ class MarkerTextOverlayOptions private constructor(
     val textXOffset: Int,
     val textAnchorX: Float,
     val textAnchorY: Float,
-    val textBgBitmapDescriptor: BitmapDescriptor?,
-    val align: Int,
-    val width: Int,
-    val height: Int,
-    val maxLines: Int,
-    val leftPadding: Int,
-    val rightPadding: Int,
-    val topPadding: Int,
-    val bottomPadding: Int,
     val textRotate: Float
 ) {
     companion object {
@@ -233,15 +215,6 @@ class MarkerTextOverlayOptions private constructor(
          * @param textXOffset 文字水平偏移量，默认值为 0
          * @param textAnchorX 文字X锚点，默认值为 0.5f
          * @param textAnchorY 文字Y锚点，默认值为 1.0f
-         * @param textBgBitmapDescriptor 文字背景图，默认为 null
-         * @param align 文字对齐方式，默认值为 2
-         * @param width 文字背景框宽度，默认为 0
-         * @param height 文字背景框高度，默认为 0
-         * @param maxLines 文字最大行数，默认为 0
-         * @param leftPadding 文字背景框左边距，默认为 0
-         * @param rightPadding 文字背景框右边距，默认为 0
-         * @param topPadding 文字背景框上边距，默认为 0
-         * @param bottomPadding 文字背景框下边距，默认为 0
          * @param textRotate 文字旋转角度，默认值为 0f
          */
         fun create(
@@ -253,15 +226,6 @@ class MarkerTextOverlayOptions private constructor(
             textXOffset: Int = 0,
             textAnchorX: Float = 0.5f,
             textAnchorY: Float = 1.0f,
-            textBgBitmapDescriptor: BitmapDescriptor? = null,
-            align: Int = 2,
-            width: Int = 0,
-            height: Int = 0,
-            maxLines: Int = 0,
-            leftPadding: Int = 0,
-            rightPadding: Int = 0,
-            topPadding: Int = 0,
-            bottomPadding: Int = 0,
             textRotate: Float = 0f
         ): MarkerTextOverlayOptions {
             return MarkerTextOverlayOptions(
@@ -273,15 +237,6 @@ class MarkerTextOverlayOptions private constructor(
                 textXOffset,
                 textAnchorX,
                 textAnchorY,
-                textBgBitmapDescriptor,
-                align,
-                width,
-                height,
-                maxLines,
-                leftPadding,
-                rightPadding,
-                topPadding,
-                bottomPadding,
                 textRotate % 360
             )
         }
@@ -299,12 +254,6 @@ class MarkerTextOverlayOptions private constructor(
             .titleFontSize(this.textFontSize)
             .titleOffset(this.textXOffset, this.textYOffset)
             .titleAnchor(this.textAnchorX, this.textAnchorY)
-            .titleBgBitmapDescriptor(this.textBgBitmapDescriptor)
-            .setAlign(this.align)
-            .setWidth(this.width)
-            .setHeight(this.height)
-            .setMaxLines(this.maxLines)
-            .setPadding(this.leftPadding, this.topPadding, this.rightPadding, this.bottomPadding)
             .titleRotate(this.textRotate)
         return titleOptions
     }

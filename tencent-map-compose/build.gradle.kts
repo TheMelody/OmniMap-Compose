@@ -59,6 +59,8 @@ dependencies {
 
     // 地图库
     api(libs.tencent.map.vector.sdk)
+    // 基础库
+    api(libs.openmap.foundation)
     // 地图组件库，包括小车平移、点聚合等组件功能。
     api(libs.tencent.map.sdk.utilities)
 }

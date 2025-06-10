@@ -125,14 +125,17 @@ object RoutePlanRepository {
                     }
                     // 返回多路径
                     val points= (p1.result.routes?.map { it.polyline }?: emptyList())
-
+                    // 将所有路径的折线点合并为一个列表
+                    val allPoints = points.flatten()
+                    // 使用所有点计算边界
+                    val latLngBounds = convertLatLngBounds(allPoints)
                     continuation.resumeWith(Result.success(
                         DrivingRouteDataState(
                             polylineWidth = 24F,
                             polylineBorderWidth = 6F,
                             startPoint = fromPoint,
                             endPoint = toPoint,
-                            latLngBounds = convertLatLngBounds(points[0]),
+                            latLngBounds = latLngBounds,
                             polylineAnim = initPolylineAnimation(fromPoint,1000),
                             points = points,
                             isAnimationStart = false,

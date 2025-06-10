@@ -41,6 +41,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,6 +63,7 @@ import com.melody.map.tencent_compose.overlay.rememberMarkerState
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.melody.sample.common.utils.showToast
 import com.melody.tencentmap.myapplication.R
+import com.melody.tencentmap.myapplication.utils.LocalTileProvider
 import com.melody.tencentmap.myapplication.viewmodel.OverlayViewModel
 import com.melody.ui.components.MapMenuButton
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory
@@ -204,12 +206,12 @@ internal fun OverlayScreen() {
 
             if(currentState.isShowTileOverlay) {
                 // 贴图，像热力图也是用TileOverlay渲染的
-                val tileProvider: TileProvider = object : UrlTileProvider(256, 256) {
+                /*val tileProvider: TileProvider = object : UrlTileProvider(256, 256) {
                     override fun getTileUrl(x: Int, y: Int, zoom: Int): URL {
                         return URL("https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png")
                     }
-                }
-                TileOverlay(tileProvider = tileProvider)
+                }*/
+                TileOverlay(tileProvider = LocalTileProvider(LocalContext.current))
             }
         }
 

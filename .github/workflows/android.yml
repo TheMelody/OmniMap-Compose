@@ -61,7 +61,15 @@ jobs:
           body:  |
             ### 功能更新
             - fix: Demo中有些同学的测试机只提供网络定位，无法显示定位蓝点，所以Demo中的LocationManager.GPS_PROVIDER始终返回false，现在同时增加LocationManager.NETWORK_PROVIDER一起判断是否打开了GPS开关
-            - 其他.........
+            - ComposeBOM，更新 2024.09.03 → 2025.04.01
+            - 百度地图SDK，由7.6.2  → 7.6.4
+            - 高德地图搜索SDK，由9.7.0 → 9.7.1
+            - TencentLocationSdk-openplatform，由7.5.2 → 7.6.1
+            - com.tencent.map:sdk-utilities，由 1.0.9.1 → 1.0.10
+            - tencent-map-vector-sdk，由 5.1.0 → 6.2.1.250120.3f971009.140342819
+            - 腾讯地图现在支持设置：新3D沉浸地图MAP_TYPE_NEW_3D_IMMERSIVE
+            - 新增com.tencent.openmap:foundation基础库
+            - 其他三方库版本升级
           token: ${{ secrets.github_token }}
           commit: master
           # tag名称

@@ -26,7 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -41,6 +41,7 @@ import com.melody.map.tencent_compose.position.CameraPositionState
 import com.melody.map.tencent_compose.position.rememberCameraPositionState
 import com.tencent.tencentmap.mapsdk.maps.LocationSource
 import com.tencent.tencentmap.mapsdk.maps.MapView
+import com.tencent.tencentmap.mapsdk.maps.TencentMapInitializer
 import com.tencent.tencentmap.mapsdk.maps.TencentMapOptions
 import com.tencent.tencentmap.mapsdk.maps.model.LatLng
 import com.tencent.tencentmap.mapsdk.maps.model.MapPoi

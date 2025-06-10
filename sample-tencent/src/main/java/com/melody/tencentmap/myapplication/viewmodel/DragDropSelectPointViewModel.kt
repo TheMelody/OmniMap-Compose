@@ -146,10 +146,10 @@ class DragDropSelectPointViewModel :
     /**
      * 搜索当前位置附近1000米内的地址数据
      */
-    fun doSearchQueryPoi(latLng: LatLng, cityName: String) = asyncLaunch(Dispatchers.IO) {
+    fun doSearchQueryPoi(latLng: LatLng, cityName: String?) = asyncLaunch(Dispatchers.IO) {
         DragDropSelectPointRepository.queryPoiResult(
             latLng = latLng,
-            cityName = cityName,
+            cityName = cityName?: "",
             onSuccess = {
                 setState { copy(poiItems = it) }
             },
